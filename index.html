@@ -688,7 +688,6 @@ body::before{
 <div id="tab-bar">
   <button class="tab-btn active"  onclick="switchTab('daily')">⚔ DAILY</button>
   <button class="tab-btn"         onclick="switchTab('quests')">⚔ QUESTS</button>
-  <button class="tab-btn"         onclick="switchTab('charsheet')">✦ CHARACTER</button>
   <button class="tab-btn"         onclick="switchTab('inventory')">💰 INVENTORY</button>
   <div id="user-info-bar">
     <span class="sync-dot" id="sync-dot"></span>
@@ -739,6 +738,7 @@ body::before{
               <div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;justify-content:center">
                 <button class="px-btn sm" onclick="openWellnessReport()">📊 WELLNESS</button>
                 <button class="px-btn sm" onclick="openCustomize()">✎ CUSTOMIZE</button>
+                <button class="px-btn sm" onclick="openManageStats()">⚙ STATS</button>
               </div>
               <!-- equipped cosmetics list -->
               <div id="daily-cosmetics-display" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center"></div>
@@ -813,53 +813,6 @@ body::before{
       </section>
 
     </div>
-  </div>
-
-  <!-- TAB 3: CHARACTER -->
-  <div id="tab-charsheet" class="tab-pane">
-    <div class="grid-3">
-      <section class="panel">
-        <div class="panel-head"><span>✦</span> SPRITE
-          <span class="panel-head-right"><button class="px-btn sm" onclick="showTutorial('charsheet')" title="Help">?</button></span>
-        </div>
-        <div id="sprite-section">
-          <div id="sprite-wrap">
-            <div id="thought-bubble" onclick="openWellnessReport()"></div>
-            <div id="sprite-frame">
-              <canvas id="layer-base" width="128" height="192"></canvas>
-              <canvas id="layer-acc1" width="128" height="192"></canvas>
-              <canvas id="layer-acc2" width="128" height="192"></canvas>
-              <canvas id="layer-aura" width="128" height="192"></canvas>
-              <span id="layer-cosm-hw" class="cosm-layer cosm-layer-hw" style="display:none"></span>
-              <span id="layer-cosm-wp" class="cosm-layer cosm-layer-wp" style="display:none"></span>
-              <span id="layer-cosm-ac" class="cosm-layer cosm-layer-ac" style="display:none"></span>
-            </div>
-          </div>
-          <div id="mood-badge" class="mood-badge mbadge-happy">😊 HAPPY</div>
-          <div id="class-title-display">NOVICE ADVENTURER</div>
-          <div id="total-level-display">TOTAL LEVEL: 0</div>
-          <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;justify-content:center">
-            <button class="px-btn sm" onclick="openCustomize()">✎ CUSTOMIZE</button>
-            <button class="px-btn sm" onclick="openWellnessReport()">📊 WELLNESS</button>
-            <button class="px-btn sm" onclick="openManageStats()">⚙ MANAGE STATS</button>
-          </div>
-        </div>
-      </section>
-      <section class="panel">
-        <div class="panel-head"><span>★</span> UNLOCKED TITLES</div>
-        <div class="panel-body" id="titles-list"></div>
-      </section>
-      <section class="panel">
-        <div class="panel-head"><span>◎</span> NEXT MILESTONES</div>
-        <div class="panel-body" id="milestones-list"></div>
-      </section>
-    </div>
-    <section class="panel" id="goals-panel">
-      <div class="panel-head"><span>🎯</span> PERSONAL GOALS
-        <span class="panel-head-right"><button class="px-btn sm" onclick="openAddGoal(null)">+ ADD GOAL</button></span>
-      </div>
-      <div class="panel-body" id="goals-list"></div>
-    </section>
   </div>
 
   <!-- TAB 4: INVENTORY -->
@@ -1138,7 +1091,8 @@ body::before{
           </div>
         </div>
       </div>
-      <!-- cosmetics full-width below -->
+      <!-- titles + cosmetics full-width below -->
+      <div id="titles-equip-section" class="cust-cosmetics-full"></div>
       <div id="cosmetics-section" class="cust-cosmetics-full"></div>
       <div class="form-actions">
         <button class="px-btn" onclick="cancelCustomize()">CANCEL</button>
@@ -1208,8 +1162,12 @@ body::before{
 <!-- MODAL: WELCOME (first visit) -->
 <div class="modal-overlay" id="modal-welcome">
   <div class="modal-box">
-    <div class="modal-head">✦ WELCOME, ADVENTURER!<span class="modal-close" onclick="closeWelcomeModal()">✕</span></div>
+    <div class="modal-head">✦ WELCOME, ADVENTURER!</div>
     <div class="modal-body">
+      <div class="form-row" style="margin-bottom:16px">
+        <label class="form-label" style="margin-bottom:8px">ENTER YOUR NAME, ADVENTURER</label>
+        <input type="text" id="welcome-name-input" class="form-input" maxlength="24" placeholder="Your name..." style="width:100%;font-size:clamp(7px,1.4vw,9px);text-align:center;padding:8px"/>
+      </div>
       <div class="form-hint" style="margin-bottom:12px;line-height:1.8">
         <p style="margin-bottom:10px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 attributes (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), level up, unlock class titles, and earn cosmetics for your pixel-art character.</p>
         <p style="margin-bottom:10px"><strong>Getting started:</strong></p>
@@ -1223,7 +1181,7 @@ body::before{
         <p style="margin-bottom:0"><strong>⚠ Your data is stored only in this browser (localStorage).</strong> It is not synced or backed up anywhere. Use the EXPORT button regularly to save a backup file, and IMPORT to restore it.</p>
       </div>
       <div class="form-actions">
-        <button class="px-btn success" onclick="closeWelcomeModal()">LET'S GO!</button>
+        <button class="px-btn success" onclick="closeWelcomeModal()">BEGIN ADVENTURE!</button>
       </div>
     </div>
   </div>
@@ -1516,6 +1474,7 @@ function load(){
     STATS_DEF.forEach(s=>{if(d.activeStats[s.key]===undefined)d.activeStats[s.key]=true;});
     // Phase 6.2: app theme
     if(!d.appTheme)d.appTheme='blue';
+    if(d.equippedTitle===undefined)d.equippedTitle=null;
     // Phase 5.6: Quests — migrate existing projects to customQuests
     const calcQH=logs=>Object.values(logs||{}).reduce((s,h)=>s+Number(h),0);
     if(!d.customQuests){
@@ -1565,7 +1524,7 @@ function freshData(){
     characterCustomization:{hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'},
     taskHistory:{},statLastIncreased:{},customGoals:[],characterMood:'happy',
     unlockedCosmetics:[],equippedCosmetics:{headwear:null,accessory:null,weapon:null,outfit:null},
-    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),appTheme:'blue',
+    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),appTheme:'blue',equippedTitle:null,
     customQuests:[],completedQuests:[],defaultQuests:{},tutorialsViewed:{},
     lastWeekStart:getStartOfWeek(),completedGoalCount:0,statsIncreasedToday:{},
     perfectStreak:0,goalWeekStreak:0};
@@ -1658,12 +1617,11 @@ function toggleSound(){
 // ══════════════════════════════════════════
 //  TABS
 // ══════════════════════════════════════════
-const TAB_NAMES=['daily','quests','charsheet','inventory'];
+const TAB_NAMES=['daily','quests','inventory'];
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',TAB_NAMES[i]===name));
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='charsheet'){const d=load();drawSprite(getTotalStats(d),d.characterCustomization,'layer');renderCharSheet(d);renderGoals(d);updateMoodDisplay(d);}
   if(name==='daily'){const d=load();renderDailyCharacter(d);}
   if(name==='inventory'){renderInventoryTab(load());}
   if(name==='quests'){const d=load();renderQuests(d);}
@@ -1806,7 +1764,6 @@ function buildProjectCard(proj){
 //  RENDER: CHARACTER SHEET
 // ══════════════════════════════════════════
 function renderCharSheet(data){
-  updateClassTitleDisplay(getTotalStats(data));
   document.getElementById('total-level-display').textContent=`TOTAL LEVEL: ${data.unlockedTitles.length}`;
   const tlWrap=document.getElementById('titles-list');tlWrap.innerHTML='';
   if(!data.unlockedTitles.length){tlWrap.innerHTML='<div class="empty-state">No titles yet.<br>Complete daily tasks<br>to unlock your first title!</div>';}
@@ -1835,23 +1792,6 @@ function renderCharSheet(data){
     mlWrap.appendChild(div);
   });
 }
-function getClassTitle(stats){
-  const total=STATS_DEF.reduce((s,x)=>s+(stats[x.key]||0),0);
-  let title='NOVICE ADVENTURER';
-  if(total>=200)title='LEGENDARY HERO';else if(total>=100)title='MASTER CHAMPION';
-  else if(total>=60)title='ELITE WARRIOR';else if(total>=35)title='SEASONED VETERAN';
-  else if(total>=20)title='RISING HERO';else if(total>=10)title='APPRENTICE';
-  const best=STATS_DEF.reduce((a,b)=>(stats[b.key]||0)>(stats[a.key]||0)?b:a,STATS_DEF[0]);
-  const bv=stats[best.key]||0;
-  if(bv>=26){const m={strength:'WARLORD',focus:'ZEN MASTER',intelligence:'ARCHMAGE',charisma:'HIGH CONSUL',creativity:'GRAND ARTISAN',initiative:'FIELD MARSHAL',discipline:'IRON SAGE'};title=m[best.key]||title;}
-  else if(bv>=11){const m={strength:'WARRIOR',focus:'MONK',intelligence:'SCHOLAR',charisma:'DIPLOMAT',creativity:'ARTISAN',initiative:'COMMANDER',discipline:'SENTINEL'};title=m[best.key]||title;}
-  return title;
-}
-function updateClassTitleDisplay(stats){
-  const title=getClassTitle(stats);
-  const el=document.getElementById('class-title-display');if(el)el.textContent=title;
-}
-
 // ══════════════════════════════════════════
 //  RENDER: INVENTORY TAB
 // ══════════════════════════════════════════
@@ -2150,7 +2090,7 @@ function toggleTask(tid){
     if(newVal%10===0||newTitles.length){
       const lines=[];
       if(newVal%10===0)lines.push(`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}!`);
-      newTitles.forEach(t=>lines.push(`New Title: ${t.cls} Lvl ${t.lvl}`));
+      newTitles.forEach(t=>lines.push(`New Title: ${t.cls}`));
       setTimeout(()=>{showLU(lines.join('\n'));playLU();},800);
     }
     return;
@@ -2448,6 +2388,11 @@ function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 
 function closeWelcomeModal(){
+  const nameInput=document.getElementById('welcome-name-input');
+  if(nameInput&&nameInput.value.trim()){
+    const d=load();d.characterName=nameInput.value.trim();save(d);
+    const ni=document.getElementById('char-name');if(ni)ni.value=d.characterName;
+  }
   closeModal('modal-welcome');
   localStorage.setItem('hasVisitedBefore','1');
 }
@@ -2678,6 +2623,7 @@ function openCustomize(){
   tempColors={...data.characterCustomization};
   buildCustomizeModal();
   refreshCustomPreview(data);
+  renderTitlesSection(data);
   renderCosmeticsSection(data);
   openModal('modal-customize');
 }
@@ -2904,7 +2850,7 @@ function saveBackdate(){
   Object.entries(statChanges).forEach(([statKey,pts])=>{
     if(pts>0){
       const titles=checkTitleUnlocks(data,statKey,data.stats[statKey]);
-      titles.forEach(tt=>luLines.push(`New Title: ${tt.cls} Lvl ${tt.lvl}`));
+      titles.forEach(tt=>luLines.push(`New Title: ${tt.cls}`));
     }
   });
 
@@ -3123,28 +3069,32 @@ function updateMoodDisplay(data){
   const badge=document.getElementById('mood-badge');
   if(badge){badge.textContent=MOOD_EMOJIS[mood]+' '+MOOD_LABELS[mood];
     badge.className='mood-badge mbadge-'+mood;}
-  // thought bubble
+  // thought bubble (character tab removed — element may not exist)
   const tb=document.getElementById('thought-bubble');
-  if(!tb)return;
-  if(mood==='happy'){tb.style.display='none';return;}
-  tb.style.display='block';
-  ['tb-neutral','tb-concerned','tb-sad','tb-critical'].forEach(c=>tb.classList.remove(c));
-  if(mood!=='neutral')tb.classList.add('tb-'+mood);
-  // find primary issue
-  const sli=data.statLastIncreased||{};const today=todayStr();
-  const active=data.activeStats||{};
-  let worstStat=null,worstDays=0;
-  STATS_DEF.forEach(s=>{if(active[s.key]===false)return;const d=daysBetween(sli[s.key],today);if(d>=7&&d>worstDays){worstDays=d;worstStat=s;}});
-  const failGoal=(data.customGoals||[]).find(g=>g.status==='failing');
-  const riskGoal=!failGoal&&(data.customGoals||[]).find(g=>g.status==='atRisk');
-  if(worstStat){tb.textContent=`${STAT_EMOJI_MAP[worstStat.key]||worstStat.emoji} ${worstStat.fullLabel}: ${worstDays}d ago`;}
-  else if(failGoal){tb.textContent=`🎯 ${goalDescription(failGoal,data)} — FAILING`;}
-  else if(riskGoal){tb.textContent=`🎯 ${goalDescription(riskGoal,data)} — AT RISK`;}
-  // mood drop notification
-  if(prevMood==='happy'&&mood!=='happy'&&worstStat){
-    setTimeout(()=>spawnFloatCenter(`⚠ ${worstStat.fullLabel} neglected ${worstDays} days!`),200);
+  if(tb){
+    if(mood==='happy'){tb.style.display='none';}
+    else{
+      tb.style.display='block';
+      ['tb-neutral','tb-concerned','tb-sad','tb-critical'].forEach(c=>tb.classList.remove(c));
+      if(mood!=='neutral')tb.classList.add('tb-'+mood);
+      const sli=data.statLastIncreased||{};const today=todayStr();
+      const active=data.activeStats||{};
+      let worstStat=null,worstDays=0;
+      STATS_DEF.forEach(s=>{if(active[s.key]===false)return;const d=daysBetween(sli[s.key],today);if(d>=7&&d>worstDays){worstDays=d;worstStat=s;}});
+      const failGoal=(data.customGoals||[]).find(g=>g.status==='failing');
+      const riskGoal=!failGoal&&(data.customGoals||[]).find(g=>g.status==='atRisk');
+      if(worstStat){tb.textContent=`${STAT_EMOJI_MAP[worstStat.key]||worstStat.emoji} ${worstStat.fullLabel}: ${worstDays}d ago`;}
+      else if(failGoal){tb.textContent=`🎯 ${goalDescription(failGoal,data)} — FAILING`;}
+      else if(riskGoal){tb.textContent=`🎯 ${goalDescription(riskGoal,data)} — AT RISK`;}
+    }
   }
-  // Phase 5.2: update daily character panel
+  // mood drop notification
+  if(prevMood==='happy'&&mood!=='happy'){
+    const sli2=data.statLastIncreased||{};const today2=todayStr();const active2=data.activeStats||{};
+    let ws=null,wd=0;STATS_DEF.forEach(s=>{if(active2[s.key]===false)return;const d=daysBetween(sli2[s.key],today2);if(d>=7&&d>wd){wd=d;ws=s;}});
+    if(ws)setTimeout(()=>spawnFloatCenter(`⚠ ${ws.fullLabel} neglected ${wd} days!`),200);
+  }
+  // update daily character panel
   renderDailyCharacter(data);
 }
 
@@ -3319,9 +3269,9 @@ function renderDailyCharacter(data){
   try{drawSprite(stats,data.characterCustomization,'d');}catch(e){}
   // Class title & level
   const titleEl=document.getElementById('daily-class-title-lg');
-  if(titleEl)titleEl.textContent=getClassTitle(stats);
+  if(titleEl)titleEl.textContent=data.equippedTitle||'ADVENTURER';
   const lvlEl=document.getElementById('daily-level-lg');
-  if(lvlEl){const total=STATS_DEF.reduce((s,x)=>s+(stats[x.key]||0),0);lvlEl.textContent='TOTAL POINTS: '+total;}
+  if(lvlEl)lvlEl.textContent='TOTAL LEVEL: '+(data.unlockedTitles||[]).length;
   // Mood class on wrapper (for CSS filter)
   const inner=document.getElementById('daily-char-inner');
   if(inner){
@@ -3505,6 +3455,37 @@ function renderCosmeticsSection(data){
   });
 }
 
+function equipTitle(cls){
+  const data=load();
+  data.equippedTitle=(data.equippedTitle===cls)?null:cls;
+  save(data);
+  renderTitlesSection(data);
+  renderDailyCharacter(data);
+}
+
+function renderTitlesSection(data){
+  const container=document.getElementById('titles-equip-section');
+  if(!container)return;
+  const unlocked=data.unlockedTitles||[];
+  const equipped=data.equippedTitle;
+  // deduplicate by cls name
+  const seen=new Set();const unique=[];
+  unlocked.forEach(t=>{if(!seen.has(t.cls)){seen.add(t.cls);unique.push(t);}});
+  container.innerHTML='';
+  const hd=document.createElement('div');hd.className='cosm-section-hd';hd.textContent='✦ TITLES';container.appendChild(hd);
+  if(!unique.length){
+    const em=document.createElement('div');em.className='empty-state';em.style.padding='8px 0';
+    em.textContent='No titles unlocked yet. Complete tasks to earn titles!';
+    container.appendChild(em);return;
+  }
+  unique.forEach(t=>{
+    const row=document.createElement('div');row.className='cosm-row'+(equipped===t.cls?' equipped':'');
+    const isEq=equipped===t.cls;
+    row.innerHTML=`<span class="cosm-icon">★</span><span class="cosm-name">${t.cls}</span><button class="px-btn sm${isEq?' success':''}" onclick="equipTitle('${t.cls}')">${isEq?'EQUIPPED':'EQUIP'}</button>`;
+    container.appendChild(row);
+  });
+}
+
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
@@ -3612,10 +3593,6 @@ function _fbStartSync(uid){
     const d=load();checkNewDay(d);
     renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();
     if(document.getElementById('tab-quests').classList.contains('active'))renderQuests(d);
-    if(document.getElementById('tab-charsheet').classList.contains('active')){
-      drawSprite(getTotalStats(d),d.characterCustomization,'layer');
-      renderCharSheet(d);renderGoals(d);updateMoodDisplay(d);
-    }
     if(document.getElementById('tab-inventory').classList.contains('active'))renderInventoryTab(d);
     _fbShowBanner('✓ DATA SYNCED FROM ANOTHER DEVICE','#1a5c1a');
   },e=>{
