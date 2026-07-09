@@ -395,11 +395,14 @@ body::before{
 .theme-btn:hover{transform:scale(1.15)}
 .theme-btn.active{border-color:var(--white)}
 /* ── CUSTOMIZE MODAL REDESIGN ── */
-.cust-grid{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+#modal-customize .modal-box{max-height:72vh;overflow-y:hidden;display:flex;flex-direction:column}
+#modal-customize .modal-body{flex:1;overflow-y:auto;padding-right:10px}
+.cust-grid{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
 @media(max-width:600px){.cust-grid{grid-template-columns:1fr}}
-#customize-preview-wrap{width:128px;height:192px;position:relative;flex-shrink:0}
+#customize-preview-wrap{width:128px;height:192px;position:relative;flex-shrink:0;margin:0 auto}
 #customize-preview{width:128px;height:192px;position:relative}
 #customize-preview canvas{position:absolute;top:0;left:0;}
+.cust-sprite-col{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:192px}
 .cust-cosmetics-full{margin-top:14px}
 
 /* ── PHASE 4: BACKDATE ── */
@@ -1096,7 +1099,21 @@ body::before{
     <div class="modal-head">✦ CUSTOMIZE CHARACTER<span class="modal-close" onclick="cancelCustomize()">✕</span></div>
     <div class="modal-body">
       <div class="cust-grid">
-        <!-- left: controls -->
+        <!-- left: sprite preview -->
+        <div class="cust-sprite-col">
+          <div id="customize-preview-wrap">
+            <div id="customize-preview">
+              <canvas id="prev-base" width="128" height="192"></canvas>
+              <canvas id="prev-acc1" width="128" height="192"></canvas>
+              <canvas id="prev-acc2" width="128" height="192"></canvas>
+              <canvas id="prev-aura" width="128" height="192"></canvas>
+              <div id="prev-cosm-ac" class="cosm-layer cosm-layer-ac"></div>
+              <div id="prev-cosm-wp" class="cosm-layer cosm-layer-wp"></div>
+              <div id="prev-cosm-hw" class="cosm-layer cosm-layer-hw"></div>
+            </div>
+          </div>
+        </div>
+        <!-- right: color controls -->
         <div>
           <!-- theme -->
           <div class="swatch-label" style="margin-bottom:8px">APP THEME</div>
@@ -1118,18 +1135,6 @@ body::before{
           <div class="swatch-section">
             <div class="swatch-label">CLOTHING COLOR</div>
             <div class="swatch-row" id="swatches-clothing"></div>
-          </div>
-        </div>
-        <!-- right: large preview -->
-        <div id="customize-preview-wrap">
-          <div id="customize-preview">
-            <canvas id="prev-base" width="128" height="192"></canvas>
-            <canvas id="prev-acc1" width="128" height="192"></canvas>
-            <canvas id="prev-acc2" width="128" height="192"></canvas>
-            <canvas id="prev-aura" width="128" height="192"></canvas>
-            <div id="prev-cosm-ac" class="cosm-layer cosm-layer-ac"></div>
-            <div id="prev-cosm-wp" class="cosm-layer cosm-layer-wp"></div>
-            <div id="prev-cosm-hw" class="cosm-layer cosm-layer-hw"></div>
           </div>
         </div>
       </div>
