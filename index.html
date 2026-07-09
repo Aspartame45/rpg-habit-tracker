@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <title>RPG Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <!-- Firebase SDKs -->
@@ -38,13 +38,17 @@ window._fbSyncing=false;
   --yellow:#ffea00;--teal:#1de9b6;
   --white:#f0f0ff;--dim:#7a7aaa;
 }
-html{image-rendering:pixelated;image-rendering:crisp-edges}
+html{image-rendering:pixelated;image-rendering:crisp-edges;
+  -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
 body{
-  font-family:'Press Start 2P',monospace;background:#0d0d2e;
-  background-image:radial-gradient(ellipse at 30% 0%,#2d1b69 0%,transparent 50%),
-    radial-gradient(ellipse at 70% 0%,#1a3a6e 0%,transparent 50%),
-    linear-gradient(180deg,#0d0d2e 0%,#1a1a4e 40%,#0f1a2e 100%);
+  font-family:'Press Start 2P',monospace;
+  background-color:var(--body-bg,#0d0d2e);
+  background-image:
+    radial-gradient(ellipse at 30% 0%,var(--body-hi1,#2d1b69) 0%,transparent 50%),
+    radial-gradient(ellipse at 70% 0%,var(--body-hi2,#1a3a6e) 0%,transparent 50%),
+    linear-gradient(180deg,var(--body-bg,#0d0d2e) 0%,var(--body-mid,#1a1a4e) 40%,var(--body-dark,#0f1a2e) 100%);
   min-height:100vh;color:var(--white);overflow-x:hidden;
+  -webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;
 }
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -100,6 +104,7 @@ body::before{
 @media(max-width:600px){.grid-daily{grid-template-columns:1fr}}
 /* Daily sprite column – larger, centered */
 #daily-sprite-col-large{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0}
+@media(max-width:600px){#daily-sprite-col-large{margin:0 auto;width:fit-content}}
 #daily-sprite-preview-wrap-large{width:128px;height:192px;overflow:hidden;position:relative;
   filter:drop-shadow(0 0 10px rgba(88,101,242,.5));margin:0 auto}
 #daily-sprite-preview-large{width:128px;height:192px;position:absolute;top:0;left:0}
@@ -383,10 +388,18 @@ body::before{
   padding:4px 6px;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .preset-btn:hover{color:var(--white);border-color:var(--b2)}
 .preset-btn.active-preset{color:var(--gold);border-color:var(--gold)}
-/* preview sprite in customize modal */
-#customize-preview-wrap{width:64px;height:96px;overflow:hidden;margin:0 auto 10px;position:relative;}
-#customize-preview{width:128px;height:192px;position:absolute;top:0;left:0;transform:scale(.5);transform-origin:top left;}
+/* ── THEME SWITCHER ── */
+.theme-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.theme-btn{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:transform .12s,border-color .12s;flex-shrink:0}
+.theme-btn:hover{transform:scale(1.15)}
+.theme-btn.active{border-color:var(--white)}
+/* ── CUSTOMIZE MODAL REDESIGN ── */
+.cust-grid{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+@media(max-width:600px){.cust-grid{grid-template-columns:1fr}}
+#customize-preview-wrap{width:128px;height:192px;position:relative;flex-shrink:0}
+#customize-preview{width:128px;height:192px;position:relative}
 #customize-preview canvas{position:absolute;top:0;left:0;}
+.cust-cosmetics-full{margin-top:14px}
 
 /* ── PHASE 4: BACKDATE ── */
 #yesterday-reminder{
@@ -1078,38 +1091,49 @@ body::before{
 
 <!-- MODAL: CUSTOMIZE CHARACTER -->
 <div class="modal-overlay" id="modal-customize">
-  <div class="modal-box">
+  <div class="modal-box wide">
     <div class="modal-head">✦ CUSTOMIZE CHARACTER<span class="modal-close" onclick="cancelCustomize()">✕</span></div>
     <div class="modal-body">
-      <!-- mini sprite preview -->
-      <div id="customize-preview-wrap">
-        <div id="customize-preview">
-          <canvas id="prev-base" width="128" height="192"></canvas>
-          <canvas id="prev-acc1" width="128" height="192"></canvas>
-          <canvas id="prev-acc2" width="128" height="192"></canvas>
-          <canvas id="prev-aura" width="128" height="192"></canvas>
+      <div class="cust-grid">
+        <!-- left: controls -->
+        <div>
+          <!-- theme -->
+          <div class="swatch-label" style="margin-bottom:8px">APP THEME</div>
+          <div class="theme-row" id="theme-row"></div>
+          <!-- presets -->
+          <div class="swatch-label">PRESETS</div>
+          <div class="preset-row" id="preset-row"></div>
+          <!-- hair -->
+          <div class="swatch-section">
+            <div class="swatch-label">HAIR COLOR</div>
+            <div class="swatch-row" id="swatches-hair"></div>
+          </div>
+          <!-- skin -->
+          <div class="swatch-section">
+            <div class="swatch-label">SKIN COLOR</div>
+            <div class="swatch-row" id="swatches-skin"></div>
+          </div>
+          <!-- clothing -->
+          <div class="swatch-section">
+            <div class="swatch-label">CLOTHING COLOR</div>
+            <div class="swatch-row" id="swatches-clothing"></div>
+          </div>
+        </div>
+        <!-- right: large preview -->
+        <div id="customize-preview-wrap">
+          <div id="customize-preview">
+            <canvas id="prev-base" width="128" height="192"></canvas>
+            <canvas id="prev-acc1" width="128" height="192"></canvas>
+            <canvas id="prev-acc2" width="128" height="192"></canvas>
+            <canvas id="prev-aura" width="128" height="192"></canvas>
+            <div id="prev-cosm-ac" class="cosm-layer cosm-layer-ac"></div>
+            <div id="prev-cosm-wp" class="cosm-layer cosm-layer-wp"></div>
+            <div id="prev-cosm-hw" class="cosm-layer cosm-layer-hw"></div>
+          </div>
         </div>
       </div>
-      <!-- presets -->
-      <div class="swatch-label">PRESETS</div>
-      <div class="preset-row" id="preset-row"></div>
-      <!-- hair -->
-      <div class="swatch-section">
-        <div class="swatch-label">HAIR COLOR</div>
-        <div class="swatch-row" id="swatches-hair"></div>
-      </div>
-      <!-- skin -->
-      <div class="swatch-section">
-        <div class="swatch-label">SKIN COLOR</div>
-        <div class="swatch-row" id="swatches-skin"></div>
-      </div>
-      <!-- clothing -->
-      <div class="swatch-section">
-        <div class="swatch-label">CLOTHING COLOR</div>
-        <div class="swatch-row" id="swatches-clothing"></div>
-      </div>
-      <!-- cosmetics section (Phase 5.2) -->
-      <div id="cosmetics-section"></div>
+      <!-- cosmetics full-width below -->
+      <div id="cosmetics-section" class="cust-cosmetics-full"></div>
       <div class="form-actions">
         <button class="px-btn" onclick="cancelCustomize()">CANCEL</button>
         <button class="px-btn success" onclick="saveCustomize()">APPLY & SAVE</button>
@@ -1338,6 +1362,22 @@ const CLASS_MILESTONES={
   agility:     [{at:10,cls:'Rogue',lvl:1},{at:25,cls:'Rogue',lvl:2},{at:50,cls:'Scout',lvl:1},{at:100,cls:'Shadow',lvl:1}],
   vitality:    [{at:10,cls:'Novice',lvl:1},{at:25,cls:'Cleric',lvl:1},{at:50,cls:'Cleric',lvl:2},{at:100,cls:'Saint',lvl:1}],
 };
+const COLOR_THEMES={
+  blue:  {b1:'#5865f2',b2:'#8892f8',b3:'#c0c8ff',bg:'#0d0d2e',mid:'#1a1a4e',dark:'#0f1a2e',hi1:'#2d1b69',hi2:'#1a3a6e'},
+  green: {b1:'#2ecc71',b2:'#55e890',b3:'#a8f5c8',bg:'#0a1f14',mid:'#0f2d1c',dark:'#071510',hi1:'#0d3320',hi2:'#0a2e1a'},
+  red:   {b1:'#e74c3c',b2:'#f07468',b3:'#f5aaaa',bg:'#1f0a0a',mid:'#2d0f0f',dark:'#150707',hi1:'#3d1010',hi2:'#2a0c0c'},
+  grey:  {b1:'#7f8c8d',b2:'#a5b2b3',b3:'#d0d8da',bg:'#0f0f0f',mid:'#1a1a1a',dark:'#0a0a0a',hi1:'#1f1f1f',hi2:'#181818'},
+  orange:{b1:'#e67e22',b2:'#f0a352',b3:'#f5c88a',bg:'#1a0f00',mid:'#271600',dark:'#110a00',hi1:'#331a00',hi2:'#281400'},
+  purple:{b1:'#9b59b6',b2:'#be82d5',b3:'#ddb8ee',bg:'#120a1f',mid:'#1b0f2e',dark:'#0d0615',hi1:'#28104a',hi2:'#1a0a3d'},
+};
+function applyTheme(name){
+  const t=COLOR_THEMES[name]||COLOR_THEMES.blue;
+  const r=document.documentElement.style;
+  r.setProperty('--b1',t.b1);r.setProperty('--b2',t.b2);r.setProperty('--b3',t.b3);
+  r.setProperty('--body-bg',t.bg);r.setProperty('--body-mid',t.mid);r.setProperty('--body-dark',t.dark);
+  r.setProperty('--body-hi1',t.hi1);r.setProperty('--body-hi2',t.hi2);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===name));
+}
 const DEFAULT_TASKS=[
   {id:'exercise',     name:'Exercise',                                          stat:'strength',    points:1,icon:'⚔'},
   {id:'study',        name:'Study',                                             stat:'intelligence',points:1,icon:'✦'},
@@ -1468,6 +1508,8 @@ function load(){
     // Phase 5.4: active stats toggle — default all stats to active (preserves existing behavior)
     if(!d.activeStats)d.activeStats={};
     STATS_DEF.forEach(s=>{if(d.activeStats[s.key]===undefined)d.activeStats[s.key]=true;});
+    // Phase 6.2: app theme
+    if(!d.appTheme)d.appTheme='blue';
     // Phase 5.6: Quests — migrate existing projects to customQuests
     const calcQH=logs=>Object.values(logs||{}).reduce((s,h)=>s+Number(h),0);
     if(!d.customQuests){
@@ -1517,7 +1559,7 @@ function freshData(){
     characterCustomization:{hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'},
     taskHistory:{},statLastIncreased:{},customGoals:[],characterMood:'happy',
     unlockedCosmetics:[],equippedCosmetics:{headwear:null,accessory:null,weapon:null,outfit:null},
-    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),
+    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),appTheme:'blue',
     customQuests:[],completedQuests:[],defaultQuests:{},tutorialsViewed:{},
     lastWeekStart:getStartOfWeek(),completedGoalCount:0,statsIncreasedToday:{},
     perfectStreak:0,goalWeekStreak:0};
@@ -2527,9 +2569,13 @@ function resetAllData(){
 }
 function updateFooter(){
   const now=new Date();
-  document.getElementById('footer-date').textContent=
-    `DATA SAVED LOCALLY · ${now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()}`;
+  const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+  const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const label=window._fbUser?`SYNCED TO CLOUD · ${timeStr}`:`DATA SAVED LOCALLY · ${dateStr}`;
+  document.getElementById('footer-date').textContent=label;
 }
+window._lastFooterSync=null;
+function _updateFooterSyncTime(){window._lastFooterSync=new Date();updateFooter();}
 
 // ══════════════════════════════════════════
 //  PIXEL SPRITE  (4-layer canvas, S=4)
@@ -2630,7 +2676,25 @@ function openCustomize(){
   openModal('modal-customize');
 }
 
+function buildThemeButtons(){
+  const row=document.getElementById('theme-row');if(!row)return;
+  row.innerHTML='';
+  const data=load();const cur=data.appTheme||'blue';
+  Object.entries(COLOR_THEMES).forEach(([name,t])=>{
+    const b=document.createElement('button');
+    b.className='theme-btn'+(cur===name?' active':'');
+    b.title=name.charAt(0).toUpperCase()+name.slice(1);
+    b.dataset.theme=name;
+    b.style.background=t.b1;
+    b.onclick=()=>{
+      applyTheme(name);
+      const d=load();d.appTheme=name;save(d);
+    };
+    row.appendChild(b);
+  });
+}
 function buildCustomizeModal(){
+  buildThemeButtons();
   // Presets
   const pr=document.getElementById('preset-row');pr.innerHTML='';
   PRESETS.forEach(pre=>{
@@ -3443,6 +3507,7 @@ function init(){
   if(sp==='0'){soundOn=false;const b=document.getElementById('sound-btn');b.textContent='✕';b.classList.add('muted');}
 
   const data=load();
+  applyTheme(data.appTheme||'blue');
   checkNewDay(data);
   checkMonthRollover(data);
 
@@ -3508,7 +3573,7 @@ function _fbSaveData(d){
   _fbSetSyncDot('syncing');
   fbDb.ref('users/'+window._fbUser.uid+'/data')
     .set(JSON.parse(JSON.stringify(d)))
-    .then(()=>{_fbSetSyncDot('online');})
+    .then(()=>{_fbSetSyncDot('online');_updateFooterSyncTime();})
     .catch(e=>{
       console.error('[Firebase] save failed:',e);
       _fbSetSyncDot('offline');
