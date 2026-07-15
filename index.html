@@ -78,12 +78,24 @@ body::before{
 #header-sub{font-size:clamp(5px,1.1vw,6px);color:var(--b2);letter-spacing:3px}
 
 /* ── TABS ── */
-#tab-bar{display:flex;position:relative;z-index:9;background:#0a0a20;border-bottom:4px solid var(--b1);max-width:100%;overflow-x:auto;}
-.tab-btn{font-family:'Press Start 2P',monospace;font-size:clamp(5px,1.2vw,7px);letter-spacing:1px;color:var(--dim);
-  background:none;border:none;padding:10px 14px;cursor:pointer;border-right:2px solid #1a1a3a;
-  white-space:nowrap;transition:all .15s;border-bottom:3px solid transparent;}
-.tab-btn:hover{color:var(--white)}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(255,215,0,.05)}
+#tab-bar{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+  position:relative;z-index:9;padding:10px 16px;
+  background:linear-gradient(180deg,#07071a 0%,#0d0d28 100%);
+  border-bottom:4px solid var(--b1);}
+.tab-btn{
+  font-family:'Press Start 2P',monospace;font-size:clamp(5px,1.2vw,7px);letter-spacing:1px;
+  color:var(--b3);background:var(--b1);
+  border:2px solid var(--b2);border-radius:3px;
+  padding:8px 16px;cursor:pointer;white-space:nowrap;
+  position:relative;transition:transform .08s,box-shadow .08s,background .12s,color .12s;
+  transform:translateY(-3px);
+  box-shadow:0 4px 0 rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);}
+.tab-btn:hover{color:var(--white);background:var(--b2);transform:translateY(-2px);
+  box-shadow:0 3px 0 rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);}
+.tab-btn.active{color:var(--white);background:var(--b2);transform:translateY(0);
+  box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 2px 5px rgba(0,0,0,.35);}
+.tab-btn:active{transform:translateY(0)!important;
+  box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 2px 5px rgba(0,0,0,.35)!important;}
 
 /* ── PAGE + PANELS ── */
 #page{max-width:1100px;margin:0 auto;padding:14px 10px 60px;position:relative;z-index:1}
@@ -492,6 +504,9 @@ body::before{
 .goal-card.grace{border-color:rgba(29,233,182,.3);border-style:dashed}
 .grace-badge{font-size:clamp(4px,.75vw,5px);color:var(--teal);border:1px solid var(--teal);padding:1px 5px;margin-left:6px;letter-spacing:1px;vertical-align:middle}
 .grace-hint{font-size:clamp(4px,.75vw,5px);color:var(--dim);margin-top:4px;letter-spacing:1px}
+/* Goal streak badge */
+.goal-streak{display:inline-flex;align-items:center;gap:3px;font-size:clamp(4px,.75vw,5px);color:var(--gold);border:1px solid rgba(255,215,0,.4);padding:1px 6px;margin-left:6px;vertical-align:middle;letter-spacing:1px}
+.goal-streak.cold{color:var(--dim);border-color:rgba(120,120,160,.3)}
 
 /* Goal type radio */
 .goal-type-row{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap}
@@ -665,7 +680,8 @@ body::before{
 .auth-skip{color:var(--dim);font-size:clamp(4px,.7vw,5px);text-align:center;cursor:pointer;text-decoration:underline;margin-top:4px}
 .auth-skip:hover{color:var(--white)}
 /* ── User info bar in tab strip ── */
-#user-info-bar{display:none;align-items:center;gap:6px;margin-left:auto;padding:0 10px;font-size:clamp(4px,.7vw,5px);color:var(--dim);white-space:nowrap}
+#user-info-bar{display:none;align-items:center;gap:6px;padding:0 10px;font-size:clamp(4px,.7vw,5px);color:var(--dim);white-space:nowrap;
+  position:absolute;right:0;top:50%;transform:translateY(-50%)}
 #user-info-bar.visible{display:flex}
 #user-email-lbl{color:var(--teal);max-width:120px;overflow:hidden;text-overflow:ellipsis}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0}
@@ -1565,6 +1581,9 @@ function checkNewDay(data){
     if(data.lastWeekStart&&newWeekStart>data.lastWeekStart){
       // Snapshot current goal status as previousWeekStatus (reflects last week's performance)
       (data.customGoals||[]).forEach(g=>{
+        if(g.period==='week'){
+          g.streak=(g.status==='onTrack')?(g.streak||0)+1:0;
+        }
         g.previousWeekStatus=g.status||null;
       });
       // Check if any goal was on-track last week (for goalWeekStreak)
@@ -2951,7 +2970,7 @@ const TUTORIALS={
     {e:'🎯',t:'<strong>Custom Quests</strong> let you create project goals with optional time tracking.'},
     {e:'⏱️',t:'<strong>Log hours</strong> on custom quests each day and see your average work rate.'},
     {e:'✅',t:'<strong>Mark quests complete</strong> to earn stat rewards and archive them.'},
-    {e:'📋',t:'<strong>Weekly Goals</strong> on the right track recurring habits — they reset each week.'},
+    {e:'📋',t:'<strong>Personal Goals</strong> on the right track recurring habits — they reset each week or month.'},
   ]},
   charsheet:{title:'🦸 CHARACTER TAB',items:[
     {e:'🎨',t:'<strong>Customize</strong> your character\'s hair, skin, and clothing colors.'},
@@ -2999,6 +3018,11 @@ function getDaysLeftInPeriod(period){
 function calculateGoalProgress(goal,data){
   if(goal.type==='taskFrequency'){
     const ps=getStartOfPeriod(goal.period);
+    // Monthly streak: detect period rollover
+    if(goal.period==='month'&&goal._lastMonthPS&&goal._lastMonthPS<ps){
+      goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
+    }
+    if(goal.period==='month')goal._lastMonthPS=ps;
     let n=0;
     const hist=data.taskHistory||{};
     for(const date in hist){if(date>=ps&&hist[date][goal.taskId])n++;}
@@ -3012,6 +3036,10 @@ function calculateGoalProgress(goal,data){
   } else {
     const ps=getStartOfPeriod(goal.period);
     if(!goal.periodStart||goal.periodStart<ps){
+      // Monthly streak: detect period rollover for statIncrease goals
+      if(goal.periodStart&&goal.period==='month'){
+        goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
+      }
       goal.periodStart=ps;goal.startValue=data.stats[goal.stat]||0;
     }
     const current=data.stats[goal.stat]||0;
@@ -3163,8 +3191,10 @@ function renderGoalsInto(containerId,data){
     const graceBadge=grace?`<span class="grace-badge">🆕 NEW</span>`:'';
     const graceHint=grace?`<div class="grace-hint">Won't affect mood for ${Math.max(1,graceDaysLeft)} more day${graceDaysLeft===1?'':'s'}</div>`:'';
     const daysHint=!grace&&g.status!=='onTrack'?`<div class="grace-hint">${periodDaysLeft} day${periodDaysLeft===1?'':'s'} remaining in period</div>`:'';
+    const streak=g.streak||0;
+    const streakBadge=streak>0?`<span class="goal-streak">🔥 ${streak}</span>`:`<span class="goal-streak cold">— 0</span>`;
     const div=document.createElement('div');div.className='goal-card'+(grace?' grace':'');
-    div.innerHTML=`<div class="goal-desc">🎯 ${desc}${graceBadge}</div>${graceHint}
+    div.innerHTML=`<div class="goal-desc">🎯 ${desc}${graceBadge}${streakBadge}</div>${graceHint}
       <div class="goal-prog-row">
         <div class="goal-bar-outer"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
         <span class="goal-prog-txt">${progTxt}</span>
