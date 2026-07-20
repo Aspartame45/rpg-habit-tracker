@@ -116,7 +116,7 @@ body::before{
 @media(max-width:900px){.grid-daily{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.grid-daily{grid-template-columns:1fr}}
 /* Daily sprite column – larger, centered */
-#daily-sprite-col-large{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0}
+#daily-sprite-col-large{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0;flex:1;min-width:0;overflow:hidden}
 @media(max-width:600px){#daily-sprite-col-large{margin:0 auto;width:fit-content}}
 #daily-sprite-preview-wrap-large{width:128px;height:192px;overflow:hidden;position:relative;
   filter:drop-shadow(0 0 10px rgba(88,101,242,.5));margin:0 auto}
@@ -172,7 +172,8 @@ body::before{
 .task-cb{width:20px;height:20px;min-width:20px;border:3px solid var(--b2);background:#0a0a1a;
   display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;transition:all .15s;}
 .task-item.done .task-cb{background:var(--green);border-color:var(--green2);color:#000;box-shadow:0 0 8px var(--green)}
-.task-label{font-size:clamp(5px,1.2vw,7px);line-height:1.8;color:var(--white)}
+.task-label{font-size:clamp(5px,1.2vw,7px);line-height:1.8;color:var(--white);cursor:pointer}
+.task-label:hover{color:var(--b3);text-decoration:underline}
 .task-meta{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
 .task-stat-pill{font-size:clamp(4px,.9vw,5px);padding:2px 5px;border:2px solid;letter-spacing:1px}
 .task-streak{font-size:clamp(4px,.9vw,5px);color:var(--dim);display:flex;align-items:center;gap:2px}
@@ -507,6 +508,51 @@ body::before{
 /* Goal streak badge */
 .goal-streak{display:inline-flex;align-items:center;gap:3px;font-size:clamp(4px,.75vw,5px);color:var(--gold);border:1px solid rgba(255,215,0,.4);padding:1px 6px;margin-left:6px;vertical-align:middle;letter-spacing:1px}
 .goal-streak.cold{color:var(--dim);border-color:rgba(120,120,160,.3)}
+/* ── STOPWATCH ── */
+.sw-display{
+  font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.5vw,22px);
+  color:var(--green);text-shadow:0 0 10px var(--green),0 0 20px rgba(0,230,118,.4);
+  background:#050f08;border:3px solid #1a3a22;
+  padding:10px 14px;letter-spacing:4px;display:inline-block;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.8),0 0 0 1px #0d2218;
+  position:relative;}
+.sw-display::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px);
+  pointer-events:none;}
+.sw-display.running{color:var(--green);text-shadow:0 0 10px var(--green),0 0 24px rgba(0,230,118,.6)}
+.sw-display.paused{color:var(--orange2);text-shadow:0 0 10px var(--orange2)}
+
+/* ── DAILY GOALS WATCH ── */
+#daily-goals-watch{width:100%;max-width:100%;overflow:hidden;box-sizing:border-box}
+#daily-goals-watch .dgw-title{font-size:clamp(4px,.8vw,5px);color:var(--dim);letter-spacing:2px;text-align:center;margin-bottom:6px;padding-top:4px;border-top:1px solid rgba(88,101,242,.2)}
+.dgw-row{padding:4px 0;border-bottom:1px solid rgba(88,101,242,.12)}
+.dgw-row:last-child{border-bottom:none}
+.dgw-label{display:block;width:100%;font-size:clamp(4px,.75vw,5px);color:var(--white);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dgw-pct{font-size:clamp(4px,.75vw,5px);color:var(--dim);white-space:nowrap;flex-shrink:0}
+.dgw-bar{width:100%;height:4px;background:rgba(255,255,255,.08);margin-top:2px}
+.dgw-bar-inner{height:4px;background:var(--b2);transition:width .4s}
+.dgw-bar-inner.danger{background:var(--red)}
+.dgw-bar-inner.warn{background:var(--orange2)}
+
+/* ── TASK / GOAL STATS MODALS ── */
+.tsk-stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(88,101,242,.15);font-size:clamp(4px,.9vw,5px)}
+.tsk-stat-row:last-child{border-bottom:none}
+.tsk-stat-lbl{color:var(--dim);letter-spacing:1px}
+.tsk-stat-val{color:var(--white);letter-spacing:1px}
+.tsk-chart-wrap{margin:10px 0;overflow-x:auto}
+.tsk-chart{display:flex;align-items:flex-end;gap:2px;height:60px;padding:0 2px}
+.tsk-bar-col{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:18px}
+.tsk-bar{background:var(--b2);width:14px;transition:height .3s;min-height:2px}
+.tsk-bar.full{background:var(--green)}
+.tsk-bar-lbl{font-size:clamp(3px,.6vw,4px);color:var(--dim);letter-spacing:0;text-align:center;white-space:nowrap;margin-top:2px}
+.tsk-chart-toggle{display:flex;gap:6px;margin-bottom:6px}
+.tsk-chart-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.8vw,5px);padding:3px 8px;background:var(--b1);border:1px solid var(--b2);color:var(--b3);cursor:pointer}
+.tsk-chart-toggle button.active{background:var(--b2);color:var(--white)}
+.tsk-section-hd{font-size:clamp(4px,.85vw,5px);color:var(--dim);letter-spacing:2px;margin:10px 0 5px;border-top:1px solid rgba(88,101,242,.2);padding-top:8px}
+.gst-rate-row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.gst-rate-card{flex:1;min-width:80px;background:rgba(88,101,242,.1);border:1px solid var(--b1);padding:8px;text-align:center}
+.gst-rate-num{font-size:clamp(8px,2vw,12px);color:var(--green);text-shadow:0 0 8px var(--green)}
+.gst-rate-lbl{font-size:clamp(4px,.75vw,5px);color:var(--dim);margin-top:4px;letter-spacing:1px}
 
 /* Goal type radio */
 .goal-type-row{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap}
@@ -522,7 +568,7 @@ body::before{
 .wellness-section-hd{font-size:clamp(4px,.85vw,5px);color:var(--dim);letter-spacing:1px;margin:10px 0 5px;border-top:1px solid rgba(88,101,242,.2);padding-top:8px}
 
 /* ── PHASE 5.2: DAILY CHARACTER PANEL ── */
-#daily-char-inner{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+#daily-char-inner{display:flex;justify-content:center;align-items:flex-start;gap:14px;flex-wrap:wrap;width:100%}
 #daily-sprite-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 #daily-sprite-outer{position:relative;padding-top:38px}
 #daily-sprite-preview-wrap{width:64px;height:96px;overflow:hidden;position:relative}
@@ -619,6 +665,7 @@ body::before{
 .modal-overlay.open .modal-box{transform:scale(1)}
 .modal-head{background:var(--b1);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;
   border-bottom:3px solid var(--b2);font-size:clamp(6px,1.3vw,8px);letter-spacing:1px;}
+#modal-customize .modal-head{font-size:clamp(5px,1vw,6px);}
 .modal-close{cursor:pointer;font-size:14px;color:var(--b3);transition:color .15s}.modal-close:hover{color:var(--red)}
 .modal-body{padding:14px 16px}
 .form-row{margin-bottom:12px}
@@ -751,13 +798,19 @@ body::before{
               <div id="daily-class-title-lg">NOVICE ADVENTURER</div>
               <div id="daily-level-lg">TOTAL POINTS: 0</div>
               <!-- buttons -->
-              <div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;justify-content:center">
-                <button class="px-btn sm" onclick="openWellnessReport()">📊 WELLNESS</button>
-                <button class="px-btn sm" onclick="openCustomize()">✎ CUSTOMIZE</button>
-                <button class="px-btn sm" onclick="openManageStats()">⚙ STATS</button>
+              <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px;width:100%;align-items:center">
+                <div style="display:flex;gap:5px;justify-content:center">
+                  <button class="px-btn sm" onclick="openWellnessReport()">📊 WELLNESS</button>
+                  <button class="px-btn sm" onclick="openCustomize()">✎ CUSTOMIZE</button>
+                </div>
+                <div style="display:flex;justify-content:center">
+                  <button class="px-btn sm" onclick="openManageStats()">⚙ STATS</button>
+                </div>
               </div>
               <!-- equipped cosmetics list -->
               <div id="daily-cosmetics-display" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center"></div>
+              <!-- goals needing attention -->
+              <div id="daily-goals-watch" style="margin-top:10px;width:100%"></div>
             </div>
           </div>
         </div>
@@ -847,6 +900,20 @@ body::before{
             <div id="budget-history-list"><div class="empty-state">No history yet.</div></div>
           </div>
         </section>
+
+        <!-- Stopwatch panel -->
+        <section class="panel" style="margin-top:12px">
+          <div class="panel-head"><span>⏱</span> STOPWATCH</div>
+          <div class="panel-body" style="text-align:center;padding:12px 8px">
+            <div id="sw-quest-label" style="font-size:clamp(4px,.8vw,5px);color:var(--b2);letter-spacing:1px;margin-bottom:8px;min-height:1em"></div>
+            <div id="sw-display" class="sw-display">00:00:00</div>
+            <div style="margin-top:10px;display:flex;gap:6px;justify-content:center">
+              <button class="px-btn" id="sw-btn" onclick="swAction()">▶ START</button>
+              <button class="px-btn danger" id="sw-reset-btn" onclick="swReset()" style="display:none">✕ RESET</button>
+            </div>
+            <div id="sw-status" style="font-size:clamp(4px,.75vw,5px);color:var(--dim);margin-top:6px;letter-spacing:1px"></div>
+          </div>
+        </section>
       </div>
       <!-- Right: item grid -->
       <section class="panel">
@@ -864,6 +931,39 @@ body::before{
   </div>
 
 </div><!-- end #page -->
+
+<!-- MODAL: STOPWATCH QUEST SELECT -->
+<div class="modal-overlay" id="modal-sw-select">
+  <div class="modal-box">
+    <div class="modal-head">⏱ START TIMER<span class="modal-close" onclick="closeModal('modal-sw-select')">✕</span></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-label">TRACK TIME TOWARDS QUEST?</div>
+        <select class="form-select" id="sw-quest-select">
+          <option value="">— Unrelated / No Quest —</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="px-btn success" onclick="swConfirmStart()">▶ BEGIN</button>
+        <button class="px-btn" onclick="closeModal('modal-sw-select')">CANCEL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: STOPWATCH STOP CONFIRM -->
+<div class="modal-overlay" id="modal-sw-stop">
+  <div class="modal-box">
+    <div class="modal-head">⏱ STOP TIMER?<span class="modal-close" onclick="swResume()">✕</span></div>
+    <div class="modal-body">
+      <div id="sw-stop-summary" style="font-size:clamp(5px,1vw,6px);color:var(--white);letter-spacing:1px;margin-bottom:14px;line-height:2"></div>
+      <div style="display:flex;gap:8px">
+        <button class="px-btn danger" onclick="swConfirmStop()">■ STOP &amp; SAVE</button>
+        <button class="px-btn" onclick="swResume()">▶ RESUME</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <footer>
   <div id="footer">
@@ -1164,6 +1264,22 @@ body::before{
         <button class="px-btn success" onclick="saveQuest()">SAVE QUEST</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MODAL: TASK STATS -->
+<div class="modal-overlay" id="modal-task-stats">
+  <div class="modal-box wide">
+    <div class="modal-head"><span id="tsk-stats-title">TASK STATS</span><span class="modal-close" onclick="closeModal('modal-task-stats')">✕</span></div>
+    <div class="modal-body" id="tsk-stats-body"></div>
+  </div>
+</div>
+
+<!-- MODAL: GOAL STATS -->
+<div class="modal-overlay" id="modal-goal-stats">
+  <div class="modal-box wide">
+    <div class="modal-head"><span id="gst-title">GOAL STATS</span><span class="modal-close" onclick="closeModal('modal-goal-stats')">✕</span></div>
+    <div class="modal-body" id="gst-body"></div>
   </div>
 </div>
 
@@ -1626,12 +1742,18 @@ function tone(freq,type,dur,vol){
 function playCheck(){tone(523,'square',.12,.09);setTimeout(()=>tone(784,'square',.1,.07),100);}
 function playLU(){[261,329,392,523,659].forEach((f,i)=>setTimeout(()=>tone(f,'square',.25,.09),i*110));}
 function playCoin(){[880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.12,.1),i*55));}
+function playClick(){tone(380,'square',.022,.09);setTimeout(()=>tone(220,'square',.028,.05),16);}
 function toggleSound(){
   soundOn=!soundOn;
   const b=document.getElementById('sound-btn');
   b.textContent=soundOn?'♪':'✕';b.classList.toggle('muted',!soundOn);
   localStorage.setItem('rpg_sound',soundOn?'1':'0');
 }
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('button');
+  if(!btn||btn.id==='sound-btn')return;
+  playClick();
+},true);
 
 // ══════════════════════════════════════════
 //  TABS
@@ -1684,12 +1806,13 @@ function renderTasks(data){
     div.className='task-item'+(done?' done':'');div.id='task-'+t.id;div.setAttribute('data-stat',t.stat);
     div.innerHTML=`<div class="task-cb">${done?'✓':''}</div>
       <div style="flex:1">
-        <div class="task-label">${t.icon||'·'} ${t.name}</div>
+        <div class="task-label" data-tid="${t.id}">${t.icon||'·'} ${t.name}</div>
         <div class="task-meta">
           <span class="task-stat-pill" data-stat="${t.stat}">+${t.points} ${sd?sd.label:t.stat}</span>
           <span class="task-streak">${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span></span>
         </div>
       </div>`;
+    div.querySelector('.task-label').addEventListener('click',e=>{e.stopPropagation();openTaskStats(t.id);});
     div.addEventListener('click',()=>toggleTask(t.id));
     wrap.appendChild(div);
   });
@@ -1970,6 +2093,120 @@ function closeMonth(){
 }
 
 // ══════════════════════════════════════════
+//  STOPWATCH
+// ══════════════════════════════════════════
+let _swState='idle'; // idle | running | paused
+let _swStart=null;   // Date when timer started (or resumed)
+let _swAccum=0;      // accumulated ms before last pause
+let _swQuestId=null; // quest id or null
+let _swInterval=null;
+
+function swElapsed(){return _swAccum+(_swStart?Date.now()-_swStart.getTime():0);}
+
+function swFmtMs(ms){
+  const s=Math.floor(ms/1000);
+  const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function swTick(){
+  const disp=document.getElementById('sw-display');
+  if(disp)disp.textContent=swFmtMs(swElapsed());
+}
+
+function swAction(){
+  if(_swState==='idle'){
+    // open quest select modal
+    const sel=document.getElementById('sw-quest-select');
+    if(sel){
+      const data=load();
+      sel.innerHTML='<option value="">— Unrelated / No Quest —</option>';
+      (data.customQuests||[]).forEach(q=>{
+        const opt=document.createElement('option');
+        opt.value=q.id;opt.textContent=q.name;
+        sel.appendChild(opt);
+      });
+    }
+    openModal('modal-sw-select');
+  } else if(_swState==='running'){
+    // pause and show confirm
+    clearInterval(_swInterval);_swInterval=null;
+    _swAccum=swElapsed();_swStart=null;
+    _swState='paused';
+    const disp=document.getElementById('sw-display');
+    if(disp){disp.classList.remove('running');disp.classList.add('paused');}
+    const btn=document.getElementById('sw-btn');if(btn)btn.textContent='▶ RESUME';
+    const data=load();
+    const q=_swQuestId?(data.customQuests||[]).find(x=>x.id===_swQuestId):null;
+    const hrs=(_swAccum/3600000).toFixed(2);
+    const summary=document.getElementById('sw-stop-summary');
+    if(summary)summary.innerHTML=
+      `TIME ELAPSED: <span style="color:var(--green)">${swFmtMs(_swAccum)}</span><br>`+
+      `HOURS: <span style="color:var(--green)">${hrs}h</span><br>`+
+      (q?`QUEST: <span style="color:var(--b2)">${q.name}</span>`:'NO QUEST SELECTED');
+    openModal('modal-sw-stop');
+  }
+}
+
+function swResume(){
+  closeModal('modal-sw-stop');
+  if(_swState==='paused'){
+    _swStart=new Date();_swState='running';
+    const disp=document.getElementById('sw-display');
+    if(disp){disp.classList.add('running');disp.classList.remove('paused');}
+    const btn=document.getElementById('sw-btn');if(btn)btn.textContent='■ STOP';
+    _swInterval=setInterval(swTick,500);
+  }
+}
+
+function swConfirmStart(){
+  const sel=document.getElementById('sw-quest-select');
+  _swQuestId=sel?sel.value||null:null;
+  closeModal('modal-sw-select');
+  _swAccum=0;_swStart=new Date();_swState='running';
+  const disp=document.getElementById('sw-display');
+  if(disp){disp.textContent='00:00:00';disp.classList.add('running');disp.classList.remove('paused');}
+  const btn=document.getElementById('sw-btn');if(btn)btn.textContent='■ STOP';
+  const rst=document.getElementById('sw-reset-btn');if(rst)rst.style.display='';
+  const data=load();
+  const q=_swQuestId?(data.customQuests||[]).find(x=>x.id===_swQuestId):null;
+  const lbl=document.getElementById('sw-quest-label');
+  if(lbl)lbl.textContent=q?`TRACKING: ${q.name}`:'NO QUEST';
+  const st=document.getElementById('sw-status');if(st)st.textContent='TIMER RUNNING…';
+  clearInterval(_swInterval);
+  _swInterval=setInterval(swTick,500);
+}
+
+function swConfirmStop(){
+  closeModal('modal-sw-stop');
+  clearInterval(_swInterval);_swInterval=null;
+  const hrs=parseFloat((_swAccum/3600000).toFixed(2));
+  if(_swQuestId&&hrs>0){
+    const data=load();
+    const q=(data.customQuests||[]).find(x=>x.id===_swQuestId);
+    if(q){
+      if(!q.dailyLogs)q.dailyLogs={};
+      const today=todayStr();
+      q.dailyLogs[today]=parseFloat(((q.dailyLogs[today]||0)+hrs).toFixed(2));
+      q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
+      save(data);renderQuests(data);
+      spawnFloatCenter(`⏱ +${hrs}h → ${q.name}`);
+    }
+  }
+  swReset();
+}
+
+function swReset(){
+  clearInterval(_swInterval);_swInterval=null;
+  _swState='idle';_swStart=null;_swAccum=0;_swQuestId=null;
+  const disp=document.getElementById('sw-display');
+  if(disp){disp.textContent='00:00:00';disp.classList.remove('running','paused');}
+  const btn=document.getElementById('sw-btn');if(btn)btn.textContent='▶ START';
+  const rst=document.getElementById('sw-reset-btn');if(rst)rst.style.display='none';
+  const lbl=document.getElementById('sw-quest-label');if(lbl)lbl.textContent='';
+  const st=document.getElementById('sw-status');if(st)st.textContent='';
+}
+
 //  INVENTORY ITEMS
 // ══════════════════════════════════════════
 let tooltipItemId=null;
@@ -2105,7 +2342,7 @@ function toggleTask(tid){
     flashTask(tid);playCheck();spriteCheer();
     const newVal=data.stats[task.stat];
     const newTitles=checkTitleUnlocks(data,task.stat,newVal);
-    save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);drawSprite(getTotalStats(data),data.characterCustomization,'layer');updateMoodDisplay(data);
+    save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);drawSprite(getTotalStats(data),data.characterCustomization,'layer');updateMoodDisplay(data);checkAchievements(data);
     if(newVal%10===0||newTitles.length){
       const lines=[];
       if(newVal%10===0)lines.push(`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}!`);
@@ -2136,8 +2373,20 @@ function calcAchievementProgress(q,data){
       return{current:Math.min(ps,q.target),target:q.target,pct:Math.min(100,ps/q.target*100)};
     }
     case'allStatsInDay':{
-      const n=STATS_DEF.filter(s=>(data.statsIncreasedToday||{})[s.key]).length;
-      return{current:n,target:q.target,pct:Math.min(100,n/q.target*100)};
+      // Fast path: check today's live session tracking
+      const todayN=STATS_DEF.filter(s=>(data.statsIncreasedToday||{})[s.key]).length;
+      if(todayN>=q.target)return{current:q.target,target:q.target,pct:100};
+      // History scan: find the best single day across all task logs
+      const hist=data.taskHistory||{};
+      const taskStat={};(data.customTasks||[]).forEach(t=>taskStat[t.id]=t.stat);
+      let bestDay=todayN;
+      for(const date in hist){
+        const statsOnDay=new Set();
+        for(const tid in hist[date]){if(hist[date][tid]&&taskStat[tid])statsOnDay.add(taskStat[tid]);}
+        if(statsOnDay.size>bestDay)bestDay=statsOnDay.size;
+        if(bestDay>=q.target)break;
+      }
+      return{current:Math.min(bestDay,q.target),target:q.target,pct:Math.min(100,bestDay/q.target*100)};
     }
     case'allStatsMin':{
       const n=STATS_DEF.filter(s=>(stats[s.key]||0)>=q.target).length;
@@ -2185,7 +2434,7 @@ function checkAchievements(data){
     changed=true;
     setTimeout(()=>{spawnFloatCenter(`🏆 ACHIEVEMENT: ${q.name}!`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`);playLU();},600);
   });
-  if(changed){save(data);renderStats(data);}
+  if(changed){save(data);renderStats(data);renderAchievements(data);}
   return changed;
 }
 
@@ -2256,7 +2505,7 @@ function renderCustomQuests(data){
     div.innerHTML=`<div class="cquest-name">${q.name}</div>
       ${q.description?`<div class="achv-desc">${q.description}</div>`:''}
       <div class="cquest-meta">
-        <span class="cquest-stat">TOTAL <span>${totalH.toFixed(1)}h</span></span>
+        ${(q.trackTime||totalH>0)?`<span class="cquest-stat">TOTAL <span>${totalH.toFixed(1)}h</span></span>`:''}
         ${q.trackTime?`<span class="cquest-stat">${avgLabel.toUpperCase()} <span>${avg}h</span></span><span class="cquest-stat">DAYS <span>${days}</span></span>`:''}
       </div>
       ${rewardText?`<div class="cquest-reward">On completion: ${rewardText}</div>`:''}
@@ -3194,7 +3443,7 @@ function renderGoalsInto(containerId,data){
     const streak=g.streak||0;
     const streakBadge=streak>0?`<span class="goal-streak">🔥 ${streak}</span>`:`<span class="goal-streak cold">— 0</span>`;
     const div=document.createElement('div');div.className='goal-card'+(grace?' grace':'');
-    div.innerHTML=`<div class="goal-desc">🎯 ${desc}${graceBadge}${streakBadge}</div>${graceHint}
+    div.innerHTML=`<div class="goal-desc" style="cursor:pointer" onclick="openGoalStats('${g.id}')">🎯 ${desc}${graceBadge}${streakBadge}</div>${graceHint}
       <div class="goal-prog-row">
         <div class="goal-bar-outer"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
         <span class="goal-prog-txt">${progTxt}</span>
@@ -3319,6 +3568,217 @@ function renderDailyCharacter(data){
   updateDailyThoughtBubble(data);
   // Cosmetic emoji overlays on the sprite
   updateDailyCosmeticsDisplay(data);
+  // Goals needing attention
+  renderDailyGoalsWatch(data);
+}
+
+// ── Task Stats Modal ──
+function openTaskStats(tid){
+  const data=load();
+  const task=data.customTasks.find(t=>t.id===tid);if(!task)return;
+  document.getElementById('tsk-stats-title').textContent=(task.icon||'·')+' '+task.name;
+  const body=document.getElementById('tsk-stats-body');
+  body.innerHTML='<div style="color:var(--dim);font-size:clamp(4px,.8vw,5px)">Loading…</div>';
+  openModal('modal-task-stats');
+
+  // Build per-week buckets from taskHistory
+  const hist=data.taskHistory||{};
+  const weekMap={};
+  for(const date in hist){
+    if(!hist[date][tid])continue;
+    const d=new Date(date);
+    const dow=d.getDay();
+    const diff=d.getDate()-(dow===0?6:dow-1);
+    const mon=new Date(d);mon.setDate(diff);
+    const wk=`${mon.getFullYear()}-${p(mon.getMonth()+1)}-${p(mon.getDate())}`;
+    weekMap[wk]=(weekMap[wk]||0)+1;
+  }
+  const weeks=Object.keys(weekMap).sort();
+  const counts=weeks.map(w=>weekMap[w]);
+  const totalDone=counts.reduce((s,n)=>s+n,0);
+  const streak=data.streaks[tid]||{current:0,best:0};
+  const firstDate=Object.keys(hist).filter(d=>hist[d][tid]).sort()[0];
+  const totalWeeks=weeks.length;
+  const avgPerWeek=totalWeeks>0?(totalDone/totalWeeks).toFixed(1):'—';
+
+  // Build month buckets for toggle
+  const monthMap={};
+  for(const date in hist){
+    if(!hist[date][tid])continue;
+    const mk=date.slice(0,7);
+    monthMap[mk]=(monthMap[mk]||0)+1;
+  }
+  const months=Object.keys(monthMap).sort();
+  const mCounts=months.map(m=>monthMap[m]);
+  const avgPerMonth=months.length>0?(totalDone/months.length).toFixed(1):'—';
+
+  function buildChart(labels,values,maxVal){
+    const mx=maxVal||Math.max(...values,1);
+    return `<div class="tsk-chart">`+
+      labels.map((lbl,i)=>{
+        const v=values[i];
+        const h=Math.round((v/mx)*52);
+        return`<div class="tsk-bar-col">
+          <div class="tsk-bar${v>=mx?'full':''}" style="height:${Math.max(2,h)}px"></div>
+          <div class="tsk-bar-lbl">${lbl}</div>
+        </div>`;
+      }).join('')+
+    `</div>`;
+  }
+
+  function wkLabel(ws){const d=new Date(ws);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;}
+  function moLabel(ms){const [y,m]=ms.split('-');const names=['J','F','M','A','M','J','J','A','S','O','N','D'];return names[parseInt(m)-1]+(y.slice(2));}
+
+  // Render with weekly view default
+  let view='week';
+  function render(){
+    const [lbls,vals,avg,unit]=view==='week'
+      ?[weeks.map(wkLabel),counts,avgPerWeek,'week']
+      :[months.map(moLabel),mCounts,avgPerMonth,'month'];
+    body.innerHTML=`
+      <div class="tsk-stat-row"><span class="tsk-stat-lbl">TOTAL COMPLETIONS</span><span class="tsk-stat-val">${totalDone}</span></div>
+      <div class="tsk-stat-row"><span class="tsk-stat-lbl">AVG / ${unit.toUpperCase()}</span><span class="tsk-stat-val">${avg}×</span></div>
+      <div class="tsk-stat-row"><span class="tsk-stat-lbl">CURRENT STREAK</span><span class="tsk-stat-val">${streak.current} days</span></div>
+      <div class="tsk-stat-row"><span class="tsk-stat-lbl">BEST STREAK</span><span class="tsk-stat-val">${streak.best} days</span></div>
+      ${firstDate?`<div class="tsk-stat-row"><span class="tsk-stat-lbl">FIRST COMPLETED</span><span class="tsk-stat-val">${fmtDate(firstDate)}</span></div>`:''}
+      <div class="tsk-section-hd">FREQUENCY CHART</div>
+      <div class="tsk-chart-toggle">
+        <button class="${view==='week'?'active':''}" onclick="window._tskView='week';window._tskRender()">WEEKLY</button>
+        <button class="${view==='month'?'active':''}" onclick="window._tskView='month';window._tskRender()">MONTHLY</button>
+      </div>
+      <div class="tsk-chart-wrap">${lbls.length?buildChart(lbls,vals):
+        '<div class="empty-state" style="padding:8px 0">No history yet.</div>'}</div>`;
+  }
+  window._tskRender=()=>{view=window._tskView||'week';render();};
+  render();
+}
+
+// ── Goal Stats Modal ──
+function openGoalStats(gid){
+  const data=load();
+  const goal=(data.customGoals||[]).find(g=>g.id===gid);if(!goal)return;
+  const desc=goalDescription(goal,data);
+  document.getElementById('gst-title').textContent='🎯 '+desc;
+  const body=document.getElementById('gst-body');
+  openModal('modal-goal-stats');
+
+  const hist=data.taskHistory||{};
+  const period=goal.period||'week';
+  const isFreq=goal.type==='taskFrequency';
+  const tid=goal.taskId;
+
+  // Build per-period buckets
+  function getPeriodKey(dateStr){
+    if(period==='week'){
+      const d=new Date(dateStr);const dow=d.getDay();
+      const diff=d.getDate()-(dow===0?6:dow-1);
+      const mon=new Date(d);mon.setDate(diff);
+      return`${mon.getFullYear()}-${p(mon.getMonth()+1)}-${p(mon.getDate())}`;
+    }
+    return dateStr.slice(0,7);
+  }
+
+  // For taskFrequency: count completions per period
+  const periodMap={};
+  if(isFreq){
+    for(const date in hist){
+      if(!hist[date][tid])continue;
+      const pk=getPeriodKey(date);
+      periodMap[pk]=(periodMap[pk]||0)+1;
+    }
+  } else {
+    // statIncrease: approximate by checking stat tasks of that stat key each period
+    const statTasks=(data.customTasks||[]).filter(t=>t.stat===goal.stat);
+    for(const date in hist){
+      const onDay=statTasks.some(t=>hist[date][t.id]);
+      if(!onDay)continue;
+      const pk=getPeriodKey(date);
+      periodMap[pk]=(periodMap[pk]||0)+1;
+    }
+  }
+
+  const periods=Object.keys(periodMap).sort();
+  const counts=periods.map(pk=>periodMap[pk]);
+  const target=isFreq?goal.frequency:goal.targetIncrease;
+  const completedPeriods=counts.filter(c=>c>=target).length;
+  const totalPeriods=periods.length||1;
+  const completionRate=Math.round((completedPeriods/totalPeriods)*100);
+  const avgPerPeriod=totalPeriods>0?(counts.reduce((s,n)=>s+n,0)/totalPeriods).toFixed(1):'—';
+
+  function pLabel(pk){
+    if(period==='week'){const d=new Date(pk);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;}
+    const [y,m]=pk.split('-');const names=['J','F','M','A','M','J','J','A','S','O','N','D'];return names[parseInt(m)-1]+(y.slice(2));
+  }
+
+  const streak=goal.streak||0;
+  const maxVal=Math.max(target,...counts,1);
+  const chartHtml=periods.length
+    ?`<div class="tsk-chart">`+periods.map((pk,i)=>{
+        const v=counts[i];
+        const h=Math.round((v/maxVal)*52);
+        const met=v>=target;
+        return`<div class="tsk-bar-col">
+          <div class="tsk-bar${met?' full':''}" style="height:${Math.max(2,h)}px"></div>
+          <div class="tsk-bar-lbl">${pLabel(pk)}</div>
+        </div>`;
+      }).join('')+
+      `<div class="tsk-bar-col" style="margin-left:4px;border-left:1px dashed rgba(255,255,255,.15);padding-left:4px">
+        <div style="height:${Math.round((target/maxVal)*52)}px;width:14px;border-top:2px dashed var(--gold)"></div>
+        <div class="tsk-bar-lbl" style="color:var(--gold)">goal</div>
+      </div>`+
+      `</div>`
+    :'<div class="empty-state" style="padding:8px 0">No history yet.</div>';
+
+  body.innerHTML=`
+    <div class="gst-rate-row">
+      <div class="gst-rate-card">
+        <div class="gst-rate-num">${completionRate}%</div>
+        <div class="gst-rate-lbl">COMPLETION RATE</div>
+      </div>
+      <div class="gst-rate-card">
+        <div class="gst-rate-num">${avgPerPeriod}×</div>
+        <div class="gst-rate-lbl">AVG / ${period.toUpperCase()}</div>
+      </div>
+      <div class="gst-rate-card">
+        <div class="gst-rate-num">${streak}</div>
+        <div class="gst-rate-lbl">STREAK 🔥</div>
+      </div>
+    </div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">PERIODS COMPLETED</span><span class="tsk-stat-val">${completedPeriods} / ${totalPeriods}</span></div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TARGET / ${period.toUpperCase()}</span><span class="tsk-stat-val">${target}×</span></div>
+    <div class="tsk-section-hd">COMPLETIONS PER ${period.toUpperCase()} <span style="color:var(--gold);font-size:clamp(3px,.6vw,4px)">(gold dashed = target)</span></div>
+    <div class="tsk-chart-wrap">${chartHtml}</div>`;
+}
+
+function renderDailyGoalsWatch(data){
+  const wrap=document.getElementById('daily-goals-watch');
+  if(!wrap)return;
+  const goals=(data.customGoals||[]).filter(g=>g.status!=='completed');
+  if(!goals.length){wrap.innerHTML='';return;}
+  // Use the same calculateGoalProgress used by the Quests tab for accurate data
+  goals.forEach(g=>calculateGoalProgress(g,data));
+  const scored=goals.map(g=>{
+    const max=g.type==='taskFrequency'?g.frequency:g.targetIncrease;
+    const cur=g.currentProgress||0;
+    const pct=max>0?Math.min(100,(cur/max)*100):0;
+    const score=pct+(g.status==='failing'?-20:g.status==='atRisk'?-10:0);
+    return{g,max,cur,pct,score};
+  }).sort((a,b)=>a.score-b.score).slice(0,10);
+
+  wrap.innerHTML=`<div class="dgw-title">⚠ GOALS TO WATCH</div>`+
+    scored.map(({g,cur,max,pct})=>{
+      const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:`+${cur}/+${max}`;
+      const bc=g.status==='onTrack'?'gbar-on':g.status==='atRisk'?'gbar-risk':'gbar-fail';
+      return `<div class="dgw-row">
+        <div style="width:100%">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="dgw-label">🎯 ${goalDescription(g,data)}</span>
+            <span class="dgw-pct">${progTxt}</span>
+          </div>
+          <div class="goal-bar-outer" style="margin-top:3px"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
+        </div>
+      </div>`;
+    }).join('');
 }
 
 function updateDailyThoughtBubble(data){
