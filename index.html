@@ -1667,10 +1667,13 @@ function save(d){localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));_fbSav
 // ══════════════════════════════════════════
 //  NUMBER INPUT HELPER (Phase 5.3)
 // ══════════════════════════════════════════
-function numStep(id,delta,min,max){
+function numStep(id,dir,min,max,step){
   const el=document.getElementById(id);if(!el)return;
-  let v=parseInt(el.value)||0;
-  v=Math.min(max,Math.max(min,v+delta));
+  step=step||1;
+  let v=parseFloat(el.value)||0;
+  v=Math.min(max,Math.max(min,v+dir*step));
+  // snap to step grid and clean float drift
+  v=parseFloat((Math.round(v/step)*step).toFixed(4));
   el.value=v;el.dispatchEvent(new Event('input'));
 }
 
@@ -2510,9 +2513,14 @@ function renderCustomQuests(data){
       </div>
       ${rewardText?`<div class="cquest-reward">On completion: ${rewardText}</div>`:''}
       ${q.trackTime?`<div class="cquest-time-row">
-        <input class="cquest-time-input" type="number" min="0" step="0.5" placeholder="hrs today"
-          value="${todayH||''}" id="qhours-${q.id}" onchange="logQuestHours('${q.id}',this.value)"/>
+        <div class="num-input-wrap">
+          <button class="num-btn minus" onclick="numStep('qhours-${q.id}',-1,0,999,0.25)">−</button>
+          <input class="cquest-time-input" type="number" min="0" step="0.25" placeholder="0"
+            value="${todayH||''}" id="qhours-${q.id}"/>
+          <button class="num-btn plus" onclick="numStep('qhours-${q.id}',+1,0,999,0.25)">+</button>
+        </div>
         <label style="font-size:clamp(4px,.8vw,5px);color:var(--dim)">HRS TODAY</label>
+        <button class="px-btn sm success" onclick="logQuestHours('${q.id}',document.getElementById('qhours-${q.id}').value)">LOG HOURS</button>
       </div>`:''}
       <div class="cquest-actions">
         <button class="px-btn sm success" onclick="completeQuest('${q.id}')">✓ COMPLETE</button>
@@ -2545,7 +2553,8 @@ function logQuestHours(qid,val){
   const h=parseFloat(val)||0;if(!q.dailyLogs)q.dailyLogs={};
   if(h<=0)delete q.dailyLogs[todayStr()];else q.dailyLogs[todayStr()]=h;
   q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
-  save(data);
+  save(data);renderQuests(data);
+  spawnFloatCenter(h>0?`⏱ Logged ${h}h today`:'⏱ Hours cleared');
 }
 
 function completeQuest(qid){
@@ -2605,8 +2614,12 @@ function renderQuestRewardRows(){
     row.innerHTML=`<select class="form-input" style="flex:1" onchange="_questRewardStats[${i}].stat=this.value">
       ${STATS_DEF.map(s=>`<option value="${s.key}"${s.key===r.stat?' selected':''}>${s.fullLabel}</option>`).join('')}
     </select>
-    <input type="number" class="form-input" style="width:60px" min="1" value="${r.val}"
-      onchange="_questRewardStats[${i}].val=parseInt(this.value)||1" placeholder="pts"/>
+    <div class="num-input-wrap" style="flex-shrink:0">
+      <button class="num-btn minus" onclick="numStep('qreward-${i}',-1,1,999)">−</button>
+      <input id="qreward-${i}" type="number" min="1" value="${r.val}" style="width:40px"
+        oninput="_questRewardStats[${i}].val=parseInt(this.value)||1"/>
+      <button class="num-btn plus" onclick="numStep('qreward-${i}',+1,1,999)">+</button>
+    </div>
     <button class="px-btn sm danger" onclick="_questRewardStats.splice(${i},1);renderQuestRewardRows()">✕</button>`;
     wrap.appendChild(row);
   });
