@@ -163,6 +163,58 @@ body::before{
 .num-btn.minus{border-right:2px solid rgba(255,255,255,.12)}
 .num-btn.plus {border-left:2px solid rgba(255,255,255,.12)}
 
+/* ── EMOJI PICKER ── */
+#emoji-picker{position:fixed;z-index:100000;background:#0a0a1a;border:3px solid var(--b1);
+  padding:6px;display:none;width:270px;box-shadow:0 8px 24px rgba(0,0,0,.75)}
+#emoji-picker.open{display:block}
+.emoji-cats{display:flex;gap:2px;margin-bottom:5px;border-bottom:2px solid var(--panel-hi);padding-bottom:4px}
+.emoji-cat-btn{cursor:pointer;font-size:15px;padding:2px 5px;background:transparent;border:1px solid transparent;line-height:1}
+.emoji-cat-btn.active{border-color:var(--b2);background:var(--panel-hi)}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;max-height:150px;overflow-y:auto}
+.emoji-cell{cursor:pointer;font-size:18px;text-align:center;padding:3px 0;line-height:1}
+.emoji-cell:hover{background:var(--panel-hi)}
+
+/* ── LOGBOOK ── */
+#logbook{position:relative;background:linear-gradient(90deg,#2a1d10,#4a3620 6%,#5a4228 50%,#4a3620 94%,#2a1d10);
+  border:4px solid #241810;border-radius:6px;padding:12px;min-height:340px;box-shadow:inset 0 0 26px rgba(0,0,0,.55)}
+#logbook-page{background:#f0e6d2;background-image:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(120,90,50,.14) 21px);
+  border:1px solid #c9b892;padding:14px 12px;min-height:300px;color:#3a2a18;
+  box-shadow:2px 2px 0 rgba(0,0,0,.25);transform-origin:left center;backface-visibility:hidden}
+#logbook-page.flipping{animation:pageflip .45s ease}
+@keyframes pageflip{0%{transform:perspective(900px) rotateY(0);opacity:1}
+  50%{transform:perspective(900px) rotateY(-82deg);opacity:.25}
+  100%{transform:perspective(900px) rotateY(0);opacity:1}}
+#logbook-manage-btn{position:absolute;bottom:10px;right:10px;width:32px;height:32px;border-radius:50%;
+  background:var(--b1);border:2px solid var(--b2);color:#fff;font-size:15px;cursor:pointer;
+  box-shadow:0 3px 0 rgba(0,0,0,.5);z-index:3;display:flex;align-items:center;justify-content:center}
+#logbook-manage-btn:hover{background:var(--b2)}
+.lb-title{font-size:clamp(7px,1.6vw,10px);color:#3a2a18;text-align:center;letter-spacing:2px;margin-bottom:4px;text-shadow:1px 1px 0 rgba(255,255,255,.35)}
+.lb-sub{font-size:clamp(4px,.75vw,5px);color:#6b543a;text-align:center;margin-bottom:12px;letter-spacing:1px}
+.lb-activity{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px dashed rgba(120,90,50,.45);cursor:pointer}
+.lb-activity:hover{background:rgba(120,90,50,.14)}
+.lb-act-icon{font-size:18px;flex-shrink:0;line-height:1}
+.lb-act-name{flex:1;font-size:clamp(5px,1vw,6px);color:#3a2a18;letter-spacing:1px}
+.lb-act-avg{font-size:clamp(4px,.8vw,5px);color:#7a5c30;white-space:nowrap;font-weight:bold}
+.lb-back{cursor:pointer;font-size:clamp(4px,.85vw,5px);color:#7a5c30;letter-spacing:1px;margin-bottom:6px;display:inline-block}
+.lb-back:hover{color:#3a2a18;text-decoration:underline}
+.lb-daterange{display:flex;gap:4px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.lb-daterange input{font-family:'Press Start 2P',monospace;font-size:clamp(3px,.7vw,4px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:3px 4px;outline:none}
+.lb-daterange label{font-size:clamp(3px,.7vw,4px);color:#6b543a;letter-spacing:1px}
+.lb-toggle{display:flex;gap:4px;margin:6px 0;justify-content:center}
+.lb-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.75vw,5px);padding:3px 7px;background:#c9b892;border:1px solid #7a5c30;color:#3a2a18;cursor:pointer}
+.lb-toggle button.active{background:#7a5c30;color:#f0e6d2}
+.lb-chart{display:flex;align-items:flex-end;gap:3px;height:120px;padding:0 2px;overflow-x:auto}
+.lb-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:20px;height:100%}
+.lb-bar-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;width:100%}
+.lb-bar{width:15px;background:#7a5c30;min-height:2px;border-radius:1px 1px 0 0}
+.lb-bar-num{font-size:clamp(3px,.7vw,4px);color:#3a2a18;margin-bottom:2px}
+.lb-bar-lbl{font-size:clamp(3px,.6vw,4px);color:#6b543a;margin-top:3px;white-space:nowrap}
+.lb-input-row{display:flex;gap:8px;align-items:flex-end;justify-content:center;margin-top:12px;flex-wrap:wrap;border-top:1px dashed rgba(120,90,50,.45);padding-top:10px}
+.lb-input-row input{width:46px;font-family:'Press Start 2P',monospace;font-size:clamp(5px,1vw,7px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:5px 4px;text-align:center;outline:none}
+.lb-input-lbl{font-size:clamp(3px,.7vw,4px);color:#6b543a;margin-bottom:3px;text-align:center}
+.lb-submit{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.8vw,5px);background:#2f7a30;border:1px solid #1a5c1a;color:#fff;padding:6px 10px;cursor:pointer}
+.lb-submit:hover{background:#39913a}
+
 /* ── TASKS ── */
 .task-item{display:flex;align-items:flex-start;gap:10px;padding:8px 6px;
   border-bottom:2px solid rgba(88,101,242,.2);cursor:pointer;transition:background .15s;position:relative;overflow:hidden;}
@@ -170,10 +222,10 @@ body::before{
 .task-item:hover{background:rgba(88,101,242,.1)}
 .task-item.done{opacity:.5}.task-item.done .task-label{text-decoration:line-through;color:var(--dim)}
 .task-cb{width:20px;height:20px;min-width:20px;border:3px solid var(--b2);background:#0a0a1a;
-  display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;transition:all .15s;}
+  display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;transition:all .15s;cursor:pointer;}
+.task-cb:hover{border-color:var(--green2);box-shadow:0 0 6px var(--green)}
 .task-item.done .task-cb{background:var(--green);border-color:var(--green2);color:#000;box-shadow:0 0 8px var(--green)}
-.task-label{font-size:clamp(5px,1.2vw,7px);line-height:1.8;color:var(--white);cursor:pointer}
-.task-label:hover{color:var(--b3);text-decoration:underline}
+.task-label{font-size:clamp(5px,1.2vw,7px);line-height:1.8;color:var(--white)}
 .task-meta{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
 .task-stat-pill{font-size:clamp(4px,.9vw,5px);padding:2px 5px;border:2px solid;letter-spacing:1px}
 .task-streak{font-size:clamp(4px,.9vw,5px);color:var(--dim);display:flex;align-items:center;gap:2px}
@@ -540,11 +592,16 @@ body::before{
 .tsk-stat-lbl{color:var(--dim);letter-spacing:1px}
 .tsk-stat-val{color:var(--white);letter-spacing:1px}
 .tsk-chart-wrap{margin:10px 0;overflow-x:auto}
-.tsk-chart{display:flex;align-items:flex-end;gap:2px;height:60px;padding:0 2px}
-.tsk-bar-col{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:18px}
-.tsk-bar{background:var(--b2);width:14px;transition:height .3s;min-height:2px}
+.tsk-chart{display:flex;align-items:flex-end;gap:4px;height:150px;padding:0 2px}
+.tsk-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:22px;height:100%}
+.tsk-bar-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;width:100%}
+.tsk-bar{background:var(--b2);width:16px;transition:height .3s;min-height:2px;border-radius:1px 1px 0 0}
 .tsk-bar.full{background:var(--green)}
-.tsk-bar-lbl{font-size:clamp(3px,.6vw,4px);color:var(--dim);letter-spacing:0;text-align:center;white-space:nowrap;margin-top:2px}
+.tsk-bar-num{font-size:clamp(4px,.85vw,6px);color:var(--white);margin-bottom:2px;letter-spacing:0}
+.tsk-bar-lbl{font-size:clamp(3px,.6vw,4px);color:var(--dim);letter-spacing:0;text-align:center;white-space:nowrap;margin-top:3px}
+.tsk-daterange{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.tsk-daterange input[type=date]{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.8vw,5px);background:#0a0a1a;border:2px solid var(--b1);color:var(--white);padding:4px 6px;outline:none}
+.tsk-daterange label{font-size:clamp(4px,.75vw,5px);color:var(--dim);letter-spacing:1px}
 .tsk-chart-toggle{display:flex;gap:6px;margin-bottom:6px}
 .tsk-chart-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.8vw,5px);padding:3px 8px;background:var(--b1);border:1px solid var(--b2);color:var(--b3);cursor:pointer}
 .tsk-chart-toggle button.active{background:var(--b2);color:var(--white)}
@@ -915,16 +972,18 @@ body::before{
           </div>
         </section>
       </div>
-      <!-- Right: item grid -->
+      <!-- Right: Logbook -->
       <section class="panel">
-        <div class="panel-head"><span>🎒</span> INVENTORY
+        <div class="panel-head"><span>📖</span> LOGBOOK
           <span class="panel-head-right" style="display:flex;gap:4px">
-            <button class="px-btn sm" onclick="openAddItem(null)">+ ADD ITEM</button>
             <button class="px-btn sm" onclick="showTutorial('inventory')" title="Help">?</button>
           </span>
         </div>
         <div class="panel-body">
-          <div class="inv-grid" id="inv-grid"></div>
+          <div id="logbook">
+            <div id="logbook-page"></div>
+            <button id="logbook-manage-btn" title="Manage activities" onclick="openManageActivities()">✏️</button>
+          </div>
         </div>
       </section>
     </div>
@@ -938,14 +997,35 @@ body::before{
     <div class="modal-head">⏱ START TIMER<span class="modal-close" onclick="closeModal('modal-sw-select')">✕</span></div>
     <div class="modal-body">
       <div class="form-row">
-        <div class="form-label">TRACK TIME TOWARDS QUEST?</div>
+        <div class="form-label">TRACK TIME TOWARDS…</div>
         <select class="form-select" id="sw-quest-select">
-          <option value="">— Unrelated / No Quest —</option>
+          <option value="">— Unrelated / No Target —</option>
         </select>
       </div>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button class="px-btn success" onclick="swConfirmStart()">▶ BEGIN</button>
         <button class="px-btn" onclick="closeModal('modal-sw-select')">CANCEL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MANAGE LOGBOOK ACTIVITIES -->
+<div class="modal-overlay" id="modal-manage-activities">
+  <div class="modal-box">
+    <div class="modal-head">📖 MANAGE ACTIVITIES<span class="modal-close" onclick="closeModal('modal-manage-activities')">✕</span></div>
+    <div class="modal-body">
+      <div id="manage-act-list"></div>
+      <div class="tsk-section-hd" id="act-form-hd">ADD ACTIVITY</div>
+      <input type="hidden" id="edit-act-id"/>
+      <div class="form-row"><label class="form-label">NAME</label>
+        <input class="form-input" id="edit-act-name" type="text" maxlength="40" placeholder="e.g. Reading"/></div>
+      <div class="form-row"><label class="form-label">ICON / EMOJI</label>
+        <input class="form-input" id="edit-act-icon" type="text" maxlength="4" placeholder="📖"/>
+        <div class="form-hint">Click the field to pick an emoji</div></div>
+      <div class="form-actions">
+        <button class="px-btn" onclick="resetActForm()">CLEAR</button>
+        <button class="px-btn success" onclick="saveActivity()">SAVE</button>
       </div>
     </div>
   </div>
@@ -984,6 +1064,9 @@ body::before{
     <div id="lu-close" onclick="hideLU()">[ OK ]</div>
   </div>
 </div>
+
+<!-- EMOJI PICKER -->
+<div id="emoji-picker"></div>
 
 <!-- ITEM TOOLTIP -->
 <div id="item-tooltip">
@@ -1569,6 +1652,7 @@ function load(){
     if(!d.budgetTransactions)d.budgetTransactions=[];
     if(!d.budgetHistory)d.budgetHistory=[];
     if(!d.inventory)d.inventory=[];
+    if(!d.logbookActivities)d.logbookActivities=[];
     // Phase 4 fields
     if(!d.characterCustomization)d.characterCustomization={hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'};
     if(!d.taskHistory)d.taskHistory={};
@@ -1657,7 +1741,7 @@ function freshData(){
     gold:0,currentMonth:monthStr(),budgetTransactions:[],budgetHistory:[],inventory:[],
     characterCustomization:{hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'},
     taskHistory:{},statLastIncreased:{},customGoals:[],characterMood:'happy',
-    unlockedCosmetics:[],equippedCosmetics:{headwear:null,accessory:null,weapon:null,outfit:null},
+    unlockedCosmetics:[],equippedCosmetics:{headwear:null,accessory:null,weapon:null,outfit:null},logbookActivities:[],
     activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),appTheme:'blue',equippedTitle:null,
     customQuests:[],completedQuests:[],defaultQuests:{},tutorialsViewed:{},
     lastWeekStart:getStartOfWeek(),completedGoalCount:0,statsIncreasedToday:{},
@@ -1696,6 +1780,78 @@ function numStep(id,dir,min,max,step){
   v=parseFloat((Math.round(v/step)*step).toFixed(4));
   el.value=v;el.dispatchEvent(new Event('input'));
 }
+
+// ══════════════════════════════════════════
+//  CHART / DATE-RANGE HELPERS (stats + logbook)
+// ══════════════════════════════════════════
+function _weekStartKey(dateStr){
+  const d=new Date(dateStr);const dow=d.getDay();
+  const diff=d.getDate()-(dow===0?6:dow-1);
+  const mon=new Date(d);mon.setDate(diff);
+  return`${mon.getFullYear()}-${p(mon.getMonth()+1)}-${p(mon.getDate())}`;
+}
+function _bucketKey(dateStr,gran){
+  if(gran==='day')return dateStr;
+  if(gran==='month')return dateStr.slice(0,7);
+  return _weekStartKey(dateStr);
+}
+// Default range: past 12 months, but not earlier than firstDate (when tracking began)
+function _defaultRange(firstDate){
+  const end=todayStr();
+  const d=new Date();d.setFullYear(d.getFullYear()-1);
+  let start=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  if(firstDate&&firstDate>start)start=firstDate;
+  return{start,end};
+}
+function _bucketLabel(key,gran){
+  if(gran==='month'){const[y,m]=key.split('-');const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return names[parseInt(m)-1]+' '+y.slice(2);}
+  const d=new Date(key);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;
+}
+
+// ══════════════════════════════════════════
+//  EMOJI PICKER
+// ══════════════════════════════════════════
+const EMOJI_CATEGORIES={
+  '⭐':['⭐','✨','🔥','💪','🎯','🏆','⚡','💎','🌟','☀️','🌙','❤️','🧠','👁️','🦾','🔑','🛡️','⚔️','🏅','🎖️','💯','🕐','📌','✅'],
+  '🏃':['🏃','🚴','🏋️','🧘','🤸','⛹️','🏊','🚶','🥊','🤾','🏄','🧗','⛷️','🏂','🛹','🛼','⚽','🏀','🎾','🏐','🏈','🥋','🤺','🏸'],
+  '📚':['📚','📖','✏️','🖊️','📝','💻','⌨️','🖥️','🎓','🔬','🔭','🧪','📐','📊','📈','🗂️','📅','🧮','🗒️','📎','🔖','📔','🗓️','💡'],
+  '🎨':['🎨','🎭','🎬','🎵','🎶','🎸','🎹','🥁','🎤','🎧','🖌️','🖼️','📷','📹','🎮','🕹️','♟️','🎲','🧩','🪄','🎯','🎺','🎻','🪕'],
+  '🍎':['🍎','🥗','🥦','🍳','🥑','🍵','☕','💧','🥤','🍚','🍜','🥩','🐟','🧊','🛌','😴','🚿','🪥','🧴','💊','🍌','🥕','🫐','🥛'],
+  '🌿':['🌿','🌱','🌳','🪴','🐕','🐈','🧹','🧺','🔨','🪛','🧰','💰','🕯️','🛒','🧾','📦','🗝️','🎸','🧶','🪵','🌻','🍀','🐢','🦜'],
+};
+let _emojiTargetInput=null;
+function attachEmojiPicker(inputId){
+  const el=document.getElementById(inputId);if(!el||el._emojiWired)return;
+  el._emojiWired=true;
+  el.addEventListener('focus',()=>openEmojiPicker(el));
+  el.addEventListener('click',e=>{e.stopPropagation();openEmojiPicker(el);});
+}
+function openEmojiPicker(inputEl){
+  _emojiTargetInput=inputEl;
+  buildEmojiPicker(Object.keys(EMOJI_CATEGORIES)[0]);
+  const pick=document.getElementById('emoji-picker');
+  const r=inputEl.getBoundingClientRect();
+  let left=r.left,top=r.bottom+4;
+  if(left+270>window.innerWidth)left=window.innerWidth-278;
+  if(top+200>window.innerHeight)top=Math.max(4,r.top-200);
+  pick.style.left=Math.max(4,left)+'px';pick.style.top=top+'px';
+  pick.classList.add('open');
+}
+function buildEmojiPicker(cat){
+  const pick=document.getElementById('emoji-picker');
+  const cats=Object.keys(EMOJI_CATEGORIES);
+  pick.innerHTML=`<div class="emoji-cats">${cats.map(c=>`<button class="emoji-cat-btn${c===cat?' active':''}" onclick="event.stopPropagation();buildEmojiPicker('${c}')">${c}</button>`).join('')}</div>`+
+    `<div class="emoji-grid">${EMOJI_CATEGORIES[cat].map(e=>`<div class="emoji-cell" onclick="event.stopPropagation();pickEmoji('${e}')">${e}</div>`).join('')}</div>`;
+}
+function pickEmoji(e){
+  if(_emojiTargetInput){_emojiTargetInput.value=e;_emojiTargetInput.dispatchEvent(new Event('input'));}
+  closeEmojiPicker();
+}
+function closeEmojiPicker(){const p=document.getElementById('emoji-picker');if(p)p.classList.remove('open');}
+document.addEventListener('click',e=>{
+  const pick=document.getElementById('emoji-picker');
+  if(pick&&pick.classList.contains('open')&&!pick.contains(e.target)&&e.target!==_emojiTargetInput)closeEmojiPicker();
+});
 
 // ══════════════════════════════════════════
 //  DATE HELPERS
@@ -1835,8 +1991,8 @@ function renderTasks(data){
           <span class="task-streak">${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span></span>
         </div>
       </div>`;
-    div.querySelector('.task-label').addEventListener('click',e=>{e.stopPropagation();openTaskStats(t.id);});
-    div.addEventListener('click',()=>toggleTask(t.id));
+    div.querySelector('.task-cb').addEventListener('click',e=>{e.stopPropagation();toggleTask(t.id);});
+    div.addEventListener('click',()=>openTaskStats(t.id));
     wrap.appendChild(div);
   });
 }
@@ -1976,8 +2132,164 @@ function renderInventoryTab(data){
     });
   }
 
-  // Inventory grid
-  renderInventoryGrid(data);
+  // Logbook
+  renderLogbook();
+}
+
+// ══════════════════════════════════════════
+//  LOGBOOK
+// ══════════════════════════════════════════
+window._lbView='index';   // 'index' or an activity id
+window._lb={};            // {actId,start,end,gran}
+
+function _lbFirstDate(a){const ks=Object.keys(a.dailyLogs||{}).sort();return ks[0]||a.createdDate||todayStr();}
+function _lbAvgPerWeek(a){
+  const range=_defaultRange(_lbFirstDate(a));
+  let total=0;
+  for(const d in(a.dailyLogs||{})){if(d>=range.start&&d<=range.end)total+=Number(a.dailyLogs[d])||0;}
+  const weeks=Math.max(1,Math.round((new Date(range.end)-new Date(range.start))/(7*86400000)));
+  return(total/weeks).toFixed(1);
+}
+
+function renderLogbook(){
+  const page=document.getElementById('logbook-page');if(!page)return;
+  if(window._lbView==='index')renderLogbookIndex();
+  else renderLogbookActivity(window._lbView);
+}
+
+function renderLogbookIndex(){
+  const data=load();
+  const page=document.getElementById('logbook-page');if(!page)return;
+  const acts=data.logbookActivities||[];
+  let html=`<div class="lb-title">✦ LOGBOOK ✦</div><div class="lb-sub">AVG HOURS / WEEK · PAST 12 MONTHS</div>`;
+  if(!acts.length){
+    html+=`<div style="text-align:center;color:#6b543a;font-size:clamp(4px,.9vw,5px);padding:26px 12px;line-height:2.2">No activities tracked yet.<br>Tap the ✏️ button<br>to add one.</div>`;
+  } else {
+    html+=acts.map(a=>`<div class="lb-activity" onclick="lbOpenActivity('${a.id}')">
+      <span class="lb-act-icon">${a.icon||'📓'}</span>
+      <span class="lb-act-name">${a.name}</span>
+      <span class="lb-act-avg">${_lbAvgPerWeek(a)}h/wk</span>
+    </div>`).join('');
+  }
+  page.innerHTML=html;
+}
+
+function lbFlip(renderFn){
+  const page=document.getElementById('logbook-page');
+  if(!page){renderFn();return;}
+  page.classList.remove('flipping');void page.offsetWidth;
+  page.classList.add('flipping');
+  setTimeout(renderFn,215);
+  setTimeout(()=>page.classList.remove('flipping'),460);
+}
+
+function lbOpenActivity(actId){
+  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
+  const range=_defaultRange(_lbFirstDate(a));
+  window._lb={actId,start:range.start,end:range.end,gran:'week'};
+  window._lbView=actId;
+  lbFlip(()=>renderLogbookActivity(actId));
+}
+function lbBackToIndex(){window._lbView='index';window._lb={};lbFlip(renderLogbookIndex);}
+
+function renderLogbookActivity(actId){
+  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);
+  const page=document.getElementById('logbook-page');if(!page)return;
+  if(!a){window._lbView='index';renderLogbookIndex();return;}
+  const st=window._lb;
+  const logs=a.dailyLogs||{};
+  const inRange=d=>d>=st.start&&d<=st.end;
+  const bucket={};let total=0;
+  for(const d in logs){if(!inRange(d))continue;const h=Number(logs[d])||0;if(h<=0)continue;const k=_bucketKey(d,st.gran);bucket[k]=(bucket[k]||0)+h;total+=h;}
+  const keys=Object.keys(bucket).sort();
+  const vals=keys.map(k=>bucket[k]);
+  const mx=Math.max(...vals,0.1);
+  const nBuckets=keys.length||1;
+  const avg=(total/nBuckets).toFixed(1);
+  const chart=keys.length
+    ?`<div class="lb-chart">`+keys.map((k,i)=>{
+        const v=vals[i];const h=Math.round((v/mx)*95);
+        return`<div class="lb-bar-col"><div class="lb-bar-wrap"><div class="lb-bar-num">${v.toFixed(1)}</div><div class="lb-bar" style="height:${Math.max(3,h)}px"></div></div><div class="lb-bar-lbl">${_bucketLabel(k,st.gran)}</div></div>`;
+      }).join('')+`</div>`
+    :'<div style="text-align:center;color:#6b543a;font-size:clamp(4px,.85vw,5px);padding:16px 0">No hours logged in this range.</div>';
+  const todayH=Number(logs[todayStr()]||0);
+  page.innerHTML=`
+    <span class="lb-back" onclick="lbBackToIndex()">← BACK</span>
+    <div class="lb-title" style="margin-top:2px">${a.icon||'📓'} ${a.name}</div>
+    <div class="lb-daterange">
+      <label>FROM</label><input type="date" value="${st.start}" onchange="window._lb.start=this.value;renderLogbookActivity('${actId}')"/>
+      <label>TO</label><input type="date" value="${st.end}" onchange="window._lb.end=this.value;renderLogbookActivity('${actId}')"/>
+    </div>
+    <div style="text-align:center;font-size:clamp(4px,.85vw,5px);color:#3a2a18;margin-bottom:4px">TOTAL <b>${total.toFixed(1)}h</b> · AVG <b>${avg}h/${st.gran}</b></div>
+    <div class="lb-toggle">
+      <button class="${st.gran==='day'?'active':''}" onclick="window._lb.gran='day';renderLogbookActivity('${actId}')">DAY</button>
+      <button class="${st.gran==='week'?'active':''}" onclick="window._lb.gran='week';renderLogbookActivity('${actId}')">WEEK</button>
+      <button class="${st.gran==='month'?'active':''}" onclick="window._lb.gran='month';renderLogbookActivity('${actId}')">MONTH</button>
+    </div>
+    ${chart}
+    <div class="lb-input-row">
+      <div><div class="lb-input-lbl">HOURS</div><input type="number" min="0" id="lb-in-h" placeholder="0"/></div>
+      <div><div class="lb-input-lbl">MINUTES</div><input type="number" min="0" max="59" id="lb-in-m" placeholder="0"/></div>
+      <button class="lb-submit" onclick="lbSubmitTime('${actId}')">+ ADD TODAY</button>
+    </div>
+    <div style="text-align:center;font-size:clamp(3px,.7vw,4px);color:#6b543a;margin-top:6px">Logged today: ${todayH.toFixed(2)}h</div>`;
+}
+
+function lbSubmitTime(actId){
+  const h=parseFloat(document.getElementById('lb-in-h').value)||0;
+  const m=parseFloat(document.getElementById('lb-in-m').value)||0;
+  const add=h+m/60;
+  if(add<=0){spawnFloatCenter('Enter hours or minutes');return;}
+  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
+  if(!a.dailyLogs)a.dailyLogs={};
+  const today=todayStr();
+  a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+add).toFixed(3));
+  save(data);
+  spawnFloatCenter(`📖 +${add.toFixed(2)}h → ${a.name}`);
+  renderLogbookActivity(actId);
+}
+
+// ── Manage activities ──
+function openManageActivities(){resetActForm();renderManageActList();openModal('modal-manage-activities');}
+function renderManageActList(){
+  const data=load();const wrap=document.getElementById('manage-act-list');if(!wrap)return;
+  const acts=data.logbookActivities||[];
+  if(!acts.length){wrap.innerHTML='<div class="empty-state" style="padding:6px 0">No activities yet.</div>';return;}
+  wrap.innerHTML=acts.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(88,101,242,.15)">
+    <span style="font-size:16px">${a.icon||'📓'}</span>
+    <span style="flex:1;font-size:clamp(5px,1vw,6px)">${a.name}</span>
+    <button class="px-btn sm" onclick="editActivity('${a.id}')">EDIT</button>
+    <button class="px-btn sm danger" onclick="deleteActivity('${a.id}')">✕</button>
+  </div>`).join('');
+}
+function resetActForm(){
+  document.getElementById('edit-act-id').value='';
+  document.getElementById('edit-act-name').value='';
+  document.getElementById('edit-act-icon').value='';
+  document.getElementById('act-form-hd').textContent='ADD ACTIVITY';
+}
+function editActivity(id){
+  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===id);if(!a)return;
+  document.getElementById('edit-act-id').value=a.id;
+  document.getElementById('edit-act-name').value=a.name;
+  document.getElementById('edit-act-icon').value=a.icon||'';
+  document.getElementById('act-form-hd').textContent='EDIT ACTIVITY';
+}
+function saveActivity(){
+  const name=document.getElementById('edit-act-name').value.trim();if(!name){alert('Name required.');return;}
+  const icon=document.getElementById('edit-act-icon').value.trim()||'📓';
+  const id=document.getElementById('edit-act-id').value;
+  const data=load();if(!data.logbookActivities)data.logbookActivities=[];
+  if(id){const a=data.logbookActivities.find(x=>x.id===id);if(a){a.name=name;a.icon=icon;}}
+  else{data.logbookActivities.push({id:'act-'+Date.now(),name,icon,dailyLogs:{},createdDate:todayStr()});}
+  save(data);renderManageActList();resetActForm();renderLogbook();
+}
+function deleteActivity(id){
+  if(!confirm('Delete this activity? All logged hours will be lost.'))return;
+  const data=load();data.logbookActivities=(data.logbookActivities||[]).filter(x=>x.id!==id);
+  save(data);renderManageActList();
+  if(window._lbView===id)window._lbView='index';
+  renderLogbook();
 }
 
 function renderInventoryGrid(data){
@@ -2121,8 +2433,17 @@ function closeMonth(){
 let _swState='idle'; // idle | running | paused
 let _swStart=null;   // Date when timer started (or resumed)
 let _swAccum=0;      // accumulated ms before last pause
-let _swQuestId=null; // quest id or null
+let _swTarget=null;  // '' / null, or 'quest:<id>' / 'act:<id>'
 let _swInterval=null;
+
+// Resolve a stopwatch target string to a display name, or null.
+function _swTargetName(data){
+  if(!_swTarget)return null;
+  const [kind,tid]=_swTarget.split(':');
+  if(kind==='quest'){const q=(data.customQuests||[]).find(x=>x.id===tid);return q?q.name:null;}
+  if(kind==='act'){const a=(data.logbookActivities||[]).find(x=>x.id===tid);return a?a.name:null;}
+  return null;
+}
 
 function swElapsed(){return _swAccum+(_swStart?Date.now()-_swStart.getTime():0);}
 
@@ -2139,16 +2460,23 @@ function swTick(){
 
 function swAction(){
   if(_swState==='idle'){
-    // open quest select modal
+    // open target select modal (quests + logbook activities)
     const sel=document.getElementById('sw-quest-select');
     if(sel){
       const data=load();
-      sel.innerHTML='<option value="">— Unrelated / No Quest —</option>';
-      (data.customQuests||[]).forEach(q=>{
-        const opt=document.createElement('option');
-        opt.value=q.id;opt.textContent=q.name;
-        sel.appendChild(opt);
-      });
+      sel.innerHTML='<option value="">— Unrelated / No Target —</option>';
+      const quests=data.customQuests||[];
+      if(quests.length){
+        const g=document.createElement('optgroup');g.label='QUESTS';
+        quests.forEach(q=>{const o=document.createElement('option');o.value='quest:'+q.id;o.textContent=q.name;g.appendChild(o);});
+        sel.appendChild(g);
+      }
+      const acts=data.logbookActivities||[];
+      if(acts.length){
+        const g=document.createElement('optgroup');g.label='ACTIVITIES';
+        acts.forEach(a=>{const o=document.createElement('option');o.value='act:'+a.id;o.textContent=a.name;g.appendChild(o);});
+        sel.appendChild(g);
+      }
     }
     openModal('modal-sw-select');
   } else if(_swState==='running'){
@@ -2160,13 +2488,13 @@ function swAction(){
     if(disp){disp.classList.remove('running');disp.classList.add('paused');}
     const btn=document.getElementById('sw-btn');if(btn)btn.textContent='▶ RESUME';
     const data=load();
-    const q=_swQuestId?(data.customQuests||[]).find(x=>x.id===_swQuestId):null;
+    const tName=_swTargetName(data);
     const hrs=(_swAccum/3600000).toFixed(2);
     const summary=document.getElementById('sw-stop-summary');
     if(summary)summary.innerHTML=
       `TIME ELAPSED: <span style="color:var(--green)">${swFmtMs(_swAccum)}</span><br>`+
       `HOURS: <span style="color:var(--green)">${hrs}h</span><br>`+
-      (q?`QUEST: <span style="color:var(--b2)">${q.name}</span>`:'NO QUEST SELECTED');
+      (tName?`TARGET: <span style="color:var(--b2)">${tName}</span>`:'NO TARGET SELECTED');
     openModal('modal-sw-stop');
   }
 }
@@ -2184,7 +2512,7 @@ function swResume(){
 
 function swConfirmStart(){
   const sel=document.getElementById('sw-quest-select');
-  _swQuestId=sel?sel.value||null:null;
+  _swTarget=sel?sel.value||null:null;
   closeModal('modal-sw-select');
   _swAccum=0;_swStart=new Date();_swState='running';
   const disp=document.getElementById('sw-display');
@@ -2192,9 +2520,9 @@ function swConfirmStart(){
   const btn=document.getElementById('sw-btn');if(btn)btn.textContent='■ STOP';
   const rst=document.getElementById('sw-reset-btn');if(rst)rst.style.display='';
   const data=load();
-  const q=_swQuestId?(data.customQuests||[]).find(x=>x.id===_swQuestId):null;
+  const tName=_swTargetName(data);
   const lbl=document.getElementById('sw-quest-label');
-  if(lbl)lbl.textContent=q?`TRACKING: ${q.name}`:'NO QUEST';
+  if(lbl)lbl.textContent=tName?`TRACKING: ${tName}`:'NO TARGET';
   const st=document.getElementById('sw-status');if(st)st.textContent='TIMER RUNNING…';
   clearInterval(_swInterval);
   _swInterval=setInterval(swTick,500);
@@ -2204,16 +2532,27 @@ function swConfirmStop(){
   closeModal('modal-sw-stop');
   clearInterval(_swInterval);_swInterval=null;
   const hrs=parseFloat((_swAccum/3600000).toFixed(2));
-  if(_swQuestId&&hrs>0){
+  if(_swTarget&&hrs>0){
     const data=load();
-    const q=(data.customQuests||[]).find(x=>x.id===_swQuestId);
-    if(q){
-      if(!q.dailyLogs)q.dailyLogs={};
-      const today=todayStr();
-      q.dailyLogs[today]=parseFloat(((q.dailyLogs[today]||0)+hrs).toFixed(2));
-      q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
-      save(data);renderQuests(data);
-      spawnFloatCenter(`⏱ +${hrs}h → ${q.name}`);
+    const [kind,tid]=_swTarget.split(':');
+    const today=todayStr();
+    if(kind==='quest'){
+      const q=(data.customQuests||[]).find(x=>x.id===tid);
+      if(q){
+        if(!q.dailyLogs)q.dailyLogs={};
+        q.dailyLogs[today]=parseFloat(((q.dailyLogs[today]||0)+hrs).toFixed(2));
+        q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
+        save(data);renderQuests(data);
+        spawnFloatCenter(`⏱ +${hrs}h → ${q.name}`);
+      }
+    } else if(kind==='act'){
+      const a=(data.logbookActivities||[]).find(x=>x.id===tid);
+      if(a){
+        if(!a.dailyLogs)a.dailyLogs={};
+        a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+hrs).toFixed(3));
+        save(data);renderLogbook();
+        spawnFloatCenter(`📖 +${hrs}h → ${a.name}`);
+      }
     }
   }
   swReset();
@@ -2221,7 +2560,7 @@ function swConfirmStop(){
 
 function swReset(){
   clearInterval(_swInterval);_swInterval=null;
-  _swState='idle';_swStart=null;_swAccum=0;_swQuestId=null;
+  _swState='idle';_swStart=null;_swAccum=0;_swTarget=null;
   const disp=document.getElementById('sw-display');
   if(disp){disp.textContent='00:00:00';disp.classList.remove('running','paused');}
   const btn=document.getElementById('sw-btn');if(btn)btn.textContent='▶ START';
@@ -3264,8 +3603,9 @@ const TUTORIALS={
   inventory:{title:'🎒 INVENTORY TAB',items:[
     {e:'💰',t:'<strong>Gold</strong> is earned from monthly budget surplus when you close a budget month.'},
     {e:'📊',t:'<strong>Budget Tracker</strong> — log income and expenses, then close the month to earn gold.'},
-    {e:'🗡️',t:'<strong>Items</strong> represent real-world acquisitions (gear, books, gadgets) that grant stat bonuses.'},
-    {e:'📦',t:'<strong>Add items</strong> with a stat bonus to boost your character sheet permanently.'},
+    {e:'⏱',t:'<strong>Stopwatch</strong> — time a session and log it towards a Quest or a Logbook activity.'},
+    {e:'📖',t:'<strong>Logbook</strong> tracks hours spent on activities (reading, meditating…). Tap ✏️ to manage them.'},
+    {e:'📓',t:'<strong>Tap an activity</strong> to see its hours chart, filter by date, and log time manually.'},
   ]},
 };
 const MOOD_LABELS={happy:'HAPPY',neutral:'NEUTRAL',concerned:'CONCERNED',sad:'SAD',critical:'CRITICAL'};
@@ -3610,80 +3950,55 @@ function openTaskStats(tid){
   const data=load();
   const task=data.customTasks.find(t=>t.id===tid);if(!task)return;
   document.getElementById('tsk-stats-title').textContent=(task.icon||'·')+' '+task.name;
-  const body=document.getElementById('tsk-stats-body');
-  body.innerHTML='<div style="color:var(--dim);font-size:clamp(4px,.8vw,5px)">Loading…</div>';
-  openModal('modal-task-stats');
-
-  // Build per-week buckets from taskHistory
   const hist=data.taskHistory||{};
-  const weekMap={};
-  for(const date in hist){
-    if(!hist[date][tid])continue;
-    const d=new Date(date);
-    const dow=d.getDay();
-    const diff=d.getDate()-(dow===0?6:dow-1);
-    const mon=new Date(d);mon.setDate(diff);
-    const wk=`${mon.getFullYear()}-${p(mon.getMonth()+1)}-${p(mon.getDate())}`;
-    weekMap[wk]=(weekMap[wk]||0)+1;
-  }
-  const weeks=Object.keys(weekMap).sort();
-  const counts=weeks.map(w=>weekMap[w]);
-  const totalDone=counts.reduce((s,n)=>s+n,0);
-  const streak=data.streaks[tid]||{current:0,best:0};
-  const firstDate=Object.keys(hist).filter(d=>hist[d][tid]).sort()[0];
-  const totalWeeks=weeks.length;
-  const avgPerWeek=totalWeeks>0?(totalDone/totalWeeks).toFixed(1):'—';
+  const firstDate=Object.keys(hist).filter(d=>hist[d][tid]).sort()[0]||todayStr();
+  const range=_defaultRange(firstDate);
+  window._tsk={tid,start:range.start,end:range.end,view:'week'};
+  openModal('modal-task-stats');
+  _tskRender();
+}
 
-  // Build month buckets for toggle
-  const monthMap={};
-  for(const date in hist){
-    if(!hist[date][tid])continue;
-    const mk=date.slice(0,7);
-    monthMap[mk]=(monthMap[mk]||0)+1;
-  }
-  const months=Object.keys(monthMap).sort();
-  const mCounts=months.map(m=>monthMap[m]);
-  const avgPerMonth=months.length>0?(totalDone/months.length).toFixed(1):'—';
-
-  function buildChart(labels,values,maxVal){
-    const mx=maxVal||Math.max(...values,1);
-    return `<div class="tsk-chart">`+
-      labels.map((lbl,i)=>{
-        const v=values[i];
-        const h=Math.round((v/mx)*52);
-        return`<div class="tsk-bar-col">
-          <div class="tsk-bar${v>=mx?'full':''}" style="height:${Math.max(2,h)}px"></div>
-          <div class="tsk-bar-lbl">${lbl}</div>
-        </div>`;
-      }).join('')+
-    `</div>`;
-  }
-
-  function wkLabel(ws){const d=new Date(ws);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;}
-  function moLabel(ms){const [y,m]=ms.split('-');const names=['J','F','M','A','M','J','J','A','S','O','N','D'];return names[parseInt(m)-1]+(y.slice(2));}
-
-  // Render with weekly view default
-  let view='week';
-  function render(){
-    const [lbls,vals,avg,unit]=view==='week'
-      ?[weeks.map(wkLabel),counts,avgPerWeek,'week']
-      :[months.map(moLabel),mCounts,avgPerMonth,'month'];
-    body.innerHTML=`
-      <div class="tsk-stat-row"><span class="tsk-stat-lbl">TOTAL COMPLETIONS</span><span class="tsk-stat-val">${totalDone}</span></div>
-      <div class="tsk-stat-row"><span class="tsk-stat-lbl">AVG / ${unit.toUpperCase()}</span><span class="tsk-stat-val">${avg}×</span></div>
-      <div class="tsk-stat-row"><span class="tsk-stat-lbl">CURRENT STREAK</span><span class="tsk-stat-val">${streak.current} days</span></div>
-      <div class="tsk-stat-row"><span class="tsk-stat-lbl">BEST STREAK</span><span class="tsk-stat-val">${streak.best} days</span></div>
-      ${firstDate?`<div class="tsk-stat-row"><span class="tsk-stat-lbl">FIRST COMPLETED</span><span class="tsk-stat-val">${fmtDate(firstDate)}</span></div>`:''}
-      <div class="tsk-section-hd">FREQUENCY CHART</div>
-      <div class="tsk-chart-toggle">
-        <button class="${view==='week'?'active':''}" onclick="window._tskView='week';window._tskRender()">WEEKLY</button>
-        <button class="${view==='month'?'active':''}" onclick="window._tskView='month';window._tskRender()">MONTHLY</button>
-      </div>
-      <div class="tsk-chart-wrap">${lbls.length?buildChart(lbls,vals):
-        '<div class="empty-state" style="padding:8px 0">No history yet.</div>'}</div>`;
-  }
-  window._tskRender=()=>{view=window._tskView||'week';render();};
-  render();
+function _tskRender(){
+  const st=window._tsk;if(!st)return;
+  const data=load();
+  const task=data.customTasks.find(t=>t.id===st.tid);if(!task)return;
+  const hist=data.taskHistory||{};
+  const inRange=d=>d>=st.start&&d<=st.end;
+  const dates=Object.keys(hist).filter(d=>hist[d]&&hist[d][st.tid]&&inRange(d)).sort();
+  const totalDone=dates.length;
+  const gran=st.view; // 'week' | 'month'
+  const bucket={};
+  dates.forEach(d=>{const k=_bucketKey(d,gran);bucket[k]=(bucket[k]||0)+1;});
+  const keys=Object.keys(bucket).sort();
+  const counts=keys.map(k=>bucket[k]);
+  const nBuckets=keys.length;
+  const avg=nBuckets>0?(totalDone/nBuckets).toFixed(1):'0.0';
+  const streak=data.streaks[st.tid]||{current:0,best:0};
+  const firstDate=Object.keys(hist).filter(d=>hist[d]&&hist[d][st.tid]).sort()[0];
+  const mx=Math.max(...counts,1);
+  const chart=keys.length
+    ?`<div class="tsk-chart">`+keys.map((k,i)=>{
+        const v=counts[i];const h=Math.round((v/mx)*120);
+        return`<div class="tsk-bar-col"><div class="tsk-bar-wrap"><div class="tsk-bar-num">${v}</div><div class="tsk-bar${v>=mx?' full':''}" style="height:${Math.max(3,h)}px"></div></div><div class="tsk-bar-lbl">${_bucketLabel(k,gran)}</div></div>`;
+      }).join('')+`</div>`
+    :'<div class="empty-state" style="padding:8px 0">No completions in this range.</div>';
+  const body=document.getElementById('tsk-stats-body');
+  body.innerHTML=`
+    <div class="tsk-daterange">
+      <label>FROM</label><input type="date" value="${st.start}" onchange="window._tsk.start=this.value;_tskRender()"/>
+      <label>TO</label><input type="date" value="${st.end}" onchange="window._tsk.end=this.value;_tskRender()"/>
+    </div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TOTAL COMPLETIONS</span><span class="tsk-stat-val">${totalDone}</span></div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">AVG / ${gran.toUpperCase()}</span><span class="tsk-stat-val">${avg}×</span></div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">CURRENT STREAK</span><span class="tsk-stat-val">${streak.current} days</span></div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">BEST STREAK</span><span class="tsk-stat-val">${streak.best} days</span></div>
+    ${firstDate?`<div class="tsk-stat-row"><span class="tsk-stat-lbl">FIRST COMPLETED</span><span class="tsk-stat-val">${fmtDate(firstDate)}</span></div>`:''}
+    <div class="tsk-section-hd">FREQUENCY CHART</div>
+    <div class="tsk-chart-toggle">
+      <button class="${gran==='week'?'active':''}" onclick="window._tsk.view='week';_tskRender()">WEEKLY</button>
+      <button class="${gran==='month'?'active':''}" onclick="window._tsk.view='month';_tskRender()">MONTHLY</button>
+    </div>
+    <div class="tsk-chart-wrap">${chart}</div>`;
 }
 
 // ── Goal Stats Modal ──
@@ -4033,6 +4348,10 @@ function init(){
   updateYesterdayReminder(data);
   updateMoodDisplay(data); // also calls renderDailyCharacter
   renderGoals(data);
+
+  // Emoji pickers on icon fields
+  attachEmojiPicker('edit-task-icon');
+  attachEmojiPicker('edit-act-icon');
 
   if(!localStorage.getItem('hasVisitedBefore')){
     openModal('modal-welcome');
