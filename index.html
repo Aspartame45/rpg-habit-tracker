@@ -188,32 +188,35 @@ body::before{
   background:var(--b1);border:2px solid var(--b2);color:#fff;font-size:15px;cursor:pointer;
   box-shadow:0 3px 0 rgba(0,0,0,.5);z-index:3;display:flex;align-items:center;justify-content:center}
 #logbook-manage-btn:hover{background:var(--b2)}
-.lb-title{font-size:clamp(7px,1.6vw,10px);color:#3a2a18;text-align:center;letter-spacing:2px;margin-bottom:4px;text-shadow:1px 1px 0 rgba(255,255,255,.35)}
-.lb-sub{font-size:clamp(4px,.75vw,5px);color:#6b543a;text-align:center;margin-bottom:12px;letter-spacing:1px}
-.lb-activity{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px dashed rgba(120,90,50,.45);cursor:pointer}
+.lb-title{font-size:clamp(9px,2.1vw,13px);color:#3a2a18;text-align:center;letter-spacing:2px;margin-bottom:5px;text-shadow:1px 1px 0 rgba(255,255,255,.35)}
+.lb-sub{font-size:clamp(5px,1.1vw,7px);color:#6b543a;text-align:center;margin-bottom:14px;letter-spacing:1px}
+.lb-activity{display:flex;align-items:center;gap:9px;padding:10px 6px;border-bottom:1px dashed rgba(120,90,50,.45);cursor:pointer}
 .lb-activity:hover{background:rgba(120,90,50,.14)}
-.lb-act-icon{font-size:18px;flex-shrink:0;line-height:1}
-.lb-act-name{flex:1;font-size:clamp(5px,1vw,6px);color:#3a2a18;letter-spacing:1px}
-.lb-act-avg{font-size:clamp(4px,.8vw,5px);color:#7a5c30;white-space:nowrap;font-weight:bold}
-.lb-back{cursor:pointer;font-size:clamp(4px,.85vw,5px);color:#7a5c30;letter-spacing:1px;margin-bottom:6px;display:inline-block}
+.lb-act-icon{font-size:23px;flex-shrink:0;line-height:1}
+.lb-act-name{flex:1;font-size:clamp(7px,1.4vw,9px);color:#3a2a18;letter-spacing:1px}
+.lb-act-avg{font-size:clamp(6px,1.2vw,8px);color:#7a5c30;white-space:nowrap;font-weight:bold}
+.lb-back{cursor:pointer;font-size:clamp(6px,1.2vw,8px);color:#7a5c30;letter-spacing:1px;margin-bottom:6px;display:inline-block}
 .lb-back:hover{color:#3a2a18;text-decoration:underline}
-.lb-daterange{display:flex;gap:4px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
-.lb-daterange input{font-family:'Press Start 2P',monospace;font-size:clamp(3px,.7vw,4px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:3px 4px;outline:none}
-.lb-daterange label{font-size:clamp(3px,.7vw,4px);color:#6b543a;letter-spacing:1px}
-.lb-toggle{display:flex;gap:4px;margin:6px 0;justify-content:center}
-.lb-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.75vw,5px);padding:3px 7px;background:#c9b892;border:1px solid #7a5c30;color:#3a2a18;cursor:pointer}
+.lb-daterange{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:9px}
+.lb-daterange input{font-family:'Press Start 2P',monospace;font-size:clamp(5px,1vw,6px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:4px 5px;outline:none}
+.lb-daterange label{font-size:clamp(5px,1vw,6px);color:#6b543a;letter-spacing:1px}
+.lb-toggle{display:flex;gap:5px;margin:7px 0;justify-content:center}
+.lb-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(6px,1.1vw,7px);padding:4px 9px;background:#c9b892;border:1px solid #7a5c30;color:#3a2a18;cursor:pointer}
 .lb-toggle button.active{background:#7a5c30;color:#f0e6d2}
-.lb-chart{display:flex;align-items:flex-end;gap:3px;height:120px;padding:0 2px;overflow-x:auto}
-.lb-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:20px;height:100%}
+.lb-chart{display:flex;align-items:flex-end;gap:4px;height:130px;padding:0 2px;overflow-x:auto}
+.lb-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:30px;height:100%}
 .lb-bar-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;width:100%}
-.lb-bar{width:15px;background:#7a5c30;min-height:2px;border-radius:1px 1px 0 0}
-.lb-bar-num{font-size:clamp(3px,.7vw,4px);color:#3a2a18;margin-bottom:2px}
-.lb-bar-lbl{font-size:clamp(3px,.6vw,4px);color:#6b543a;margin-top:3px;white-space:nowrap}
-.lb-input-row{display:flex;gap:8px;align-items:flex-end;justify-content:center;margin-top:12px;flex-wrap:wrap;border-top:1px dashed rgba(120,90,50,.45);padding-top:10px}
-.lb-input-row input{width:46px;font-family:'Press Start 2P',monospace;font-size:clamp(5px,1vw,7px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:5px 4px;text-align:center;outline:none}
-.lb-input-lbl{font-size:clamp(3px,.7vw,4px);color:#6b543a;margin-bottom:3px;text-align:center}
-.lb-submit{font-family:'Press Start 2P',monospace;font-size:clamp(4px,.8vw,5px);background:#2f7a30;border:1px solid #1a5c1a;color:#fff;padding:6px 10px;cursor:pointer}
+.lb-bar{width:17px;background:#7a5c30;min-height:2px;border-radius:1px 1px 0 0}
+.lb-bar-num{font-size:clamp(5px,.95vw,6px);color:#3a2a18;margin-bottom:2px;white-space:nowrap}
+.lb-bar-lbl{font-size:clamp(5px,.9vw,6px);color:#6b543a;margin-top:3px;white-space:nowrap}
+.lb-total-line{text-align:center;font-size:clamp(6px,1.2vw,8px);color:#3a2a18;margin-bottom:5px}
+.lb-input-row{display:flex;gap:9px;align-items:flex-end;justify-content:center;margin-top:13px;flex-wrap:wrap;border-top:1px dashed rgba(120,90,50,.45);padding-top:11px}
+.lb-input-row input{width:52px;font-family:'Press Start 2P',monospace;font-size:clamp(7px,1.3vw,9px);background:#f5eeda;border:1px solid #7a5c30;color:#3a2a18;padding:6px 4px;text-align:center;outline:none}
+.lb-input-lbl{font-size:clamp(5px,1vw,6px);color:#6b543a;margin-bottom:4px;text-align:center}
+.lb-submit{font-family:'Press Start 2P',monospace;font-size:clamp(6px,1.1vw,7px);background:#2f7a30;border:1px solid #1a5c1a;color:#fff;padding:7px 11px;cursor:pointer}
 .lb-submit:hover{background:#39913a}
+.lb-logged-today{text-align:center;font-size:clamp(5px,1vw,6px);color:#6b543a;margin-top:6px}
+.lb-empty{text-align:center;color:#6b543a;font-size:clamp(6px,1.2vw,8px);padding:16px 0}
 
 /* ── TASKS ── */
 .task-item{display:flex;align-items:flex-start;gap:10px;padding:8px 6px;
@@ -1444,6 +1447,9 @@ body::before{
           <label class="goal-type-opt" id="gtype-stat-lbl">
             <input type="radio" name="goal-type" id="gtype-stat" value="statIncrease" onchange="onGoalTypeChange()"/> STAT INCREASE
           </label>
+          <label class="goal-type-opt" id="gtype-act-lbl">
+            <input type="radio" name="goal-type" id="gtype-act" value="activityTime" onchange="onGoalTypeChange()"/> ACTIVITY TIME
+          </label>
         </div>
       </div>
       <div id="goal-freq-fields">
@@ -1489,6 +1495,32 @@ body::before{
             </div></div>
           <div class="form-row" style="margin-bottom:0"><label class="form-label">PERIOD</label>
             <select class="form-select" id="goal-stat-period">
+              <option value="week">Per Week</option>
+              <option value="month">Per Month</option>
+            </select></div>
+        </div>
+      </div>
+      <div id="goal-act-fields" style="display:none">
+        <div class="form-row">
+          <label class="form-label">ACTIVITY</label>
+          <select class="form-select" id="goal-act-id"></select>
+          <div class="form-hint">From your Logbook (Inventory tab)</div>
+        </div>
+        <div class="form-row-inline">
+          <div class="form-row" style="margin-bottom:0"><label class="form-label">HOURS</label>
+            <div class="num-input-wrap">
+              <button class="num-btn minus" onclick="numStep('goal-act-hours',-1,0,999)">−</button>
+              <input id="goal-act-hours" type="number" min="0" max="999" value="5"/>
+              <button class="num-btn plus"  onclick="numStep('goal-act-hours',+1,0,999)">+</button>
+            </div></div>
+          <div class="form-row" style="margin-bottom:0"><label class="form-label">MINUTES</label>
+            <div class="num-input-wrap">
+              <button class="num-btn minus" onclick="numStep('goal-act-mins',-15,0,45,15)">−</button>
+              <input id="goal-act-mins" type="number" min="0" max="45" step="15" value="0"/>
+              <button class="num-btn plus"  onclick="numStep('goal-act-mins',+15,0,45,15)">+</button>
+            </div></div>
+          <div class="form-row" style="margin-bottom:0"><label class="form-label">PERIOD</label>
+            <select class="form-select" id="goal-act-period">
               <option value="week">Per Week</option>
               <option value="month">Per Month</option>
             </select></div>
@@ -1806,6 +1838,15 @@ function _defaultRange(firstDate){
 function _bucketLabel(key,gran){
   if(gran==='month'){const[y,m]=key.split('-');const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return names[parseInt(m)-1]+' '+y.slice(2);}
   const d=new Date(key);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;
+}
+// Format a decimal-hours value as "Xh Ym" (e.g. 4.2 → "4h 12m")
+function fmtHM(hours){
+  const totalMin=Math.round((Number(hours)||0)*60);
+  const h=Math.floor(totalMin/60),m=totalMin%60;
+  if(h&&m)return`${h}h ${m}m`;
+  if(h)return`${h}h`;
+  if(m)return`${m}m`;
+  return'0m';
 }
 
 // ══════════════════════════════════════════
@@ -2148,7 +2189,7 @@ function _lbAvgPerWeek(a){
   let total=0;
   for(const d in(a.dailyLogs||{})){if(d>=range.start&&d<=range.end)total+=Number(a.dailyLogs[d])||0;}
   const weeks=Math.max(1,Math.round((new Date(range.end)-new Date(range.start))/(7*86400000)));
-  return(total/weeks).toFixed(1);
+  return total/weeks; // decimal hours
 }
 
 function renderLogbook(){
@@ -2163,12 +2204,12 @@ function renderLogbookIndex(){
   const acts=data.logbookActivities||[];
   let html=`<div class="lb-title">✦ LOGBOOK ✦</div><div class="lb-sub">AVG HOURS / WEEK · PAST 12 MONTHS</div>`;
   if(!acts.length){
-    html+=`<div style="text-align:center;color:#6b543a;font-size:clamp(4px,.9vw,5px);padding:26px 12px;line-height:2.2">No activities tracked yet.<br>Tap the ✏️ button<br>to add one.</div>`;
+    html+=`<div class="lb-empty" style="padding:26px 12px;line-height:2.2">No activities tracked yet.<br>Tap the ✏️ button<br>to add one.</div>`;
   } else {
     html+=acts.map(a=>`<div class="lb-activity" onclick="lbOpenActivity('${a.id}')">
       <span class="lb-act-icon">${a.icon||'📓'}</span>
       <span class="lb-act-name">${a.name}</span>
-      <span class="lb-act-avg">${_lbAvgPerWeek(a)}h/wk</span>
+      <span class="lb-act-avg">${fmtHM(_lbAvgPerWeek(a))}/wk</span>
     </div>`).join('');
   }
   page.innerHTML=html;
@@ -2205,13 +2246,13 @@ function renderLogbookActivity(actId){
   const vals=keys.map(k=>bucket[k]);
   const mx=Math.max(...vals,0.1);
   const nBuckets=keys.length||1;
-  const avg=(total/nBuckets).toFixed(1);
+  const avg=total/nBuckets;
   const chart=keys.length
     ?`<div class="lb-chart">`+keys.map((k,i)=>{
-        const v=vals[i];const h=Math.round((v/mx)*95);
-        return`<div class="lb-bar-col"><div class="lb-bar-wrap"><div class="lb-bar-num">${v.toFixed(1)}</div><div class="lb-bar" style="height:${Math.max(3,h)}px"></div></div><div class="lb-bar-lbl">${_bucketLabel(k,st.gran)}</div></div>`;
+        const v=vals[i];const h=Math.round((v/mx)*100);
+        return`<div class="lb-bar-col"><div class="lb-bar-wrap"><div class="lb-bar-num">${fmtHM(v)}</div><div class="lb-bar" style="height:${Math.max(3,h)}px"></div></div><div class="lb-bar-lbl">${_bucketLabel(k,st.gran)}</div></div>`;
       }).join('')+`</div>`
-    :'<div style="text-align:center;color:#6b543a;font-size:clamp(4px,.85vw,5px);padding:16px 0">No hours logged in this range.</div>';
+    :'<div class="lb-empty">No hours logged in this range.</div>';
   const todayH=Number(logs[todayStr()]||0);
   page.innerHTML=`
     <span class="lb-back" onclick="lbBackToIndex()">← BACK</span>
@@ -2220,7 +2261,7 @@ function renderLogbookActivity(actId){
       <label>FROM</label><input type="date" value="${st.start}" onchange="window._lb.start=this.value;renderLogbookActivity('${actId}')"/>
       <label>TO</label><input type="date" value="${st.end}" onchange="window._lb.end=this.value;renderLogbookActivity('${actId}')"/>
     </div>
-    <div style="text-align:center;font-size:clamp(4px,.85vw,5px);color:#3a2a18;margin-bottom:4px">TOTAL <b>${total.toFixed(1)}h</b> · AVG <b>${avg}h/${st.gran}</b></div>
+    <div class="lb-total-line">TOTAL <b>${fmtHM(total)}</b> · AVG <b>${fmtHM(avg)}/${st.gran}</b></div>
     <div class="lb-toggle">
       <button class="${st.gran==='day'?'active':''}" onclick="window._lb.gran='day';renderLogbookActivity('${actId}')">DAY</button>
       <button class="${st.gran==='week'?'active':''}" onclick="window._lb.gran='week';renderLogbookActivity('${actId}')">WEEK</button>
@@ -2232,7 +2273,7 @@ function renderLogbookActivity(actId){
       <div><div class="lb-input-lbl">MINUTES</div><input type="number" min="0" max="59" id="lb-in-m" placeholder="0"/></div>
       <button class="lb-submit" onclick="lbSubmitTime('${actId}')">+ ADD TODAY</button>
     </div>
-    <div style="text-align:center;font-size:clamp(3px,.7vw,4px);color:#6b543a;margin-top:6px">Logged today: ${todayH.toFixed(2)}h</div>`;
+    <div class="lb-logged-today">Logged today: ${fmtHM(todayH)}</div>`;
 }
 
 function lbSubmitTime(actId){
@@ -2245,7 +2286,7 @@ function lbSubmitTime(actId){
   const today=todayStr();
   a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+add).toFixed(3));
   save(data);
-  spawnFloatCenter(`📖 +${add.toFixed(2)}h → ${a.name}`);
+  spawnFloatCenter(`📖 +${fmtHM(add)} → ${a.name}`);
   renderLogbookActivity(actId);
 }
 
@@ -2551,7 +2592,7 @@ function swConfirmStop(){
         if(!a.dailyLogs)a.dailyLogs={};
         a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+hrs).toFixed(3));
         save(data);renderLogbook();
-        spawnFloatCenter(`📖 +${hrs}h → ${a.name}`);
+        spawnFloatCenter(`📖 +${fmtHM(hrs)} → ${a.name}`);
       }
     }
   }
@@ -3655,6 +3696,25 @@ function calculateGoalProgress(goal,data){
     else if(needed>daysLeft)goal.status='failing';
     else if(needed===daysLeft)goal.status='atRisk';
     else goal.status='onTrack';
+  } else if(goal.type==='activityTime'){
+    const ps=getStartOfPeriod(goal.period);
+    if(goal.period==='month'&&goal._lastMonthPS&&goal._lastMonthPS<ps){
+      goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
+    }
+    if(goal.period==='month')goal._lastMonthPS=ps;
+    const act=(data.logbookActivities||[]).find(a=>a.id===goal.activityId);
+    let hrs=0;
+    if(act)for(const d in(act.dailyLogs||{})){if(d>=ps)hrs+=Number(act.dailyLogs[d])||0;}
+    goal.currentProgress=hrs;
+    // Pace-based status: never 'failing' until the period actually ends
+    const periodLen=goal.period==='week'?7:30;
+    const daysLeft=getDaysLeftInPeriod(goal.period);
+    const elapsed=Math.max(1,periodLen-daysLeft);
+    const expected=goal.targetHours*(elapsed/periodLen);
+    if(hrs>=goal.targetHours)goal.status='onTrack';
+    else if(daysLeft<=0)goal.status='failing';
+    else if(hrs>=expected)goal.status='onTrack';
+    else goal.status='atRisk';
   } else {
     const ps=getStartOfPeriod(goal.period);
     if(!goal.periodStart||goal.periodStart<ps){
@@ -3783,6 +3843,11 @@ function goalDescription(g,data){
     const nm=g.taskName||(data&&(data.customTasks||[]).find(t=>t.id===g.taskId)||{name:g.taskId}).name;
     return`${nm} ${g.frequency}x/${g.period}`;
   }
+  if(g.type==='activityTime'){
+    const a=data&&(data.logbookActivities||[]).find(x=>x.id===g.activityId);
+    const nm=(a&&a.name)||g.activityName||g.activityId;
+    return`${nm} ${fmtHM(g.targetHours)}/${g.period}`;
+  }
   const s=STATS_DEF.find(x=>x.key===g.stat);
   return`${s?s.fullLabel:g.stat} +${g.targetIncrease}/${g.period}`;
 }
@@ -3800,10 +3865,10 @@ function renderGoalsInto(containerId,data){
   goals.forEach(g=>{
     calculateGoalProgress(g,data);
     const desc=goalDescription(g,data);
-    const max=g.type==='taskFrequency'?g.frequency:g.targetIncrease;
+    const max=g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;
     const cur=g.currentProgress||0;
     const pct=max>0?Math.min(100,(cur/max)*100):0;
-    const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:`+${cur}/+${max}`;
+    const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:g.type==='activityTime'?`${fmtHM(cur)}/${fmtHM(max)}`:`+${cur}/+${max}`;
     const sc=g.status==='onTrack'?'gsl-on':g.status==='atRisk'?'gsl-risk':'gsl-fail';
     const sl=g.status==='onTrack'?'✅ ON TRACK':g.status==='atRisk'?'⚠ AT RISK':'❌ FAILING';
     const bc=g.status==='onTrack'?'gbar-on':g.status==='atRisk'?'gbar-risk':'gbar-fail';
@@ -3843,10 +3908,14 @@ function deleteGoal(gid){
 
 function onGoalTypeChange(){
   const isFreq=document.getElementById('gtype-freq').checked;
+  const isStat=document.getElementById('gtype-stat').checked;
+  const isAct=document.getElementById('gtype-act').checked;
   document.getElementById('goal-freq-fields').style.display=isFreq?'block':'none';
-  document.getElementById('goal-stat-fields').style.display=isFreq?'none':'block';
+  document.getElementById('goal-stat-fields').style.display=isStat?'block':'none';
+  document.getElementById('goal-act-fields').style.display=isAct?'block':'none';
   document.getElementById('gtype-freq-lbl').classList.toggle('selected',isFreq);
-  document.getElementById('gtype-stat-lbl').classList.toggle('selected',!isFreq);
+  document.getElementById('gtype-stat-lbl').classList.toggle('selected',isStat);
+  document.getElementById('gtype-act-lbl').classList.toggle('selected',isAct);
 }
 
 function openAddGoal(gid){
@@ -3861,26 +3930,46 @@ function openAddGoal(gid){
     if(goal&&goal.taskId===t.id)opt.selected=true;
     sel.appendChild(opt);
   });
+  // populate activity dropdown
+  const asel=document.getElementById('goal-act-id');asel.innerHTML='';
+  const acts=data.logbookActivities||[];
+  if(!acts.length){
+    const opt=document.createElement('option');opt.value='';opt.textContent='— No activities yet —';asel.appendChild(opt);
+  }
+  acts.forEach(a=>{
+    const opt=document.createElement('option');opt.value=a.id;opt.textContent=`${a.icon||'📓'} ${a.name}`;
+    if(goal&&goal.activityId===a.id)opt.selected=true;
+    asel.appendChild(opt);
+  });
   // type
-  const isFreq=!goal||goal.type==='taskFrequency';
-  document.getElementById('gtype-freq').checked=isFreq;
-  document.getElementById('gtype-stat').checked=!isFreq;
+  const type=goal?goal.type:'taskFrequency';
+  document.getElementById('gtype-freq').checked=type==='taskFrequency';
+  document.getElementById('gtype-stat').checked=type==='statIncrease';
+  document.getElementById('gtype-act').checked=type==='activityTime';
   onGoalTypeChange();
+  // defaults
+  document.getElementById('goal-freq-count').value=3;
+  document.getElementById('goal-freq-period').value='week';
+  document.getElementById('goal-stat-target').value=5;
+  document.getElementById('goal-stat-period').value='week';
+  document.getElementById('goal-stat-key').value='strength';
+  document.getElementById('goal-act-hours').value=5;
+  document.getElementById('goal-act-mins').value=0;
+  document.getElementById('goal-act-period').value='week';
   if(goal){
     if(goal.type==='taskFrequency'){
       document.getElementById('goal-freq-count').value=goal.frequency||3;
       document.getElementById('goal-freq-period').value=goal.period||'week';
-    } else {
+    } else if(goal.type==='statIncrease'){
       document.getElementById('goal-stat-key').value=goal.stat||'strength';
       document.getElementById('goal-stat-target').value=goal.targetIncrease||5;
       document.getElementById('goal-stat-period').value=goal.period||'week';
+    } else if(goal.type==='activityTime'){
+      const th=goal.targetHours||0;
+      document.getElementById('goal-act-hours').value=Math.floor(th);
+      document.getElementById('goal-act-mins').value=Math.round((th-Math.floor(th))*60);
+      document.getElementById('goal-act-period').value=goal.period||'week';
     }
-  } else {
-    document.getElementById('goal-freq-count').value=3;
-    document.getElementById('goal-freq-period').value='week';
-    document.getElementById('goal-stat-target').value=5;
-    document.getElementById('goal-stat-period').value='week';
-    document.getElementById('goal-stat-key').value='strength';
   }
   openModal('modal-goal');
 }
@@ -3888,20 +3977,32 @@ function openAddGoal(gid){
 function saveGoal(){
   const data=load();if(!data.customGoals)data.customGoals=[];
   const id=document.getElementById('edit-goal-id').value;
-  const isFreq=document.getElementById('gtype-freq').checked;
+  const type=document.getElementById('gtype-freq').checked?'taskFrequency'
+    :document.getElementById('gtype-act').checked?'activityTime':'statIncrease';
+  const keepCreated=id?((data.customGoals||[]).find(g=>g.id===id)||{}).createdDate||todayStr():todayStr();
   let goalObj;
-  if(isFreq){
+  if(type==='taskFrequency'){
     const taskId=document.getElementById('goal-task-id').value;
     if(!taskId){alert('Select a task.');return;}
     const task=(data.customTasks||[]).find(t=>t.id===taskId);
     const freq=Math.max(1,parseInt(document.getElementById('goal-freq-count').value)||3);
     const period=document.getElementById('goal-freq-period').value;
-    goalObj={id:id||'goal-'+Date.now(),type:'taskFrequency',taskId,taskName:task?task.name:taskId,frequency:freq,period,startDate:todayStr(),createdDate:id?((data.customGoals||[]).find(g=>g.id===id)||{}).createdDate||todayStr():todayStr(),currentProgress:0,status:'onTrack'};
+    goalObj={id:id||'goal-'+Date.now(),type:'taskFrequency',taskId,taskName:task?task.name:taskId,frequency:freq,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
+  } else if(type==='activityTime'){
+    const activityId=document.getElementById('goal-act-id').value;
+    if(!activityId){alert('Create a Logbook activity first, then set this goal.');return;}
+    const act=(data.logbookActivities||[]).find(a=>a.id===activityId);
+    const hrs=Math.max(0,parseInt(document.getElementById('goal-act-hours').value)||0);
+    const mins=Math.max(0,parseInt(document.getElementById('goal-act-mins').value)||0);
+    const targetHours=hrs+mins/60;
+    if(targetHours<=0){alert('Set a target of at least a few minutes.');return;}
+    const period=document.getElementById('goal-act-period').value;
+    goalObj={id:id||'goal-'+Date.now(),type:'activityTime',activityId,activityName:act?act.name:activityId,targetHours,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
   } else {
     const stat=document.getElementById('goal-stat-key').value;
     const target=Math.max(1,parseInt(document.getElementById('goal-stat-target').value)||5);
     const period=document.getElementById('goal-stat-period').value;
-    goalObj={id:id||'goal-'+Date.now(),type:'statIncrease',stat,targetIncrease:target,period,startDate:todayStr(),createdDate:id?((data.customGoals||[]).find(g=>g.id===id)||{}).createdDate||todayStr():todayStr(),periodStart:getStartOfPeriod(period),startValue:data.stats[stat]||0,currentProgress:0,status:'onTrack'};
+    goalObj={id:id||'goal-'+Date.now(),type:'statIncrease',stat,targetIncrease:target,period,startDate:todayStr(),createdDate:keepCreated,periodStart:getStartOfPeriod(period),startValue:data.stats[stat]||0,currentProgress:0,status:'onTrack'};
   }
   if(id){const idx=data.customGoals.findIndex(g=>g.id===id);if(idx!==-1)data.customGoals[idx]=goalObj;}
   else data.customGoals.push(goalObj);
@@ -4013,6 +4114,7 @@ function openGoalStats(gid){
   const hist=data.taskHistory||{};
   const period=goal.period||'week';
   const isFreq=goal.type==='taskFrequency';
+  const isAct=goal.type==='activityTime';
   const tid=goal.taskId;
 
   // Build per-period buckets
@@ -4026,13 +4128,21 @@ function openGoalStats(gid){
     return dateStr.slice(0,7);
   }
 
-  // For taskFrequency: count completions per period
   const periodMap={};
   if(isFreq){
     for(const date in hist){
       if(!hist[date][tid])continue;
       const pk=getPeriodKey(date);
       periodMap[pk]=(periodMap[pk]||0)+1;
+    }
+  } else if(isAct){
+    // activityTime: sum logbook activity hours per period
+    const act=(data.logbookActivities||[]).find(a=>a.id===goal.activityId);
+    const logs=act?act.dailyLogs||{}:{};
+    for(const date in logs){
+      const h=Number(logs[date])||0;if(h<=0)continue;
+      const pk=getPeriodKey(date);
+      periodMap[pk]=(periodMap[pk]||0)+h;
     }
   } else {
     // statIncrease: approximate by checking stat tasks of that stat key each period
@@ -4047,11 +4157,12 @@ function openGoalStats(gid){
 
   const periods=Object.keys(periodMap).sort();
   const counts=periods.map(pk=>periodMap[pk]);
-  const target=isFreq?goal.frequency:goal.targetIncrease;
+  const target=isFreq?goal.frequency:isAct?goal.targetHours:goal.targetIncrease;
   const completedPeriods=counts.filter(c=>c>=target).length;
   const totalPeriods=periods.length||1;
+  const avgRaw=counts.reduce((s,n)=>s+n,0)/totalPeriods;
   const completionRate=Math.round((completedPeriods/totalPeriods)*100);
-  const avgPerPeriod=totalPeriods>0?(counts.reduce((s,n)=>s+n,0)/totalPeriods).toFixed(1):'—';
+  const avgPerPeriod=totalPeriods>0?(isAct?fmtHM(avgRaw):avgRaw.toFixed(1)):'—';
 
   function pLabel(pk){
     if(period==='week'){const d=new Date(pk);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;}
@@ -4084,7 +4195,7 @@ function openGoalStats(gid){
         <div class="gst-rate-lbl">COMPLETION RATE</div>
       </div>
       <div class="gst-rate-card">
-        <div class="gst-rate-num">${avgPerPeriod}×</div>
+        <div class="gst-rate-num">${avgPerPeriod}${isAct?'':'×'}</div>
         <div class="gst-rate-lbl">AVG / ${period.toUpperCase()}</div>
       </div>
       <div class="gst-rate-card">
@@ -4093,8 +4204,8 @@ function openGoalStats(gid){
       </div>
     </div>
     <div class="tsk-stat-row"><span class="tsk-stat-lbl">PERIODS COMPLETED</span><span class="tsk-stat-val">${completedPeriods} / ${totalPeriods}</span></div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TARGET / ${period.toUpperCase()}</span><span class="tsk-stat-val">${target}×</span></div>
-    <div class="tsk-section-hd">COMPLETIONS PER ${period.toUpperCase()} <span style="color:var(--gold);font-size:clamp(3px,.6vw,4px)">(gold dashed = target)</span></div>
+    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TARGET / ${period.toUpperCase()}</span><span class="tsk-stat-val">${isAct?fmtHM(target):target+'×'}</span></div>
+    <div class="tsk-section-hd">${isAct?'HOURS':'COMPLETIONS'} PER ${period.toUpperCase()} <span style="color:var(--gold);font-size:clamp(3px,.6vw,4px)">(gold dashed = target)</span></div>
     <div class="tsk-chart-wrap">${chartHtml}</div>`;
 }
 
@@ -4106,7 +4217,7 @@ function renderDailyGoalsWatch(data){
   // Use the same calculateGoalProgress used by the Quests tab for accurate data
   goals.forEach(g=>calculateGoalProgress(g,data));
   const scored=goals.map(g=>{
-    const max=g.type==='taskFrequency'?g.frequency:g.targetIncrease;
+    const max=g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;
     const cur=g.currentProgress||0;
     const pct=max>0?Math.min(100,(cur/max)*100):0;
     const score=pct+(g.status==='failing'?-20:g.status==='atRisk'?-10:0);
@@ -4115,7 +4226,7 @@ function renderDailyGoalsWatch(data){
 
   wrap.innerHTML=`<div class="dgw-title">⚠ GOALS TO WATCH</div>`+
     scored.map(({g,cur,max,pct})=>{
-      const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:`+${cur}/+${max}`;
+      const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:g.type==='activityTime'?`${fmtHM(cur)}/${fmtHM(max)}`:`+${cur}/+${max}`;
       const bc=g.status==='onTrack'?'gbar-on':g.status==='atRisk'?'gbar-risk':'gbar-fail';
       return `<div class="dgw-row">
         <div style="width:100%">
