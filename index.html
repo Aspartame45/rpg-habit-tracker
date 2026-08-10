@@ -563,6 +563,8 @@ body::before{
 /* Goal streak badge */
 .goal-streak{display:inline-flex;align-items:center;gap:3px;font-size:clamp(4px,.75vw,5px);color:var(--gold);border:1px solid rgba(255,215,0,.4);padding:1px 6px;margin-left:6px;vertical-align:middle;letter-spacing:1px}
 .goal-streak.cold{color:var(--dim);border-color:rgba(120,120,160,.3)}
+.goal-reqday{font-size:clamp(4px,.9vw,6px);color:var(--gold);letter-spacing:1px;margin-top:5px;line-height:1.6}
+.goal-reqday.done{color:var(--green)}
 /* ── STOPWATCH ── */
 .sw-display{
   font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.5vw,22px);
@@ -1848,6 +1850,42 @@ function fmtHM(hours){
   if(m)return`${m}m`;
   return'0m';
 }
+// Format a decimal-hours value rounding UP to the nearest minute (for "required per day")
+function fmtHMCeil(hours){
+  const totalMin=Math.ceil((Number(hours)||0)*60);
+  const h=Math.floor(totalMin/60),m=totalMin%60;
+  if(h&&m)return`${h}h ${m}m`;
+  if(h)return`${h}h`;
+  return`${m}m`;
+}
+// Days remaining in the current period INCLUDING today (week starts Monday)
+function _daysLeftInclusive(period){
+  const now=new Date();
+  if(period==='month'){
+    const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+    return dim-now.getDate()+1;
+  }
+  const dow=now.getDay(); // 0=Sun..6=Sat
+  return 8-(dow===0?7:dow); // Mon→7, Wed→5, Sun→1
+}
+// An activityTime goal can target a Logbook activity OR a user-created Quest.
+// Both store time as {date: hours} in dailyLogs. These resolve the source uniformly.
+function _goalTimeKind(g){return g.targetKind||(g.activityId?'activity':(g.questId?'quest':'activity'));}
+function _goalTimeId(g){return g.targetId||g.activityId||g.questId;}
+function _goalTimeLogs(g,data){
+  const id=_goalTimeId(g);
+  const src=_goalTimeKind(g)==='quest'
+    ?(data.customQuests||[]).find(x=>x.id===id)
+    :(data.logbookActivities||[]).find(x=>x.id===id);
+  return src?(src.dailyLogs||{}):{};
+}
+function _goalTimeName(g,data){
+  const id=_goalTimeId(g);
+  const src=_goalTimeKind(g)==='quest'
+    ?(data.customQuests||[]).find(x=>x.id===id)
+    :(data.logbookActivities||[]).find(x=>x.id===id);
+  return(src&&src.name)||g.targetName||g.activityName||id;
+}
 
 // ══════════════════════════════════════════
 //  EMOJI PICKER
@@ -2245,7 +2283,18 @@ function renderLogbookActivity(actId){
   const keys=Object.keys(bucket).sort();
   const vals=keys.map(k=>bucket[k]);
   const mx=Math.max(...vals,0.1);
-  const nBuckets=keys.length||1;
+  // Average denominator spans EVERY bucket from the first logged day to today
+  // (not just buckets that happen to have entries), so gaps count as zeros.
+  const firstLogged=Object.keys(logs).filter(d=>d>=st.start&&d<=st.end&&Number(logs[d])>0).sort()[0];
+  const avgStart=(firstLogged&&firstLogged>st.start)?firstLogged:st.start;
+  const avgEnd=st.end<todayStr()?st.end:todayStr();
+  let nBuckets=1;
+  if(firstLogged){
+    const spanDays=Math.floor((new Date(avgEnd)-new Date(avgStart))/86400000)+1;
+    if(st.gran==='day')nBuckets=Math.max(1,spanDays);
+    else if(st.gran==='week')nBuckets=Math.max(1,Math.ceil(spanDays/7));
+    else{const a2=new Date(avgStart),b2=new Date(avgEnd);nBuckets=Math.max(1,(b2.getFullYear()-a2.getFullYear())*12+(b2.getMonth()-a2.getMonth())+1);}
+  }
   const avg=total/nBuckets;
   const chart=keys.length
     ?`<div class="lb-chart">`+keys.map((k,i)=>{
@@ -2269,9 +2318,10 @@ function renderLogbookActivity(actId){
     </div>
     ${chart}
     <div class="lb-input-row">
+      <div><div class="lb-input-lbl">DATE</div><input type="date" id="lb-in-date" value="${todayStr()}" max="${todayStr()}"/></div>
       <div><div class="lb-input-lbl">HOURS</div><input type="number" min="0" id="lb-in-h" placeholder="0"/></div>
       <div><div class="lb-input-lbl">MINUTES</div><input type="number" min="0" max="59" id="lb-in-m" placeholder="0"/></div>
-      <button class="lb-submit" onclick="lbSubmitTime('${actId}')">+ ADD TODAY</button>
+      <button class="lb-submit" onclick="lbSubmitTime('${actId}')">+ LOG TIME</button>
     </div>
     <div class="lb-logged-today">Logged today: ${fmtHM(todayH)}</div>`;
 }
@@ -2281,12 +2331,17 @@ function lbSubmitTime(actId){
   const m=parseFloat(document.getElementById('lb-in-m').value)||0;
   const add=h+m/60;
   if(add<=0){spawnFloatCenter('Enter hours or minutes');return;}
+  const df=document.getElementById('lb-in-date');
+  let date=(df&&df.value)||todayStr();
+  if(date>todayStr())date=todayStr(); // no future logging
   const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
   if(!a.dailyLogs)a.dailyLogs={};
-  const today=todayStr();
-  a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+add).toFixed(3));
+  a.dailyLogs[date]=parseFloat(((a.dailyLogs[date]||0)+add).toFixed(3));
   save(data);
-  spawnFloatCenter(`📖 +${fmtHM(add)} → ${a.name}`);
+  // If logging earlier than the currently-viewed range, expand it so the entry shows
+  if(window._lb&&window._lb.actId===actId&&date<window._lb.start)window._lb.start=date;
+  const past=date!==todayStr();
+  spawnFloatCenter(`📖 +${fmtHM(add)} → ${a.name}${past?' ('+fmtDate(date)+')':''}`);
   renderLogbookActivity(actId);
 }
 
@@ -3702,9 +3757,9 @@ function calculateGoalProgress(goal,data){
       goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
     }
     if(goal.period==='month')goal._lastMonthPS=ps;
-    const act=(data.logbookActivities||[]).find(a=>a.id===goal.activityId);
+    const logs=_goalTimeLogs(goal,data);
     let hrs=0;
-    if(act)for(const d in(act.dailyLogs||{})){if(d>=ps)hrs+=Number(act.dailyLogs[d])||0;}
+    for(const d in logs){if(d>=ps)hrs+=Number(logs[d])||0;}
     goal.currentProgress=hrs;
     // Pace-based status: never 'failing' until the period actually ends
     const periodLen=goal.period==='week'?7:30;
@@ -3844,9 +3899,7 @@ function goalDescription(g,data){
     return`${nm} ${g.frequency}x/${g.period}`;
   }
   if(g.type==='activityTime'){
-    const a=data&&(data.logbookActivities||[]).find(x=>x.id===g.activityId);
-    const nm=(a&&a.name)||g.activityName||g.activityId;
-    return`${nm} ${fmtHM(g.targetHours)}/${g.period}`;
+    return`${_goalTimeName(g,data)} ${fmtHM(g.targetHours)}/${g.period}`;
   }
   const s=STATS_DEF.find(x=>x.key===g.stat);
   return`${s?s.fullLabel:g.stat} +${g.targetIncrease}/${g.period}`;
@@ -3880,12 +3933,21 @@ function renderGoalsInto(containerId,data){
     const daysHint=!grace&&g.status!=='onTrack'?`<div class="grace-hint">${periodDaysLeft} day${periodDaysLeft===1?'':'s'} remaining in period</div>`:'';
     const streak=g.streak||0;
     const streakBadge=streak>0?`<span class="goal-streak">🔥 ${streak}</span>`:`<span class="goal-streak cold">— 0</span>`;
+    // Required-per-day pace hint for activity-time goals
+    let reqDayHint='';
+    if(g.type==='activityTime'){
+      const needed=(g.targetHours||0)-cur;
+      const dleft=_daysLeftInclusive(g.period);
+      if(needed<=0)reqDayHint=`<div class="goal-reqday done">✓ Target reached this ${g.period}!</div>`;
+      else if(dleft>0)reqDayHint=`<div class="goal-reqday">⏳ Need ${fmtHMCeil(needed/dleft)}/day to finish this ${g.period}</div>`;
+    }
     const div=document.createElement('div');div.className='goal-card'+(grace?' grace':'');
     div.innerHTML=`<div class="goal-desc" style="cursor:pointer" onclick="openGoalStats('${g.id}')">🎯 ${desc}${graceBadge}${streakBadge}</div>${graceHint}
       <div class="goal-prog-row">
         <div class="goal-bar-outer"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
         <span class="goal-prog-txt">${progTxt}</span>
       </div>
+      ${reqDayHint}
       ${daysHint}
       <div class="goal-row-bottom">
         <span class="goal-status-lbl ${sc}">${sl}</span>
@@ -3930,17 +3992,24 @@ function openAddGoal(gid){
     if(goal&&goal.taskId===t.id)opt.selected=true;
     sel.appendChild(opt);
   });
-  // populate activity dropdown
+  // populate activity/quest dropdown (activityTime goals can target either)
   const asel=document.getElementById('goal-act-id');asel.innerHTML='';
   const acts=data.logbookActivities||[];
-  if(!acts.length){
-    const opt=document.createElement('option');opt.value='';opt.textContent='— No activities yet —';asel.appendChild(opt);
+  const quests=data.customQuests||[];
+  const curVal=(goal&&goal.type==='activityTime')?(_goalTimeKind(goal)+':'+_goalTimeId(goal)):'';
+  if(!acts.length&&!quests.length){
+    const opt=document.createElement('option');opt.value='';opt.textContent='— No activities or quests yet —';asel.appendChild(opt);
   }
-  acts.forEach(a=>{
-    const opt=document.createElement('option');opt.value=a.id;opt.textContent=`${a.icon||'📓'} ${a.name}`;
-    if(goal&&goal.activityId===a.id)opt.selected=true;
-    asel.appendChild(opt);
-  });
+  if(acts.length){
+    const grp=document.createElement('optgroup');grp.label='LOGBOOK ACTIVITIES';
+    acts.forEach(a=>{const o=document.createElement('option');o.value='activity:'+a.id;o.textContent=`${a.icon||'📓'} ${a.name}`;if(o.value===curVal)o.selected=true;grp.appendChild(o);});
+    asel.appendChild(grp);
+  }
+  if(quests.length){
+    const grp=document.createElement('optgroup');grp.label='QUESTS';
+    quests.forEach(q=>{const o=document.createElement('option');o.value='quest:'+q.id;o.textContent=`⚔ ${q.name}`;if(o.value===curVal)o.selected=true;grp.appendChild(o);});
+    asel.appendChild(grp);
+  }
   // type
   const type=goal?goal.type:'taskFrequency';
   document.getElementById('gtype-freq').checked=type==='taskFrequency';
@@ -3989,15 +4058,17 @@ function saveGoal(){
     const period=document.getElementById('goal-freq-period').value;
     goalObj={id:id||'goal-'+Date.now(),type:'taskFrequency',taskId,taskName:task?task.name:taskId,frequency:freq,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
   } else if(type==='activityTime'){
-    const activityId=document.getElementById('goal-act-id').value;
-    if(!activityId){alert('Create a Logbook activity first, then set this goal.');return;}
-    const act=(data.logbookActivities||[]).find(a=>a.id===activityId);
+    const val=document.getElementById('goal-act-id').value;
+    if(!val){alert('Create a Logbook activity or a Quest first, then set this goal.');return;}
+    const [kind,tid]=val.split(':');
+    const targetKind=kind==='quest'?'quest':'activity';
+    const src=targetKind==='quest'?(data.customQuests||[]).find(x=>x.id===tid):(data.logbookActivities||[]).find(x=>x.id===tid);
     const hrs=Math.max(0,parseInt(document.getElementById('goal-act-hours').value)||0);
     const mins=Math.max(0,parseInt(document.getElementById('goal-act-mins').value)||0);
     const targetHours=hrs+mins/60;
     if(targetHours<=0){alert('Set a target of at least a few minutes.');return;}
     const period=document.getElementById('goal-act-period').value;
-    goalObj={id:id||'goal-'+Date.now(),type:'activityTime',activityId,activityName:act?act.name:activityId,targetHours,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
+    goalObj={id:id||'goal-'+Date.now(),type:'activityTime',targetKind,targetId:tid,targetName:src?src.name:tid,targetHours,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
   } else {
     const stat=document.getElementById('goal-stat-key').value;
     const target=Math.max(1,parseInt(document.getElementById('goal-stat-target').value)||5);
@@ -4136,9 +4207,8 @@ function openGoalStats(gid){
       periodMap[pk]=(periodMap[pk]||0)+1;
     }
   } else if(isAct){
-    // activityTime: sum logbook activity hours per period
-    const act=(data.logbookActivities||[]).find(a=>a.id===goal.activityId);
-    const logs=act?act.dailyLogs||{}:{};
+    // activityTime: sum activity/quest hours per period
+    const logs=_goalTimeLogs(goal,data);
     for(const date in logs){
       const h=Number(logs[date])||0;if(h<=0)continue;
       const pk=getPeriodKey(date);
