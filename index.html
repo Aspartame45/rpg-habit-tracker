@@ -232,7 +232,6 @@ body::before{
 .task-meta{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
 .task-stat-pill{font-size:clamp(4px,.9vw,5px);padding:2px 5px;border:2px solid;letter-spacing:1px}
 .task-streak{font-size:clamp(4px,.9vw,5px);color:var(--dim);display:flex;align-items:center;gap:2px}
-.task-link-badge{font-size:clamp(4px,.85vw,5px);color:var(--teal);border:1px solid rgba(29,233,182,.4);padding:1px 5px;letter-spacing:1px;white-space:nowrap}
 .streak-hot{color:var(--orange2)}.streak-best{color:rgba(120,120,180,.6)}
 @keyframes taskFlash{0%{background:rgba(88,101,242,0)}30%{background:rgba(88,101,242,.3)}100%{background:rgba(88,101,242,0)}}
 .task-item.flash{animation:taskFlash .6s ease-out}
@@ -1225,27 +1224,6 @@ body::before{
             <button class="num-btn plus"  onclick="numStep('edit-task-pts',+1,1,10)">+</button>
           </div></div>
       </div>
-      <div class="form-row">
-        <label class="form-label">LINK TO LOGBOOK ACTIVITY (optional)</label>
-        <select class="form-select" id="edit-task-activity" onchange="onTaskActivityChange()">
-          <option value="">— None —</option>
-        </select>
-        <div class="form-hint">Auto-completes this deed when enough time is logged</div>
-      </div>
-      <div class="form-row-inline" id="task-minlink-row" style="display:none">
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">MIN HOURS</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-task-min-h',-1,0,24)">−</button>
-            <input id="edit-task-min-h" type="number" min="0" max="24" value="0"/>
-            <button class="num-btn plus"  onclick="numStep('edit-task-min-h',+1,0,24)">+</button>
-          </div></div>
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">MIN MINUTES</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-task-min-m',-5,0,55,5)">−</button>
-            <input id="edit-task-min-m" type="number" min="0" max="55" step="5" value="10"/>
-            <button class="num-btn plus"  onclick="numStep('edit-task-min-m',+5,0,55,5)">+</button>
-          </div></div>
-      </div>
       <div class="form-actions">
         <button class="px-btn" onclick="closeModal('modal-taskedit')">CANCEL</button>
         <button class="px-btn success" onclick="saveTask()">SAVE TASK</button>
@@ -2084,18 +2062,12 @@ function renderTasks(data){
     const sd=STATS_DEF.find(s=>s.key===t.stat);
     const div=document.createElement('div');
     div.className='task-item'+(done?' done':'');div.id='task-'+t.id;div.setAttribute('data-stat',t.stat);
-    let linkBadge='';
-    if(t.linkedActivityId){
-      const la=(data.logbookActivities||[]).find(a=>a.id===t.linkedActivityId);
-      if(la){const mm=t.linkedMinMinutes||0;linkBadge=`<span class="task-link-badge" title="Auto-completes from Logbook: ${la.name}${mm>0?' ≥ '+fmtHM(mm/60):''}">📖 ${la.icon||''} ${mm>0?'≥'+fmtHM(mm/60):'any'}</span>`;}
-    }
     div.innerHTML=`<div class="task-cb">${done?'✓':''}</div>
       <div style="flex:1">
         <div class="task-label" data-tid="${t.id}">${t.icon||'·'} ${t.name}</div>
         <div class="task-meta">
           <span class="task-stat-pill" data-stat="${t.stat}">+${t.points} ${sd?sd.label:t.stat}</span>
           <span class="task-streak">${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span></span>
-          ${linkBadge}
         </div>
       </div>`;
     div.querySelector('.task-cb').addEventListener('click',e=>{e.stopPropagation();toggleTask(t.id);});
@@ -2365,14 +2337,12 @@ function lbSubmitTime(actId){
   const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
   if(!a.dailyLogs)a.dailyLogs={};
   a.dailyLogs[date]=parseFloat(((a.dailyLogs[date]||0)+add).toFixed(3));
-  const autoDone=autoCheckLinkedTasks(data,actId,date);
   save(data);
   // If logging earlier than the currently-viewed range, expand it so the entry shows
   if(window._lb&&window._lb.actId===actId&&date<window._lb.start)window._lb.start=date;
   const past=date!==todayStr();
   spawnFloatCenter(`📖 +${fmtHM(add)} → ${a.name}${past?' ('+fmtDate(date)+')':''}`);
   renderLogbookActivity(actId);
-  if(autoDone.length){renderTasks(data);renderStats(data);updateMoodDisplay(data);autoDone.forEach(nm=>setTimeout(()=>spawnFloatCenter(`✓ ${nm} auto-completed`),250));}
 }
 
 // ── Manage activities ──
@@ -2676,10 +2646,8 @@ function swConfirmStop(){
       if(a){
         if(!a.dailyLogs)a.dailyLogs={};
         a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+hrs).toFixed(3));
-        const autoDone=autoCheckLinkedTasks(data,tid,today);
         save(data);renderLogbook();
         spawnFloatCenter(`📖 +${fmtHM(hrs)} → ${a.name}`);
-        if(autoDone.length){renderTasks(data);renderStats(data);updateMoodDisplay(data);autoDone.forEach(nm=>setTimeout(()=>spawnFloatCenter(`✓ ${nm} auto-completed`),250));}
       }
     }
   }
@@ -3193,10 +3161,6 @@ function deleteTask(tid){
   delete data.streaks[tid];delete data.lastCompleted[tid];delete data.todayChecked[tid];
   save(data);renderTaskMgr();renderTasks(data);
 }
-function onTaskActivityChange(){
-  const has=!!document.getElementById('edit-task-activity').value;
-  document.getElementById('task-minlink-row').style.display=has?'flex':'none';
-}
 function openAddTask(tid){
   const data=load();const task=tid?data.customTasks.find(t=>t.id===tid):null;
   document.getElementById('taskedit-title').textContent=task?'EDIT TASK':'ADD TASK';
@@ -3205,17 +3169,6 @@ function openAddTask(tid){
   document.getElementById('edit-task-icon').value=task?task.icon:'';
   document.getElementById('edit-task-stat').value=task?task.stat:'strength';
   document.getElementById('edit-task-pts').value=task?task.points:1;
-  // populate linked-activity dropdown
-  const asel=document.getElementById('edit-task-activity');asel.innerHTML='<option value="">— None —</option>';
-  (data.logbookActivities||[]).forEach(a=>{
-    const o=document.createElement('option');o.value=a.id;o.textContent=`${a.icon||'📓'} ${a.name}`;
-    if(task&&task.linkedActivityId===a.id)o.selected=true;
-    asel.appendChild(o);
-  });
-  const minMin=task?(task.linkedMinMinutes||0):10;
-  document.getElementById('edit-task-min-h').value=Math.floor(minMin/60);
-  document.getElementById('edit-task-min-m').value=minMin%60;
-  onTaskActivityChange();
   openModal('modal-taskedit');
 }
 function saveTask(){
@@ -3224,54 +3177,9 @@ function saveTask(){
   const icon=document.getElementById('edit-task-icon').value.trim()||'·';
   const stat=document.getElementById('edit-task-stat').value;
   const pts=Math.max(1,parseInt(document.getElementById('edit-task-pts').value)||1);
-  const linkedActivityId=document.getElementById('edit-task-activity').value||null;
-  const minH=Math.max(0,parseInt(document.getElementById('edit-task-min-h').value)||0);
-  const minM=Math.max(0,parseInt(document.getElementById('edit-task-min-m').value)||0);
-  const linkedMinMinutes=linkedActivityId?(minH*60+minM):0;
-  if(id){const task=data.customTasks.find(t=>t.id===id);if(task){task.name=name;task.icon=icon;task.stat=stat;task.points=pts;task.linkedActivityId=linkedActivityId;task.linkedMinMinutes=linkedMinMinutes;}}
-  else{const newId='task-'+Date.now();data.customTasks.push({id:newId,name,stat,points:pts,icon,linkedActivityId,linkedMinMinutes});data.streaks[newId]={current:0,best:0};data.lastCompleted[newId]=null;}
-  // If linked and today's logged time already qualifies, auto-complete now
-  let autoDone=[];
-  if(linkedActivityId)autoDone=autoCheckLinkedTasks(data,linkedActivityId,todayStr());
-  save(data);renderTaskMgr();renderTasks(data);renderStats(data);updateMoodDisplay(data);closeModal('modal-taskedit');
-  autoDone.forEach(nm=>spawnFloatCenter(`✓ ${nm} auto-completed`));
-}
-
-// When time is registered to a Logbook activity on a given date, auto-complete any
-// Daily Deeds linked to that activity whose minimum-time requirement is met that day.
-// Mutates `data` (caller must save). Returns names of newly-completed tasks.
-function autoCheckLinkedTasks(data,activityId,date){
-  const completed=[];
-  const today=todayStr();
-  const act=(data.logbookActivities||[]).find(a=>a.id===activityId);
-  if(!act)return completed;
-  // Compare in whole minutes to avoid float-rounding at the threshold
-  const dayMinutes=Math.round((Number((act.dailyLogs||{})[date])||0)*60);
-  if(dayMinutes<=0)return completed;
-  if(!data.taskHistory)data.taskHistory={};
-  (data.customTasks||[]).forEach(t=>{
-    if(t.linkedActivityId!==activityId)return;
-    if(dayMinutes<(t.linkedMinMinutes||0))return;
-    const already=date===today?!!data.todayChecked[t.id]:!!(data.taskHistory[date]&&data.taskHistory[date][t.id]);
-    if(already)return;
-    if(!data.taskHistory[date])data.taskHistory[date]={};
-    data.taskHistory[date][t.id]=true;
-    data.stats[t.stat]=(data.stats[t.stat]||0)+t.points;
-    if(!data.statLastIncreased)data.statLastIncreased={};
-    if(!data.statLastIncreased[t.stat]||date>data.statLastIncreased[t.stat])data.statLastIncreased[t.stat]=date;
-    if(!data.lastCompleted[t.id]||date>data.lastCompleted[t.id])data.lastCompleted[t.id]=date;
-    if(date===today){
-      data.todayChecked[t.id]=true;
-      if(!data.statsIncreasedToday)data.statsIncreasedToday={};
-      data.statsIncreasedToday[t.stat]=true;
-    }
-    if(!data.streaks[t.id])data.streaks[t.id]={current:0,best:0};
-    const s=calcStreak(data,t.id);
-    data.streaks[t.id].current=s;
-    if(s>data.streaks[t.id].best)data.streaks[t.id].best=s;
-    completed.push(t.name);
-  });
-  return completed;
+  if(id){const task=data.customTasks.find(t=>t.id===id);if(task){task.name=name;task.icon=icon;task.stat=stat;task.points=pts;}}
+  else{const newId='task-'+Date.now();data.customTasks.push({id:newId,name,stat,points:pts,icon});data.streaks[newId]={current:0,best:0};data.lastCompleted[newId]=null;}
+  save(data);renderTaskMgr();renderTasks(data);closeModal('modal-taskedit');
 }
 function openAddProject(){
   document.getElementById('proj-modal-title').textContent='ADD PROJECT';
@@ -3976,9 +3884,7 @@ function openWellnessReport(){
       calculateGoalProgress(g,data);
       const icon=g.status==='onTrack'?'✅':g.status==='atRisk'?'⚠️':'❌';
       const desc=goalDescription(g,data);
-      const prog=g.type==='taskFrequency'?`${g.currentProgress||0}/${g.frequency}`
-        :g.type==='activityTime'?`${fmtHM(g.currentProgress||0)} / ${fmtHM(g.targetHours)}`
-        :`+${g.currentProgress||0}/+${g.targetIncrease}`;
+      const prog=g.type==='taskFrequency'?`${g.currentProgress||0}/${g.frequency}`:`+${g.currentProgress||0}/+${g.targetIncrease}`;
       html+=`<div class="wellness-stat-row"><span class="wsr-icon">🎯</span><span class="wsr-name">${desc}</span><span class="wsr-val">${prog}</span><span class="wsr-status">${icon}</span></div>`;
     });
   }
@@ -4727,4 +4633,158 @@ function _fbStartSync(uid){
 function _fbMigrateOrLoad(uid){
   const ref=fbDb.ref('users/'+uid+'/data');
   ref.once('value').then(snap=>{
-    co
+    const remote=snap.val();
+    if(remote){
+      const local=JSON.parse(localStorage.getItem('rpg_tracker_v2')||'{}');
+      const localEmpty=_dataIsEmptyish(local);
+      const remoteEmpty=_dataIsEmptyish(remote);
+      let winner,pushLocal=false;
+      if(localEmpty&&!remoteEmpty){
+        // Local is blank (fresh session / cleared storage) — ALWAYS keep the cloud copy.
+        // This is the guard that prevents empty data from clobbering real data.
+        winner=remote;
+      } else if(remoteEmpty&&!localEmpty){
+        // Cloud is blank but local has real data — keep local and upload it.
+        winner=local;pushLocal=true;
+      } else {
+        // Both have data (or both empty) — newest wins by monotonic updatedAt,
+        // falling back to lastActiveDate only when no timestamps exist.
+        const lu=Number(local.updatedAt||0),ru=Number(remote.updatedAt||0);
+        if(lu||ru){
+          winner=lu>=ru?local:remote;pushLocal=(winner===local&&lu>ru);
+        } else {
+          const ld=local.lastActiveDate||'',rd=remote.lastActiveDate||'';
+          winner=ld>rd?local:remote;pushLocal=(winner===local&&ld>rd);
+        }
+      }
+      localStorage.setItem('rpg_tracker_v2',JSON.stringify(winner));
+      if(pushLocal)_fbSaveData(winner);
+    } else {
+      // No Firebase data yet — first-time migration from localStorage
+      const local=JSON.parse(localStorage.getItem('rpg_tracker_v2')||'null');
+      if(local){
+        ref.set(local)
+          .then(()=>{_fbShowBanner('✓ DATA UPLOADED TO CLOUD','#1a5c1a');})
+          .catch(e=>{
+            console.error('[Firebase] migrate:',e);
+            _fbShowBanner('UPLOAD ERROR: '+_fbErrHint(e));
+          });
+      }
+    }
+    const d=load();checkNewDay(d);
+    renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();renderGoals(d);
+    _fbStartSync(uid);
+  }).catch(e=>{
+    console.error('[Firebase] initial load:',e);
+    _fbShowBanner('CLOUD LOAD ERROR: '+_fbErrHint(e));
+  });
+}
+
+function _fbOnLogin(user){
+  window._fbUser=user;
+  // Show user info bar
+  const bar=document.getElementById('user-info-bar');
+  const lbl=document.getElementById('user-email-lbl');
+  if(bar){bar.classList.add('visible');}
+  if(lbl){lbl.textContent=user.email||user.displayName||'signed in';}
+  _fbSetSyncDot('online');
+  // Hide auth overlay
+  const ov=document.getElementById('auth-overlay');
+  if(ov)ov.classList.add('hidden');
+  _fbMigrateOrLoad(user.uid);
+}
+
+function _fbOnLogout(){
+  window._fbUser=null;
+  const bar=document.getElementById('user-info-bar');
+  if(bar)bar.classList.remove('visible');
+  _fbSetSyncDot('offline');
+  const ov=document.getElementById('auth-overlay');
+  if(ov)ov.classList.remove('hidden');
+}
+
+function fbSignOut(){
+  fbAuth.signOut().catch(e=>console.warn('[Firebase] signout:',e));
+}
+
+function _fbShowError(msg){
+  const el=document.getElementById('auth-err');
+  if(el)el.textContent=msg;
+}
+
+function fbLogin(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pass=document.getElementById('auth-pass').value;
+  if(!email||!pass){_fbShowError('Enter email and password.');return;}
+  _fbShowError('');
+  fbAuth.signInWithEmailAndPassword(email,pass)
+    .catch(e=>_fbShowError(e.message));
+}
+
+function fbSignup(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pass=document.getElementById('auth-pass').value;
+  if(!email||!pass){_fbShowError('Enter email and password.');return;}
+  if(pass.length<6){_fbShowError('Password must be at least 6 characters.');return;}
+  _fbShowError('');
+  fbAuth.createUserWithEmailAndPassword(email,pass)
+    .catch(e=>_fbShowError(e.message));
+}
+
+function fbGoogleLogin(){
+  _fbShowError('');
+  fbAuth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+    .catch(e=>{
+      if(e.code==='auth/operation-not-supported-in-this-environment')
+        _fbShowError('Google sign-in requires HTTPS. Use email/password instead, or open the app over https://.');
+      else _fbShowError(e.message);
+    });
+}
+
+function fbSkip(){
+  const ov=document.getElementById('auth-overlay');
+  if(ov)ov.classList.add('hidden');
+}
+
+// Handle redirect result from Google sign-in (suppress unsupported-env errors on page load)
+fbAuth.getRedirectResult().catch(e=>{
+  if(e.code==='auth/operation-not-supported-in-this-environment')return;
+  if(e.code!=='auth/no-current-user')
+    _fbShowBanner('GOOGLE LOGIN ERROR: '+e.message);
+});
+
+// Wire up auth state listener (runs as soon as Firebase is ready)
+fbAuth.onAuthStateChanged(user=>{
+  if(user){_fbOnLogin(user);}
+  else{_fbOnLogout();}
+});
+
+// Offline/online detection
+window.addEventListener('online',()=>{
+  if(window._fbUser){_fbSaveData(load());}_fbSetSyncDot('online');
+});
+window.addEventListener('offline',()=>_fbSetSyncDot('offline'));
+</script>
+
+<!-- ── Auth Overlay ── -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <h2>RPG HABIT TRACKER</h2>
+    <p>Sign in to sync your data across devices</p>
+    <input type="email" id="auth-email" placeholder="Email address" autocomplete="email"/>
+    <input type="password" id="auth-pass" placeholder="Password" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')fbLogin()"/>
+    <button class="px-btn success" onclick="fbLogin()">LOG IN</button>
+    <button class="px-btn" onclick="fbSignup()">CREATE ACCOUNT</button>
+    <div class="auth-divider">— or —</div>
+    <button class="px-btn auth-google-btn" onclick="fbGoogleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G"/>
+      CONTINUE WITH GOOGLE
+    </button>
+    <div class="auth-err" id="auth-err"></div>
+    <div class="auth-skip" onclick="fbSkip()">Skip — play offline without syncing</div>
+  </div>
+</div>
+
+</body>
+</html>
