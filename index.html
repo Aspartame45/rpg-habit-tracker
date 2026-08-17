@@ -1590,7 +1590,7 @@ body::before{
 // ══════════════════════════════════════════
 // Bump this on every deploy. Shown in the footer so you can confirm at a glance
 // which build the browser is actually running (vs. a stale cached copy).
-const APP_VERSION='v1.6.0';
+const APP_VERSION='v1.7.1';
 
 const STATS_DEF=[
   {key:'strength',    label:'STR',fullLabel:'Strength',    emoji:'⚔'},
@@ -2013,12 +2013,6 @@ function checkNewDay(data){
     else data.perfectStreak=0;
     // Reset per-day tracking
     data.statsIncreasedToday={};
-    // Recompute streaks via calcStreak, which applies the grace period (a streak
-    // survives until a full day passes uncompleted, not merely until midnight).
-    data.customTasks.forEach(t=>{
-      if(!data.streaks[t.id])data.streaks[t.id]={current:0,best:0};
-      data.streaks[t.id].current=calcStreak(data,t.id);
-    });
     // Rebuild (don't blind-wipe) today's checkboxes from today's history.
     // taskHistory[today] can already hold entries — pushed by another device via
     // cloud sync, written by a Logbook auto-complete, or added by backdating —
@@ -2030,6 +2024,24 @@ function checkNewDay(data){
   // Self-heal: reconcile any pre-existing divergence between the checkboxes and
   // today's history (e.g. data saved by an older build that had the wipe bug).
   else _reconcileTodayChecked(data,today);
+  // Recompute streaks on EVERY load, not just at day rollover. Data saved by an
+  // older build may hold a stale 0 that would otherwise never be corrected, since
+  // the rollover block is skipped once lastActiveDate is already today. This runs
+  // after todayChecked is settled so calcStreak reads accurate completion state.
+  _syncStreaks(data);
+}
+
+// Bring stored streak values in line with what calcStreak derives from history.
+// Returns true if anything changed.
+function _syncStreaks(data){
+  let changed=false;
+  (data.customTasks||[]).forEach(t=>{
+    if(!data.streaks[t.id])data.streaks[t.id]={current:0,best:0};
+    const live=calcStreak(data,t.id);
+    if(data.streaks[t.id].current!==live){data.streaks[t.id].current=live;changed=true;}
+    if(live>(data.streaks[t.id].best||0)){data.streaks[t.id].best=live;changed=true;}
+  });
+  return changed;
 }
 
 // Diagnostic: explains exactly which dates are driving each task-frequency goal's
@@ -2214,7 +2226,11 @@ function renderTasks(data){
   if(!data.customTasks.length){wrap.innerHTML='<div class="empty-state">No tasks yet.<br>Click MANAGE to add one.</div>';return;}
   data.customTasks.forEach(t=>{
     const done=!!data.todayChecked[t.id];
-    const streak=data.streaks[t.id]||{current:0,best:0};
+    // Derive the streak live rather than trusting the stored value, which may be
+    // stale (e.g. zeroed by an older build before the grace period existed).
+    const stored=data.streaks[t.id]||{current:0,best:0};
+    const live=calcStreak(data,t.id);
+    const streak={current:live,best:Math.max(stored.best||0,live)};
     const atRisk=streak.current>0&&!done;
     const flame=streak.current>=7?'🔥':streak.current>=3?'🕯':'·';
     const sd=STATS_DEF.find(s=>s.key===t.stat);
@@ -4407,7 +4423,9 @@ function _tskRender(){
   const counts=keys.map(k=>bucket[k]);
   const nBuckets=keys.length;
   const avg=nBuckets>0?(totalDone/nBuckets).toFixed(1):'0.0';
-  const streak=data.streaks[st.tid]||{current:0,best:0};
+  const _st=data.streaks[st.tid]||{current:0,best:0};
+  const _live=calcStreak(data,st.tid);
+  const streak={current:_live,best:Math.max(_st.best||0,_live)};
   const firstDate=Object.keys(hist).filter(d=>hist[d]&&hist[d][st.tid]).sort()[0];
   const mx=Math.max(...counts,1);
   const chart=keys.length
