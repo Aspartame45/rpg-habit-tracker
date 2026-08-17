@@ -1575,6 +1575,10 @@ body::before{
 // ══════════════════════════════════════════
 //  CONSTANTS
 // ══════════════════════════════════════════
+// Bump this on every deploy. Shown in the footer so you can confirm at a glance
+// which build the browser is actually running (vs. a stale cached copy).
+const APP_VERSION='v1.5.0';
+
 const STATS_DEF=[
   {key:'strength',    label:'STR',fullLabel:'Strength',    emoji:'⚔'},
   {key:'focus',       label:'FOC',fullLabel:'Focus',       emoji:'◎'},
@@ -2011,6 +2015,32 @@ function checkNewDay(data){
   // Self-heal: reconcile any pre-existing divergence between the checkboxes and
   // today's history (e.g. data saved by an older build that had the wipe bug).
   else _reconcileTodayChecked(data,today);
+}
+
+// Diagnostic: explains exactly which dates are driving each task-frequency goal's
+// count. Run `whyGoals()` in the browser console.
+function whyGoals(){
+  const data=load();
+  const out={version:APP_VERSION,today:todayStr(),weekStart:getStartOfWeek(),monthStart:getStartOfMonth(),goals:[]};
+  (data.customGoals||[]).forEach(g=>{
+    if(g.type!=='taskFrequency')return;
+    const ps=getStartOfPeriod(g.period);
+    const hits=[];
+    const hist=data.taskHistory||{};
+    for(const date in hist){
+      if(date>=ps&&hist[date]&&hist[date][g.taskId]){
+        hits.push({date,weekday:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(date+'T12:00:00').getDay()],value:hist[date][g.taskId]});
+      }
+    }
+    hits.sort((a,b)=>a.date<b.date?-1:1);
+    const task=(data.customTasks||[]).find(t=>t.id===g.taskId);
+    out.goals.push({goal:goalDescription(g,data),taskId:g.taskId,
+      linkedActivity:task&&task.linkedActivityId?task.linkedActivityId:null,
+      periodStart:ps,counted:hits.length,countedOn:hits});
+  });
+  out.todayChecked=Object.keys(data.todayChecked||{}).filter(k=>data.todayChecked[k]);
+  console.log(JSON.stringify(out,null,2));
+  return out;
 }
 
 // Derive the todayChecked map from taskHistory for a given day.
@@ -3382,7 +3412,7 @@ function updateFooter(){
   const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
   const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   const label=window._fbUser?`SYNCED TO CLOUD · ${timeStr}`:`DATA SAVED LOCALLY · ${dateStr}`;
-  document.getElementById('footer-date').textContent=label;
+  document.getElementById('footer-date').textContent=`${label} · ${APP_VERSION}`;
 }
 window._lastFooterSync=null;
 function _updateFooterSyncTime(){window._lastFooterSync=new Date();updateFooter();}
