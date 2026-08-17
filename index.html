@@ -233,6 +233,8 @@ body::before{
 .task-stat-pill{font-size:clamp(4px,.9vw,5px);padding:2px 5px;border:2px solid;letter-spacing:1px}
 .task-streak{font-size:clamp(4px,.9vw,5px);color:var(--dim);display:flex;align-items:center;gap:2px}
 .task-link-badge{font-size:clamp(4px,.85vw,5px);color:var(--teal);border:1px solid rgba(29,233,182,.4);padding:1px 5px;letter-spacing:1px;white-space:nowrap}
+.task-streak.at-risk .streak-hot{color:var(--gold)}
+.streak-risk{color:var(--orange2);margin-left:3px}
 .streak-hot{color:var(--orange2)}.streak-best{color:rgba(120,120,180,.6)}
 @keyframes taskFlash{0%{background:rgba(88,101,242,0)}30%{background:rgba(88,101,242,.3)}100%{background:rgba(88,101,242,0)}}
 .task-item.flash{animation:taskFlash .6s ease-out}
@@ -1366,6 +1368,17 @@ body::before{
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(4px,.85vw,5px);color:var(--dim)"><input type="radio" name="quest-avg" value="workDays"/> Only days with logged work</label>
         </div>
       </div>
+      <div id="quest-logbook-section" style="display:none;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <input type="checkbox" id="quest-in-logbook" onchange="onQuestLogbookChange()" style="width:14px;height:14px"/>
+          <label class="form-label" style="margin:0;cursor:pointer" for="quest-in-logbook">Show in Logbook (ongoing quest)</label>
+        </div>
+        <div id="quest-icon-row" style="display:none">
+          <label class="form-label">LOGBOOK ICON</label>
+          <input class="form-input" id="quest-icon" type="text" maxlength="4" placeholder="⚔"/>
+          <div class="form-hint">Click the field to pick an emoji</div>
+        </div>
+      </div>
       <label class="form-label">STAT REWARDS ON COMPLETION</label>
       <div id="quest-rewards-list"></div>
       <button class="px-btn sm" onclick="addQuestRewardRow()" style="margin-bottom:12px">+ ADD REWARD</button>
@@ -2000,9 +2013,11 @@ function checkNewDay(data){
     else data.perfectStreak=0;
     // Reset per-day tracking
     data.statsIncreasedToday={};
+    // Recompute streaks via calcStreak, which applies the grace period (a streak
+    // survives until a full day passes uncompleted, not merely until midnight).
     data.customTasks.forEach(t=>{
-      if(data.lastCompleted[t.id]!==yest&&data.lastCompleted[t.id]!==today)
-        if(data.streaks[t.id])data.streaks[t.id].current=0;
+      if(!data.streaks[t.id])data.streaks[t.id]={current:0,best:0};
+      data.streaks[t.id].current=calcStreak(data,t.id);
     });
     // Rebuild (don't blind-wipe) today's checkboxes from today's history.
     // taskHistory[today] can already hold entries — pushed by another device via
@@ -2200,6 +2215,7 @@ function renderTasks(data){
   data.customTasks.forEach(t=>{
     const done=!!data.todayChecked[t.id];
     const streak=data.streaks[t.id]||{current:0,best:0};
+    const atRisk=streak.current>0&&!done;
     const flame=streak.current>=7?'🔥':streak.current>=3?'🕯':'·';
     const sd=STATS_DEF.find(s=>s.key===t.stat);
     const div=document.createElement('div');
@@ -2214,7 +2230,7 @@ function renderTasks(data){
         <div class="task-label" data-tid="${t.id}">${t.icon||'·'} ${t.name}</div>
         <div class="task-meta">
           <span class="task-stat-pill" data-stat="${t.stat}">+${t.points} ${sd?sd.label:t.stat}</span>
-          <span class="task-streak">${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span></span>
+          <span class="task-streak${atRisk?' at-risk':''}"${atRisk?' title="Complete today to keep this streak alive"':''}>${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span>${atRisk?'<span class="streak-risk">⚠</span>':''}</span>
           ${linkBadge}
         </div>
       </div>`;
@@ -3202,8 +3218,10 @@ function openCreateQuest(qid){
   document.getElementById('quest-name').value=q?q.name:'';
   document.getElementById('quest-desc').value=q?q.description||'':'';
   document.getElementById('quest-track-time').checked=q?!!q.trackTime:false;
-  document.getElementById('quest-avg-section').style.display=q&&q.trackTime?'block':'none';
   if(q&&q.averageMode){document.querySelectorAll('input[name="quest-avg"]').forEach(r=>r.checked=r.value===q.averageMode);}
+  document.getElementById('quest-in-logbook').checked=q?!!q.showInLogbook:false;
+  document.getElementById('quest-icon').value=q&&q.icon?q.icon:'';
+  onQuestTrackTimeChange();
   // Build reward rows
   _questRewardStats=q&&q.rewards?Object.entries(q.rewards).filter(([,v])=>v>0).map(([k,v])=>({stat:k,val:v})):[];
   renderQuestRewardRows();
@@ -3213,6 +3231,15 @@ function openCreateQuest(qid){
 function onQuestTrackTimeChange(){
   const checked=document.getElementById('quest-track-time').checked;
   document.getElementById('quest-avg-section').style.display=checked?'block':'none';
+  // Logbook tracking is about hours, so it only applies to time-tracked quests.
+  document.getElementById('quest-logbook-section').style.display=checked?'block':'none';
+  if(!checked)document.getElementById('quest-in-logbook').checked=false;
+  onQuestLogbookChange();
+}
+function onQuestLogbookChange(){
+  const on=document.getElementById('quest-in-logbook').checked;
+  document.getElementById('quest-icon-row').style.display=on?'block':'none';
+  if(on)attachEmojiPicker('quest-icon');
 }
 
 function renderQuestRewardRows(){
@@ -3530,13 +3557,23 @@ function isTaskDoneOn(data,tid,ds){
   return !!(data.taskHistory&&data.taskHistory[ds]&&data.taskHistory[ds][tid]);
 }
 function calcStreak(data,tid){
-  const d=new Date();let streak=0;
-  for(let i=0;i<365;i++){
+  const d=new Date();
+  // Grace period: if today isn't done yet, the streak is still ALIVE (just at risk)
+  // because there's still time left to continue it. Start counting from yesterday
+  // so the user can see what they stand to lose. The streak only truly resets once
+  // a whole day has passed without completion.
+  if(!isTaskDoneOn(data,tid,todayStr()))d.setDate(d.getDate()-1);
+  let streak=0;
+  for(let i=0;i<366;i++){
     const ds=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
     if(isTaskDoneOn(data,tid,ds)){streak++;d.setDate(d.getDate()-1);}
     else break;
   }
   return streak;
+}
+// A streak is "at risk" when it's non-zero but today's completion is still pending.
+function isStreakAtRisk(data,tid){
+  return calcStreak(data,tid)>0&&!isTaskDoneOn(data,tid,todayStr());
 }
 
 // ══════════════════════════════════════════
@@ -4158,9 +4195,13 @@ function renderGoalsInto(containerId,data){
     let reqDayHint='';
     if(g.type==='activityTime'){
       const needed=(g.targetHours||0)-cur;
-      const dleft=_daysLeftInclusive(g.period);
+      // If time is already logged today, today's contribution is spent: spread the
+      // remainder over the days still to come, excluding today.
+      const loggedToday=Number(_goalTimeLogs(g,data)[todayStr()])||0;
+      const daysLeft=_daysLeftInclusive(g.period)-(loggedToday>0?1:0);
       if(needed<=0)reqDayHint=`<div class="goal-reqday done">✓ Target reached this ${g.period}!</div>`;
-      else if(dleft>0)reqDayHint=`<div class="goal-reqday">⏳ Need ${fmtHMCeil(needed/dleft)}/day to finish this ${g.period}</div>`;
+      else if(daysLeft<=0)reqDayHint=`<div class="goal-reqday">⏳ ${fmtHMCeil(needed)} still needed today to finish this ${g.period}</div>`;
+      else reqDayHint=`<div class="goal-reqday">⏳ Need ${fmtHMCeil(needed/daysLeft)}/day for the next ${daysLeft} day${daysLeft===1?'':'s'}${loggedToday>0?' (today done)':''}</div>`;
     }
     const div=document.createElement('div');div.className='goal-card'+(grace?' grace':'');
     div.innerHTML=`<div class="goal-desc" style="cursor:pointer" onclick="openGoalStats('${g.id}')">🎯 ${desc}${graceBadge}${streakBadge}</div>${graceHint}
