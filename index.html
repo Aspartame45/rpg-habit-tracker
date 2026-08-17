@@ -1577,7 +1577,7 @@ body::before{
 // ══════════════════════════════════════════
 // Bump this on every deploy. Shown in the footer so you can confirm at a glance
 // which build the browser is actually running (vs. a stale cached copy).
-const APP_VERSION='v1.5.0';
+const APP_VERSION='v1.6.0';
 
 const STATS_DEF=[
   {key:'strength',    label:'STR',fullLabel:'Strength',    emoji:'⚔'},
@@ -2029,7 +2029,8 @@ function whyGoals(){
     const hist=data.taskHistory||{};
     for(const date in hist){
       if(date>=ps&&hist[date]&&hist[date][g.taskId]){
-        hits.push({date,weekday:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(date+'T12:00:00').getDay()],value:hist[date][g.taskId]});
+        hits.push({date,weekday:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(date+'T12:00:00').getDay()],
+          value:hist[date][g.taskId],future:date>out.today?'⚠ FUTURE — not counted':undefined});
       }
     }
     hits.sort((a,b)=>a.date<b.date?-1:1);
@@ -2041,6 +2042,64 @@ function whyGoals(){
   out.todayChecked=Object.keys(data.todayChecked||{}).filter(k=>data.todayChecked[k]);
   console.log(JSON.stringify(out,null,2));
   return out;
+}
+
+// Report any future-dated entries in taskHistory / logbook / quest logs.
+// Future dates arise from a device whose clock was wrong (entries get stamped with
+// that clock's date) and then sync to every other device.
+function findFutureEntries(){
+  const data=load(),today=todayStr();
+  const report={today,taskHistory:[],logbook:[],quests:[]};
+  for(const d in(data.taskHistory||{})){
+    if(d>today){
+      const done=Object.keys(data.taskHistory[d]||{}).filter(k=>data.taskHistory[d][k]);
+      report.taskHistory.push({date:d,completedTasks:done});
+    }
+  }
+  (data.logbookActivities||[]).forEach(a=>{
+    for(const d in(a.dailyLogs||{})){if(d>today)report.logbook.push({activity:a.name,date:d,hours:a.dailyLogs[d]});}
+  });
+  (data.customQuests||[]).forEach(q=>{
+    for(const d in(q.dailyLogs||{})){if(d>today)report.quests.push({quest:q.name,date:d,hours:q.dailyLogs[d]});}
+  });
+  const total=report.taskHistory.length+report.logbook.length+report.quests.length;
+  console.log(JSON.stringify(report,null,2));
+  console.log(total?`Found ${total} future-dated group(s). Run cleanFutureEntries() to remove them.`:'No future-dated entries found.');
+  return report;
+}
+
+// Permanently delete future-dated entries. Asks for confirmation first, and
+// re-syncs stats so the numbers stay consistent with the remaining history.
+function cleanFutureEntries(){
+  const data=load(),today=todayStr();
+  const removed={taskHistory:[],logbook:[],quests:[]};
+  for(const d in(data.taskHistory||{})){if(d>today)removed.taskHistory.push(d);}
+  (data.logbookActivities||[]).forEach(a=>{for(const d in(a.dailyLogs||{})){if(d>today)removed.logbook.push(a.name+' '+d);}});
+  (data.customQuests||[]).forEach(q=>{for(const d in(q.dailyLogs||{})){if(d>today)removed.quests.push(q.name+' '+d);}});
+  const total=removed.taskHistory.length+removed.logbook.length+removed.quests.length;
+  if(!total){console.log('Nothing to clean — no future-dated entries.');return;}
+  if(!confirm(`Delete ${total} future-dated entr${total===1?'y':'ies'}?\n\n`+
+      `Task days: ${removed.taskHistory.join(', ')||'none'}\n`+
+      `Logbook: ${removed.logbook.join(', ')||'none'}\n`+
+      `Quests: ${removed.quests.join(', ')||'none'}\n\n`+
+      `This cannot be undone. Export a backup first if unsure.`))return;
+  removed.taskHistory.forEach(d=>{delete data.taskHistory[d];});
+  (data.logbookActivities||[]).forEach(a=>{for(const d in(a.dailyLogs||{})){if(d>today)delete a.dailyLogs[d];}});
+  (data.customQuests||[]).forEach(q=>{
+    for(const d in(q.dailyLogs||{})){if(d>today)delete q.dailyLogs[d];}
+    q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
+  });
+  // Rebuild streaks so they reflect the corrected history
+  (data.customTasks||[]).forEach(t=>{
+    if(!data.streaks[t.id])data.streaks[t.id]={current:0,best:0};
+    data.streaks[t.id].current=calcStreak(data,t.id);
+  });
+  save(data);
+  renderTasks(data);renderStats(data);renderQuests(data);renderGoals(data);
+  try{renderLogbook();}catch(e){}
+  updateMoodDisplay(data);
+  console.log('Cleaned '+total+' future-dated entr'+(total===1?'y':'ies')+'.');
+  spawnFloatCenter('🧹 Removed '+total+' future-dated entr'+(total===1?'y':'ies'));
 }
 
 // Derive the todayChecked map from taskHistory for a given day.
@@ -2931,7 +2990,9 @@ function calcAchievementProgress(q,data){
       const hist=data.taskHistory||{};
       const taskStat={};(data.customTasks||[]).forEach(t=>taskStat[t.id]=t.stat);
       let bestDay=todayN;
+      const _tdy3=todayStr();
       for(const date in hist){
+        if(date>_tdy3)continue; // ignore future-dated entries (bad clock / bad sync)
         const statsOnDay=new Set();
         for(const tid in hist[date]){if(hist[date][tid]&&taskStat[tid])statsOnDay.add(taskStat[tid]);}
         if(statsOnDay.size>bestDay)bestDay=statsOnDay.size;
@@ -3896,7 +3957,11 @@ function calculateGoalProgress(goal,data){
     if(goal.period==='month')goal._lastMonthPS=ps;
     let n=0;
     const hist=data.taskHistory||{};
-    for(const date in hist){if(date>=ps&&hist[date][goal.taskId])n++;}
+    // Bound by today: a period runs from its start up to now. Without the upper
+    // bound, any future-dated history entry (bad device clock, mis-picked date)
+    // would be counted as an already-earned completion.
+    const _tdy=todayStr();
+    for(const date in hist){if(date>=ps&&date<=_tdy&&hist[date][goal.taskId])n++;}
     goal.currentProgress=n;
     const needed=goal.frequency-n;
     const daysLeft=getDaysLeftInPeriod(goal.period);
@@ -3912,7 +3977,8 @@ function calculateGoalProgress(goal,data){
     if(goal.period==='month')goal._lastMonthPS=ps;
     const logs=_goalTimeLogs(goal,data);
     let hrs=0;
-    for(const d in logs){if(d>=ps)hrs+=Number(logs[d])||0;}
+    const _tdy2=todayStr();
+    for(const d in logs){if(d>=ps&&d<=_tdy2)hrs+=Number(logs[d])||0;}
     goal.currentProgress=hrs;
     // Pace-based status: never 'failing' until the period actually ends
     const periodLen=goal.period==='week'?7:30;
