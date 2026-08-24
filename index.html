@@ -1059,6 +1059,7 @@ body::before{
     <div class="footer-btns">
       <button class="px-btn" onclick="importData()">IMPORT</button>
       <button class="px-btn" onclick="exportData()">EXPORT</button>
+      <button class="px-btn" onclick="openBackups()">BACKUPS</button>
       <button class="px-btn danger" onclick="resetAllData()">RESET ALL</button>
     </div>
   </div>
@@ -1390,6 +1391,24 @@ body::before{
   </div>
 </div>
 
+<!-- MODAL: LOCAL BACKUPS -->
+<div class="modal-overlay" id="modal-backups">
+  <div class="modal-box wide">
+    <div class="modal-head">🛟 LOCAL BACKUPS<span class="modal-close" onclick="closeModal('modal-backups')">✕</span></div>
+    <div class="modal-body">
+      <div style="font-size:clamp(4px,.85vw,5px);color:var(--dim);line-height:1.9;margin-bottom:10px">
+        Snapshots kept on THIS device only — cloud sync can never overwrite them.
+        Restoring replaces your current data and pushes it to the cloud.
+      </div>
+      <div id="backups-list"></div>
+      <div class="form-actions" style="margin-top:12px">
+        <button class="px-btn" onclick="_makeBackup(load(),'manual');renderBackupsList();spawnFloatCenter('🛟 Snapshot saved')">+ SNAPSHOT NOW</button>
+        <button class="px-btn" onclick="closeModal('modal-backups')">CLOSE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: TASK STATS -->
 <div class="modal-overlay" id="modal-task-stats">
   <div class="modal-box wide">
@@ -1590,7 +1609,7 @@ body::before{
 // ══════════════════════════════════════════
 // Bump this on every deploy. Shown in the footer so you can confirm at a glance
 // which build the browser is actually running (vs. a stale cached copy).
-const APP_VERSION='v1.7.1';
+const APP_VERSION='v1.8.0';
 
 const STATS_DEF=[
   {key:'strength',    label:'STR',fullLabel:'Strength',    emoji:'⚔'},
@@ -1821,7 +1840,73 @@ function freshData(){
     perfectStreak:0,goalWeekStreak:0};
 }
 
-function save(d){d.updatedAt=Date.now();localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));_fbSaveData(d);}
+// Signature of the fields that represent real user data. Housekeeping saves
+// (day rollover, streak recompute, render bookkeeping) leave this unchanged.
+function _dataSignature(d){
+  try{
+    return JSON.stringify([d.taskHistory,d.todayChecked,d.stats,d.customTasks,
+      d.customQuests,d.completedQuests,d.customGoals,d.logbookActivities,
+      d.inventory,d.budgetTransactions,d.budgetHistory,d.unlockedTitles,
+      d.unlockedCosmetics,d.equippedCosmetics,d.equippedTitle,d.activeStats,
+      d.defaultQuests,d.characterName,d.characterCustomization,d.gold]);
+  }catch(e){return String(Math.random());}
+}
+
+// Rough measure of how much user data a snapshot holds. Used to detect a sync
+// that would destroy substantially more than it adds.
+function _dataScore(d){
+  if(!d||typeof d!=='object')return 0;
+  let s=0;
+  const th=d.taskHistory||{};
+  for(const dt in th){s+=10;s+=Object.keys(th[dt]||{}).filter(k=>th[dt][k]).length;}
+  s+=(d.customQuests||[]).length*8;
+  s+=(d.completedQuests||[]).length*8;
+  s+=(d.customGoals||[]).length*6;
+  (d.logbookActivities||[]).forEach(a=>{s+=5+Object.keys(a.dailyLogs||{}).length*2;});
+  s+=(d.inventory||[]).length*2;
+  s+=(d.budgetTransactions||[]).length*2;
+  s+=(d.budgetHistory||[]).length*3;
+  s+=(d.unlockedTitles||[]).length*3;
+  s+=Object.values(d.stats||{}).reduce((a,v)=>a+(Number(v)||0),0);
+  return Math.round(s);
+}
+
+// ── Local snapshot backups ──────────────────────────────────────────────
+// Stored under their own key, never synced to Firebase, so a bad cloud merge
+// cannot destroy them. This is the undo button the app previously lacked.
+const BACKUP_KEY='rpg_local_backups';
+const BACKUP_MAX=12;
+function _loadBackups(){try{return JSON.parse(localStorage.getItem(BACKUP_KEY)||'[]');}catch(e){return[];}}
+function _makeBackup(data,reason){
+  try{
+    const json=JSON.stringify(data);
+    const arr=_loadBackups();
+    if(arr.length&&arr[arr.length-1].json===json)return; // no duplicate snapshots
+    arr.push({ts:Date.now(),reason:reason||'auto',score:_dataScore(data),json});
+    while(arr.length>BACKUP_MAX)arr.shift();
+    try{localStorage.setItem(BACKUP_KEY,JSON.stringify(arr));}
+    catch(quota){ // storage full — keep only the newest few and retry once
+      const trimmed=arr.slice(-3);
+      localStorage.setItem(BACKUP_KEY,JSON.stringify(trimmed));
+    }
+  }catch(e){console.warn('[backup] failed:',e);}
+}
+// Take at most one automatic snapshot per day.
+function _dailyBackup(data){
+  const arr=_loadBackups();
+  const last=arr.length?arr[arr.length-1].ts:0;
+  if(Date.now()-last>20*3600*1000)_makeBackup(data,'daily');
+}
+
+function save(d){
+  // Only advance updatedAt when the user's data actually changed. Without this,
+  // simply opening the app re-stamps stale data as "newest" and lets it win the
+  // cloud merge — which is exactly how a stale device can overwrite a good one.
+  const sig=_dataSignature(d);
+  if(sig!==d._sig){d._sig=sig;d.updatedAt=Date.now();}
+  localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));
+  _fbSaveData(d);
+}
 
 // Returns true if a data blob has no meaningful user content (fresh/default state).
 // Used to guard cloud merges so an empty copy can never overwrite real data.
@@ -2069,6 +2154,47 @@ function whyGoals(){
   out.todayChecked=Object.keys(data.todayChecked||{}).filter(k=>data.todayChecked[k]);
   console.log(JSON.stringify(out,null,2));
   return out;
+}
+
+// ── Backups UI ──
+function openBackups(){renderBackupsList();openModal('modal-backups');}
+function renderBackupsList(){
+  const wrap=document.getElementById('backups-list');if(!wrap)return;
+  const arr=_loadBackups().slice().reverse();
+  const curScore=_dataScore(load());
+  if(!arr.length){wrap.innerHTML='<div class="empty-state">No snapshots yet. One is taken automatically each day and before any risky sync.</div>';return;}
+  wrap.innerHTML=`<div style="font-size:clamp(4px,.8vw,5px);color:var(--b3);margin-bottom:8px">CURRENT DATA: ${curScore} points</div>`+
+    arr.map((b,i)=>{
+      const dt=new Date(b.ts);
+      const when=dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      const richer=b.score>curScore;
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(88,101,242,.15)">
+        <span style="flex:1;font-size:clamp(4px,.9vw,5px)">${when}<br><span style="color:var(--dim)">${b.reason}</span></span>
+        <span style="font-size:clamp(4px,.9vw,5px);color:${richer?'var(--green)':'var(--dim)'};white-space:nowrap">${b.score} pts</span>
+        <button class="px-btn sm" onclick="restoreBackup(${arr.length-1-i})">RESTORE</button>
+      </div>`;
+    }).join('');
+}
+function restoreBackup(idx){
+  const arr=_loadBackups();
+  const b=arr[idx];if(!b)return;
+  const cur=load();
+  const dt=new Date(b.ts);
+  if(!confirm('Restore the snapshot from '+dt.toLocaleString('en-GB')+'?\n\n'+
+    'Snapshot: '+b.score+' points of data\n'+
+    'Current:  '+_dataScore(cur)+' points of data\n\n'+
+    'Your current data will be snapshotted first, so this is reversible.'))return;
+  _makeBackup(cur,'pre-restore');
+  try{
+    const restored=JSON.parse(b.json);
+    restored.updatedAt=Date.now();     // make the restore win the next cloud merge
+    restored._sig=_dataSignature(restored);
+    localStorage.setItem('rpg_tracker_v2',JSON.stringify(restored));
+    _fbSaveData(restored);
+    closeModal('modal-backups');
+    spawnFloatCenter('🛟 Backup restored');
+    setTimeout(()=>location.reload(),700);
+  }catch(e){alert('Restore failed: '+e.message);}
 }
 
 // Report any future-dated entries in taskHistory / logbook / quest logs.
@@ -4810,6 +4936,9 @@ function init(){
   updateMoodDisplay(data); // also calls renderDailyCharacter
   renderGoals(data);
 
+  // Take one automatic snapshot per day as a safety net
+  _dailyBackup(data);
+
   // Emoji pickers on icon fields
   attachEmojiPicker('edit-task-icon');
   attachEmojiPicker('edit-act-icon');
@@ -4910,6 +5039,17 @@ function _fbStartSync(uid){
       _fbShowBanner('⚠ Ignored an empty cloud update to protect your local data','#8a6d00');
       return;
     }
+    // Richness guard: an incoming update that holds far less data than what this
+    // device already has is almost always a stale device overwriting a good one.
+    // Snapshot first, then hold it back and let the user choose.
+    const rs=_dataScore(remote),ls=_dataScore(localNow);
+    if(ls>rs*1.4&&ls-rs>15){
+      _makeBackup(localNow,'pre-incoming-sync');
+      _makeBackup(remote,'incoming-cloud');
+      _fbShowBanner('⚠ Held back an incoming sync that would remove data — see BACKUPS in the footer','#8a6d00');
+      return;
+    }
+    _makeBackup(localNow,'pre-sync');
     localStorage.setItem('rpg_tracker_v2',JSON.stringify(remote));
     const d=load();checkNewDay(d);
     renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();
@@ -4948,6 +5088,27 @@ function _fbMigrateOrLoad(uid){
           const ld=local.lastActiveDate||'',rd=remote.lastActiveDate||'';
           winner=ld>rd?local:remote;pushLocal=(winner===local&&ld>rd);
         }
+      }
+      // Richness guard: a timestamp says which copy is NEWER, not which is RICHER.
+      // If the winner holds substantially less data than the loser, applying it
+      // silently would destroy real history — so snapshot first and let the user
+      // decide, defaulting to whichever copy actually has more in it.
+      const lScore=_dataScore(local),rScore=_dataScore(remote);
+      const loser=winner===local?remote:local;
+      const wScore=winner===local?lScore:rScore;
+      const lsScore=winner===local?rScore:lScore;
+      if(lsScore>wScore*1.4&&lsScore-wScore>15){
+        _makeBackup(local,'pre-sync-local');
+        _makeBackup(remote,'pre-sync-cloud');
+        const keepRicher=confirm(
+          'SYNC CONFLICT\n\n'+
+          'The two copies of your data disagree, and the more recent one contains LESS data.\n\n'+
+          'This device: '+lScore+' points of data'+(winner===local?' (more recent)':'')+'\n'+
+          'Cloud copy:  '+rScore+' points of data'+(winner===remote?' (more recent)':'')+'\n\n'+
+          'OK  = keep the copy with MORE data (recommended)\n'+
+          'Cancel = keep the more recent copy\n\n'+
+          'Both versions have been backed up locally either way (footer → BACKUPS).');
+        if(keepRicher){winner=loser;pushLocal=(winner===local);}
       }
       localStorage.setItem('rpg_tracker_v2',JSON.stringify(winner));
       if(pushLocal)_fbSaveData(winner);
