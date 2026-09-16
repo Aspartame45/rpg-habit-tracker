@@ -23,7 +23,6 @@ firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 const fbDb=firebase.database();
 window._fbUser=null;
-window._fbSyncing=false;
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1609,7 +1608,7 @@ body::before{
 // ══════════════════════════════════════════
 // Bump this on every deploy. Shown in the footer so you can confirm at a glance
 // which build the browser is actually running (vs. a stale cached copy).
-const APP_VERSION='v1.8.0';
+const APP_VERSION='v1.9.0';
 
 const STATS_DEF=[
   {key:'strength',    label:'STR',fullLabel:'Strength',    emoji:'⚔'},
@@ -1840,18 +1839,6 @@ function freshData(){
     perfectStreak:0,goalWeekStreak:0};
 }
 
-// Signature of the fields that represent real user data. Housekeeping saves
-// (day rollover, streak recompute, render bookkeeping) leave this unchanged.
-function _dataSignature(d){
-  try{
-    return JSON.stringify([d.taskHistory,d.todayChecked,d.stats,d.customTasks,
-      d.customQuests,d.completedQuests,d.customGoals,d.logbookActivities,
-      d.inventory,d.budgetTransactions,d.budgetHistory,d.unlockedTitles,
-      d.unlockedCosmetics,d.equippedCosmetics,d.equippedTitle,d.activeStats,
-      d.defaultQuests,d.characterName,d.characterCustomization,d.gold]);
-  }catch(e){return String(Math.random());}
-}
-
 // Rough measure of how much user data a snapshot holds. Used to detect a sync
 // that would destroy substantially more than it adds.
 function _dataScore(d){
@@ -1872,40 +1859,84 @@ function _dataScore(d){
 }
 
 // ── Local snapshot backups ──────────────────────────────────────────────
-// Stored under their own key, never synced to Firebase, so a bad cloud merge
-// cannot destroy them. This is the undo button the app previously lacked.
-const BACKUP_KEY='rpg_local_backups';
-const BACKUP_MAX=12;
-function _loadBackups(){try{return JSON.parse(localStorage.getItem(BACKUP_KEY)||'[]');}catch(e){return[];}}
+// Stored on this device only, never synced, so nothing in the cloud can destroy
+// them. Three kinds, kept separately so routine activity can't push out the
+// useful ones:
+//   daily   one per calendar day, the last 14 days
+//   event   before a restore, import, reset, or a sync that removes data; last 10
+//   legacy  snapshots made by v1.8.0, kept until storage runs out
+const BACKUP_KEY='rpg_backups_v2';
+const BACKUP_LEGACY_KEY='rpg_local_backups';
+const BACKUP_DAILY_KEEP=14,BACKUP_EVENT_KEEP=10;
+
+function _backupDay(ts){const d=new Date(ts);return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;}
+function _backupEntry(data,kind,reason,ts){
+  const clean=_syncNormalize(data,true)||{};
+  const t=ts||Date.now();
+  return{id:t.toString(36)+Math.random().toString(36).slice(2,7),ts:t,day:_backupDay(t),
+    kind,reason:reason||kind,score:_dataScore(clean),json:JSON.stringify(clean)};
+}
+function _backupSummary(d){
+  const days=Object.keys((d&&d.taskHistory)||{}).filter(k=>Object.values(d.taskHistory[k]||{}).some(Boolean)).sort();
+  return{days:days.length,last:days[days.length-1]||'none'};
+}
+function _saveBackups(arr){
+  const byTs=(a,b)=>a.ts-b.ts;
+  const legacy=arr.filter(b=>b.kind==='legacy').sort(byTs);
+  const daily=arr.filter(b=>b.kind==='daily').sort(byTs).slice(-BACKUP_DAILY_KEEP);
+  const events=arr.filter(b=>b.kind==='event').sort(byTs).slice(-BACKUP_EVENT_KEEP);
+  let keep=[...legacy,...daily,...events];
+  // Storage full: give up the oldest event snapshot first, then the oldest
+  // v1.8.0 snapshot, then the oldest daily, always keeping the newest daily.
+  for(let i=0;i<60;i++){
+    try{localStorage.setItem(BACKUP_KEY,JSON.stringify(keep));return true;}
+    catch(e){
+      const pick=kind=>keep.find(b=>b.kind===kind);
+      const victim=pick('event')||pick('legacy')||(keep.filter(b=>b.kind==='daily').length>1?pick('daily'):null);
+      if(!victim){console.warn('[backup] storage full:',e);return false;}
+      keep=keep.filter(b=>b!==victim);
+    }
+  }
+  return false;
+}
+function _loadBackups(){
+  let arr=null;
+  try{arr=JSON.parse(localStorage.getItem(BACKUP_KEY)||'null');}catch(e){arr=null;}
+  if(Array.isArray(arr))return arr;
+  // One-time move of the v1.8.0 snapshots into the new store.
+  arr=[];
+  try{
+    JSON.parse(localStorage.getItem(BACKUP_LEGACY_KEY)||'[]').forEach(b=>{
+      try{arr.push(_backupEntry(JSON.parse(b.json),'legacy',b.reason,b.ts));}catch(e){}
+    });
+  }catch(e){}
+  if(_saveBackups(arr)){try{localStorage.removeItem(BACKUP_LEGACY_KEY);}catch(e){}}
+  return arr;
+}
 function _makeBackup(data,reason){
   try{
-    const json=JSON.stringify(data);
-    const arr=_loadBackups();
-    if(arr.length&&arr[arr.length-1].json===json)return; // no duplicate snapshots
-    arr.push({ts:Date.now(),reason:reason||'auto',score:_dataScore(data),json});
-    while(arr.length>BACKUP_MAX)arr.shift();
-    try{localStorage.setItem(BACKUP_KEY,JSON.stringify(arr));}
-    catch(quota){ // storage full — keep only the newest few and retry once
-      const trimmed=arr.slice(-3);
-      localStorage.setItem(BACKUP_KEY,JSON.stringify(trimmed));
-    }
+    const arr=_loadBackups(),entry=_backupEntry(data,'event',reason);
+    const last=arr.filter(b=>b.kind==='event').sort((a,b)=>b.ts-a.ts)[0];
+    if(last&&last.json===entry.json)return;
+    arr.push(entry);_saveBackups(arr);
   }catch(e){console.warn('[backup] failed:',e);}
 }
-// Take at most one automatic snapshot per day.
+// One snapshot per calendar day. Taken after the first sync when signed in, so
+// a device that was out of date doesn't snapshot its stale copy as "today".
 function _dailyBackup(data){
-  const arr=_loadBackups();
-  const last=arr.length?arr[arr.length-1].ts:0;
-  if(Date.now()-last>20*3600*1000)_makeBackup(data,'daily');
+  try{
+    const arr=_loadBackups(),today=todayStr();
+    if(arr.some(b=>b.kind==='daily'&&b.day===today))return;
+    arr.push(_backupEntry(data,'daily','daily'));_saveBackups(arr);
+  }catch(e){console.warn('[backup] daily failed:',e);}
 }
 
 function save(d){
-  // Only advance updatedAt when the user's data actually changed. Without this,
-  // simply opening the app re-stamps stale data as "newest" and lets it win the
-  // cloud merge — which is exactly how a stale device can overwrite a good one.
-  const sig=_dataSignature(d);
-  if(sig!==d._sig){d._sig=sig;d.updatedAt=Date.now();}
+  // Sync decisions no longer use timestamps (see SYNC ENGINE), so the old
+  // signature field is dropped rather than stored.
+  delete d._sig;
   localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));
-  _fbSaveData(d);
+  _syncSchedule();
 }
 
 // Returns true if a data blob has no meaningful user content (fresh/default state).
@@ -2160,41 +2191,41 @@ function whyGoals(){
 function openBackups(){renderBackupsList();openModal('modal-backups');}
 function renderBackupsList(){
   const wrap=document.getElementById('backups-list');if(!wrap)return;
-  const arr=_loadBackups().slice().reverse();
-  const curScore=_dataScore(load());
-  if(!arr.length){wrap.innerHTML='<div class="empty-state">No snapshots yet. One is taken automatically each day and before any risky sync.</div>';return;}
-  wrap.innerHTML=`<div style="font-size:clamp(4px,.8vw,5px);color:var(--b3);margin-bottom:8px">CURRENT DATA: ${curScore} points</div>`+
-    arr.map((b,i)=>{
+  const arr=_loadBackups().slice().sort((a,b)=>b.ts-a.ts);
+  const cur=load(),curInfo=_backupSummary(cur);
+  if(!arr.length){wrap.innerHTML='<div class="empty-state">No snapshots yet. One is taken each day, and before any restore, import or sync that removes data.</div>';return;}
+  const label={daily:'daily',legacy:'older version'};
+  // Each row shows how far its history reaches, so the right one is easy to find.
+  wrap.innerHTML=`<div style="font-size:clamp(4px,.8vw,5px);color:var(--b3);margin-bottom:8px">CURRENT DATA: ${curInfo.days} days · last day ${curInfo.last}</div>`+
+    arr.map(b=>{
+      let info={days:'?',last:'?'};try{info=_backupSummary(JSON.parse(b.json));}catch(e){}
       const dt=new Date(b.ts);
       const when=dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      const richer=b.score>curScore;
+      const why=b.kind==='event'?b.reason:(label[b.kind]||b.kind)+(b.kind==='legacy'?' · '+b.reason:'');
+      const reaches=info.last>curInfo.last;
       return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(88,101,242,.15)">
-        <span style="flex:1;font-size:clamp(4px,.9vw,5px)">${when}<br><span style="color:var(--dim)">${b.reason}</span></span>
-        <span style="font-size:clamp(4px,.9vw,5px);color:${richer?'var(--green)':'var(--dim)'};white-space:nowrap">${b.score} pts</span>
-        <button class="px-btn sm" onclick="restoreBackup(${arr.length-1-i})">RESTORE</button>
+        <span style="flex:1;font-size:clamp(4px,.9vw,5px);line-height:1.9">${when}<br><span style="color:var(--dim)">${why}</span></span>
+        <span style="font-size:clamp(4px,.9vw,5px);color:${reaches?'var(--green)':'var(--dim)'};white-space:nowrap;text-align:right;line-height:1.9">${info.days} days<br>to ${info.last}</span>
+        <button class="px-btn sm" onclick="restoreBackup('${b.id}')">RESTORE</button>
       </div>`;
     }).join('');
 }
-function restoreBackup(idx){
-  const arr=_loadBackups();
-  const b=arr[idx];if(!b)return;
-  const cur=load();
-  const dt=new Date(b.ts);
-  if(!confirm('Restore the snapshot from '+dt.toLocaleString('en-GB')+'?\n\n'+
-    'Snapshot: '+b.score+' points of data\n'+
-    'Current:  '+_dataScore(cur)+' points of data\n\n'+
-    'Your current data will be snapshotted first, so this is reversible.'))return;
-  _makeBackup(cur,'pre-restore');
-  try{
-    const restored=JSON.parse(b.json);
-    restored.updatedAt=Date.now();     // make the restore win the next cloud merge
-    restored._sig=_dataSignature(restored);
-    localStorage.setItem('rpg_tracker_v2',JSON.stringify(restored));
-    _fbSaveData(restored);
-    closeModal('modal-backups');
-    spawnFloatCenter('🛟 Backup restored');
-    setTimeout(()=>location.reload(),700);
-  }catch(e){alert('Restore failed: '+e.message);}
+function restoreBackup(id){
+  const b=_loadBackups().find(x=>x.id===id);if(!b)return;
+  let restored;
+  try{restored=JSON.parse(b.json);}catch(e){alert('This snapshot is damaged and cannot be restored.');return;}
+  const cur=load(),a=_backupSummary(restored),c=_backupSummary(cur);
+  if(!confirm('Restore the snapshot from '+new Date(b.ts).toLocaleString('en-GB')+'?\n\n'+
+    'Snapshot: '+a.days+' days of history, last day '+a.last+'\n'+
+    'Current:  '+c.days+' days of history, last day '+c.last+'\n\n'+
+    'This replaces your data on every device. Your current data is snapshotted first, so this is reversible.'))return;
+  _makeBackup(cur,'before-restore');
+  closeModal('modal-backups');
+  spawnFloatCenter('🛟 Restoring…');
+  _syncReplaceAll(restored).then(state=>{
+    if(state==='failed')alert('Restored on this device, but the cloud could not be updated yet. It will be sent on the next sync.');
+    location.reload();
+  });
 }
 
 // Report any future-dated entries in taskHistory / logbook / quest logs.
@@ -3616,26 +3647,24 @@ function handleImport(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
-    try{
-      const d=JSON.parse(ev.target.result);if(!d.stats)throw new Error('bad');
-      if(!confirm('Replace ALL current data with this backup?'))return;
-      localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));
-      // If logged in, push imported data to Firebase immediately before reload
-      if(window._fbUser){
-        fbDb.ref('users/'+window._fbUser.uid+'/data').set(d)
-          .then(()=>location.reload())
-          .catch(()=>location.reload());
-      } else {
-        location.reload();
-      }
-    }catch(err){alert('Invalid backup file.');}
+    let d;
+    try{d=JSON.parse(ev.target.result);if(!d||!d.stats)throw new Error('bad');}
+    catch(err){alert('Invalid backup file.');return;}
+    const info=_backupSummary(d);
+    if(!confirm('Replace ALL current data with this backup?\n\n'+
+      'Backup: '+info.days+' days of history, last day '+info.last+'\n\n'+
+      'This replaces your data on every device. Your current data is snapshotted first.'))return;
+    _makeBackup(load(),'before-import');
+    _syncReplaceAll(d).then(()=>location.reload());
   };
   reader.readAsText(file);e.target.value='';
 }
 function resetAllData(){
   if(!confirm('DELETE ALL DATA? This cannot be undone.'))return;
   if(!confirm('Absolutely sure?'))return;
-  localStorage.removeItem('rpg_tracker_v2');localStorage.removeItem('rpg_tracker_v1');location.reload();
+  _makeBackup(load(),'before-reset');
+  ['rpg_tracker_v2','rpg_tracker_v1',SYNC_BASE_KEY,SYNC_PENDING_KEY].forEach(k=>localStorage.removeItem(k));
+  location.reload();
 }
 function updateFooter(){
   const now=new Date();
@@ -4936,8 +4965,9 @@ function init(){
   updateMoodDisplay(data); // also calls renderDailyCharacter
   renderGoals(data);
 
-  // Take one automatic snapshot per day as a safety net
-  _dailyBackup(data);
+  // Daily snapshot. When signed in, it is taken after the first sync instead,
+  // so an out-of-date device never snapshots its stale copy as today's.
+  setTimeout(()=>{if(!window._fbUser)_dailyBackup(load());},10000);
 
   // Emoji pickers on icon fields
   attachEmojiPicker('edit-task-icon');
@@ -4977,8 +5007,6 @@ function _fbSetSyncDot(state){
   dot.className='sync-dot'+(state==='syncing'?' syncing':state==='offline'?' offline':'');
 }
 
-// Track our last write timestamp to avoid re-applying our own echo
-window._fbLastWriteTs=0;
 
 function _fbShowBanner(msg,color){
   let b=document.getElementById('fb-banner');
@@ -4997,140 +5025,408 @@ function _fbShowBanner(msg,color){
   if(color==='#1a5c1a')setTimeout(()=>b.style.display='none',3000);
 }
 
-function _fbSaveData(d){
-  if(!window._fbUser||window._fbSyncing)return;
-  window._fbSyncing=true;
-  window._fbLastWriteTs=Date.now();
-  _fbSetSyncDot('syncing');
-  fbDb.ref('users/'+window._fbUser.uid+'/data')
-    .set(JSON.parse(JSON.stringify(d)))
-    .then(()=>{_fbSetSyncDot('online');_updateFooterSyncTime();})
-    .catch(e=>{
-      console.error('[Firebase] save failed:',e);
-      _fbSetSyncDot('offline');
-      _fbShowBanner('SYNC ERROR: '+_fbErrHint(e));
-    })
-    .finally(()=>{window._fbSyncing=false;});
-}
-
 function _fbErrHint(e){
   if(e.code==='PERMISSION_DENIED')return'Database rules are blocking access — check Firebase Console → Rules';
   if(e.code==='NETWORK_ERROR')return'No network connection';
   return e.message||e.code||'unknown error';
 }
 
-function _fbStartSync(uid){
-  const ref=fbDb.ref('users/'+uid+'/data');
-  // Monitor Firebase connection state
-  fbDb.ref('.info/connected').on('value',snap=>{
-    if(snap.val()===true){_fbSetSyncDot('online');}
-    else if(window._fbUser){_fbSetSyncDot('offline');}
-  });
-  // Real-time listener for cross-device changes
-  let firstCall=true;
-  ref.on('value',snap=>{
-    if(firstCall){firstCall=false;return;} // skip the immediate echo of our own initial load
-    if(Date.now()-window._fbLastWriteTs<3000)return; // skip echo of our own write
-    const remote=snap.val();
-    if(!remote)return;
-    // Guard: never let a blank/emptied cloud copy wipe a device that still holds real data.
-    const localNow=JSON.parse(localStorage.getItem('rpg_tracker_v2')||'{}');
-    if(_dataIsEmptyish(remote)&&!_dataIsEmptyish(localNow)){
-      _fbShowBanner('⚠ Ignored an empty cloud update to protect your local data','#8a6d00');
-      return;
-    }
-    // Richness guard: an incoming update that holds far less data than what this
-    // device already has is almost always a stale device overwriting a good one.
-    // Snapshot first, then hold it back and let the user choose.
-    const rs=_dataScore(remote),ls=_dataScore(localNow);
-    if(ls>rs*1.4&&ls-rs>15){
-      _makeBackup(localNow,'pre-incoming-sync');
-      _makeBackup(remote,'incoming-cloud');
-      _fbShowBanner('⚠ Held back an incoming sync that would remove data — see BACKUPS in the footer','#8a6d00');
-      return;
-    }
-    _makeBackup(localNow,'pre-sync');
-    localStorage.setItem('rpg_tracker_v2',JSON.stringify(remote));
-    const d=load();checkNewDay(d);
-    renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();
-    if(document.getElementById('tab-quests').classList.contains('active'))renderQuests(d);
-    if(document.getElementById('tab-inventory').classList.contains('active'))renderInventoryTab(d);
-    _fbShowBanner('✓ DATA SYNCED FROM ANOTHER DEVICE','#1a5c1a');
-  },e=>{
-    console.error('[Firebase] listener error:',e);
-    _fbShowBanner('SYNC LISTENER ERROR: '+_fbErrHint(e));
-  });
+// ══════════════════════════════════════════
+//  SYNC ENGINE — three-way merge (v1.9.0)
+// ══════════════════════════════════════════
+// Each device keeps a private "base": the last version of the data it knows the
+// cloud held. A sync compares this device's data and the cloud's data against
+// that base and applies BOTH sets of changes. A device that changed nothing since
+// its base simply adopts the cloud, so a stale device can never overwrite newer
+// data just by being opened, which is how v1.8.0 lost data. Timestamps are not
+// used to decide anything.
+const SYNC_V=2;
+const _SYNC_META=['updatedAt','_sig','_syncV'];
+
+// Lists merged item by item, keyed by identity, so each device's additions,
+// edits and deletions survive independently.
+const _SYNC_KEYS={
+  customTasks:'id',customQuests:'id',completedQuests:'id',customGoals:'id',
+  logbookActivities:'id',budgetTransactions:'id',transactions:'id',inventory:'id',
+  projects:'id',completedProjects:'id',budgetHistory:'month',
+  unlockedTitles:t=>(t&&typeof t==='object')?[t.cls,t.lvl,t.stat].join('|'):String(t),
+  unlockedCosmetics:v=>String(v)
+};
+
+// Fields the app recalculates by itself (checkboxes, streaks, goal status and so
+// on). A change to these alone never triggers a sync, and never counts as
+// "editing" an item that the other device deleted.
+const _SYNC_DERIVED=/^(todayChecked|characterMood|statsIncreasedToday|lastActiveDate|lastWeekStart|currentMonth|streaks|perfectStreak|goalWeekStreak|completedGoalCount)$|^customGoals\[\]\.(status|currentProgress|previousWeekStatus|streak)$|^(customQuests|completedQuests)\[\]\.totalHours$|^unlockedTitles\[\]\.isNew$/;
+
+// How to resolve a value that BOTH devices changed, differently.
+function _syncPolicy(p){
+  // Logged time: each device's sessions are separate, so both are kept even when
+  // the two totals happen to be equal. (Stats are rebuilt separately, see
+  // _syncMergeStats, because equal totals there can mean the same deed.)
+  if(/^logbookActivities\[\]\.dailyLogs\.[^.]+$/.test(p))return'add';
+  // progress markers and entered totals: the further one wins
+  if(/^(streaks|lastCompleted|statLastIncreased)\./.test(p)
+    ||/^(gold|perfectStreak|goalWeekStreak|completedGoalCount|lastActiveDate|lastWeekStart|currentMonth)$/.test(p)
+    ||/^(customQuests|completedQuests)\[\]\.dailyLogs\.[^.]+$/.test(p)
+    ||/^customGoals\[\]\.(streak|currentProgress)$/.test(p))return'max';
+  // recalculated summaries: take the cloud's
+  if(/^customGoals\[\]\.(status|previousWeekStatus)$/.test(p)||p==='characterMood'||p==='budgetHistory[]')return'remote';
+  // completions: done on either device means done
+  if(/^taskHistory\.[^.]+\.[^.]+$/.test(p)||/^(tutorialsViewed|statsIncreasedToday)\.[^.]+$/.test(p)
+    ||/^defaultQuests\.[^.]+\.completed$/.test(p))return'or';
+  return null;
 }
 
-function _fbMigrateOrLoad(uid){
-  const ref=fbDb.ref('users/'+uid+'/data');
-  ref.once('value').then(snap=>{
-    const remote=snap.val();
-    if(remote){
-      const local=JSON.parse(localStorage.getItem('rpg_tracker_v2')||'{}');
-      const localEmpty=_dataIsEmptyish(local);
-      const remoteEmpty=_dataIsEmptyish(remote);
-      let winner,pushLocal=false;
-      if(localEmpty&&!remoteEmpty){
-        // Local is blank (fresh session / cleared storage) — ALWAYS keep the cloud copy.
-        // This is the guard that prevents empty data from clobbering real data.
-        winner=remote;
-      } else if(remoteEmpty&&!localEmpty){
-        // Cloud is blank but local has real data — keep local and upload it.
-        winner=local;pushLocal=true;
-      } else {
-        // Both have data (or both empty) — newest wins by monotonic updatedAt,
-        // falling back to lastActiveDate only when no timestamps exist.
-        const lu=Number(local.updatedAt||0),ru=Number(remote.updatedAt||0);
-        if(lu||ru){
-          winner=lu>=ru?local:remote;pushLocal=(winner===local&&lu>ru);
-        } else {
-          const ld=local.lastActiveDate||'',rd=remote.lastActiveDate||'';
-          winner=ld>rd?local:remote;pushLocal=(winner===local&&ld>rd);
-        }
-      }
-      // Richness guard: a timestamp says which copy is NEWER, not which is RICHER.
-      // If the winner holds substantially less data than the loser, applying it
-      // silently would destroy real history — so snapshot first and let the user
-      // decide, defaulting to whichever copy actually has more in it.
-      const lScore=_dataScore(local),rScore=_dataScore(remote);
-      const loser=winner===local?remote:local;
-      const wScore=winner===local?lScore:rScore;
-      const lsScore=winner===local?rScore:lScore;
-      if(lsScore>wScore*1.4&&lsScore-wScore>15){
-        _makeBackup(local,'pre-sync-local');
-        _makeBackup(remote,'pre-sync-cloud');
-        const keepRicher=confirm(
-          'SYNC CONFLICT\n\n'+
-          'The two copies of your data disagree, and the more recent one contains LESS data.\n\n'+
-          'This device: '+lScore+' points of data'+(winner===local?' (more recent)':'')+'\n'+
-          'Cloud copy:  '+rScore+' points of data'+(winner===remote?' (more recent)':'')+'\n\n'+
-          'OK  = keep the copy with MORE data (recommended)\n'+
-          'Cancel = keep the more recent copy\n\n'+
-          'Both versions have been backed up locally either way (footer → BACKUPS).');
-        if(keepRicher){winner=loser;pushLocal=(winner===local);}
-      }
-      localStorage.setItem('rpg_tracker_v2',JSON.stringify(winner));
-      if(pushLocal)_fbSaveData(winner);
-    } else {
-      // No Firebase data yet — first-time migration from localStorage
-      const local=JSON.parse(localStorage.getItem('rpg_tracker_v2')||'null');
-      if(local){
-        ref.set(local)
-          .then(()=>{_fbShowBanner('✓ DATA UPLOADED TO CLOUD','#1a5c1a');})
-          .catch(e=>{
-            console.error('[Firebase] migrate:',e);
-            _fbShowBanner('UPLOAD ERROR: '+_fbErrHint(e));
-          });
+function _syncIsObj(x){return x!==null&&typeof x==='object'&&!Array.isArray(x);}
+function _syncCanon(x){
+  if(Array.isArray(x))return'['+x.map(_syncCanon).join(',')+']';
+  if(_syncIsObj(x))return'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+_syncCanon(x[k])).join(',')+'}';
+  return x===undefined?'~':JSON.stringify(x);
+}
+function _syncEq(a,b){return a===b||_syncCanon(a)===_syncCanon(b);}
+function _syncName(path){return String(path||'').split('.').pop().replace(/\[\]$/,'');}
+
+// Mirror what Firebase stores: no nulls, no empty lists or objects.
+function _syncNormalize(x,top){
+  if(Array.isArray(x)){const a=x.map(v=>_syncNormalize(v)).filter(v=>v!==undefined);return a.length?a:undefined;}
+  if(_syncIsObj(x)){
+    const o={};
+    for(const k of Object.keys(x)){if(top&&_SYNC_META.includes(k))continue;const v=_syncNormalize(x[k]);if(v!==undefined)o[k]=v;}
+    return Object.keys(o).length?o:undefined;
+  }
+  if(x===null||x===undefined||(typeof x==='number'&&!isFinite(x)))return undefined;
+  return x;
+}
+function _syncStrip(x,path){
+  if(Array.isArray(x))return x.map(v=>_syncStrip(v,path+'[]'));
+  if(_syncIsObj(x)){
+    const o={};
+    for(const k of Object.keys(x)){const cp=path?path+'.'+k:k;if(_SYNC_DERIVED.test(cp))continue;o[k]=_syncStrip(x[k],cp);}
+    return o;
+  }
+  return x;
+}
+// Fingerprint of the user's actual content, ignoring recalculated fields.
+function _syncSig(doc){return _syncCanon(_syncNormalize(_syncStrip(_syncNormalize(doc,true)||{},''))||{});}
+
+function _syncKeyFn(path){
+  const k=_SYNC_KEYS[_syncName(path)];
+  if(!k)return null;
+  return typeof k==='function'?k:(v=>(v&&typeof v==='object'&&v[k]!=null)?String(v[k]):undefined);
+}
+function _syncToMap(arr,kf){
+  if(arr===undefined)return{map:Object.create(null),order:[]};
+  if(!Array.isArray(arr))return null;
+  const map=Object.create(null),order=[];
+  for(const v of arr){const k=kf(v);if(k===undefined||k in map)return null;map[k]=v;order.push(k);}
+  return{map,order};
+}
+
+function _syncMerge3(b,l,r,path,opt){
+  const pol=_syncPolicy(path);
+  if(pol==='add'&&typeof l==='number'&&typeof r==='number'&&!_syncEq(l,b)&&!_syncEq(r,b)){
+    const bn=typeof b==='number'?b:0;
+    return Math.round((l+r-bn)*1000)/1000;
+  }
+  if(_syncEq(l,r)){
+    // Identical results usually mean the same edit. Logged time is the exception:
+    // two equal sessions on two devices are two sessions, so look inside.
+    const holdsTime=path===''||/^logbookActivities(\[\](\.dailyLogs)?)?$/.test(path);
+    if(!(holdsTime&&!_syncEq(l,b)&&!_syncEq(r,b)))return l;
+  }
+  else if(_syncEq(l,b))return r;
+  else if(_syncEq(r,b))return l;
+  // Both devices changed this value.
+  if(l===undefined||r===undefined){
+    // Deleted on one device, changed on the other: keep the change, unless the
+    // only change was to recalculated fields.
+    const kept=l===undefined?r:l;
+    if(b!==undefined&&_syncEq(_syncStrip(kept,path),_syncStrip(b,path)))return undefined;
+    return kept;
+  }
+  if(pol==='remote')return r;
+  if(pol==='max'&&typeof l===typeof r&&(typeof l==='number'||typeof l==='string'))return l>r?l:r;
+  if(pol==='or'&&typeof l==='boolean'&&typeof r==='boolean')return l||r;
+  if(_syncIsObj(l)&&_syncIsObj(r)){
+    const bo=_syncIsObj(b)?b:{},out={};
+    const keys=new Set([...Object.keys(bo),...Object.keys(l),...Object.keys(r)]);
+    for(const k of keys){const v=_syncMerge3(bo[k],l[k],r[k],path?path+'.'+k:k,opt);if(v!==undefined)out[k]=v;}
+    return Object.keys(out).length?out:undefined;
+  }
+  if(Array.isArray(l)&&Array.isArray(r)){
+    const kf=_syncKeyFn(path);
+    if(kf){
+      const L=_syncToMap(l,kf),R=_syncToMap(r,kf),B=_syncToMap(b,kf);
+      if(L&&R&&B){
+        const out=[],seen=new Set(),ip=path+'[]';
+        const take=k=>{if(seen.has(k))return;seen.add(k);
+          const v=_syncMerge3(B.map[k],L.map[k],R.map[k],ip,opt);if(v!==undefined)out.push(v);};
+        R.order.forEach(take);L.order.forEach(take);
+        return out.length?out:undefined;
       }
     }
+  }
+  return opt&&opt.preferRemote?r:l;
+}
+
+// Without a base (first sync after updating, or a device whose base was lost),
+// treat only what both copies agree on as shared. That merge never deletes.
+function _syncIntersect(l,r,path){
+  if(_syncEq(l,r))return l;
+  if(typeof l==='number'&&typeof r==='number')return Math.min(l,r);
+  if(typeof l==='boolean'&&typeof r==='boolean')return l&&r;
+  if(_syncIsObj(l)&&_syncIsObj(r)){
+    const o={};
+    for(const k of Object.keys(l))if(k in r){const v=_syncIntersect(l[k],r[k],path?path+'.'+k:k);if(v!==undefined)o[k]=v;}
+    return o;
+  }
+  if(Array.isArray(l)&&Array.isArray(r)){
+    const kf=_syncKeyFn(path);
+    if(kf){const L=_syncToMap(l,kf),R=_syncToMap(r,kf);
+      if(L&&R){const out=[];R.order.forEach(k=>{if(k in L.map){const v=_syncIntersect(L.map[k],R.map[k],path+'[]');if(v!==undefined)out.push(v);}});return out;}}
+  }
+  return undefined;
+}
+
+// Deed points one copy has that the other lacks.
+function _syncDeedGain(from,other,tasks){
+  const pts={};(tasks||[]).forEach(t=>{pts[t.id]=[t.stat,t.points||1];});
+  const gain={},th=from.taskHistory||{},oh=other.taskHistory||{};
+  for(const d in th)for(const id in th[d])
+    if(th[d][id]===true&&!(oh[d]&&oh[d][id]===true)&&pts[id]){const[s,p]=pts[id];gain[s]=(gain[s]||0)+p;}
+  return gain;
+}
+// Net deed points gained by X since B, per stat (ticks minus unticks).
+function _syncDeedDelta(X,B){
+  const up=_syncDeedGain(X,B,X.customTasks),down=_syncDeedGain(B,X,B.customTasks),out={};
+  for(const s in up)out[s]=(out[s]||0)+up[s];
+  for(const s in down)out[s]=(out[s]||0)-down[s];
+  return out;
+}
+// Stats are not merged as numbers: two devices ticking different deeds of the
+// same stat both go from 4 to 5, which looks identical. Instead, deed points come
+// from the merged history once, and anything else each device earned since the
+// base (quest rewards and so on) is added on top.
+function _syncMergeStats(B,L,R,M){
+  const bs=B.stats||{},ls=L.stats||{},rs=R.stats||{};
+  const dl=_syncDeedDelta(L,B),dr=_syncDeedDelta(R,B),dm=_syncDeedDelta(M,B);
+  const keys=new Set([...Object.keys(bs),...Object.keys(ls),...Object.keys(rs),...Object.keys(dm)]);
+  const out={};
+  for(const s of keys){
+    const b=bs[s]||0;
+    const otherL=((ls[s]!==undefined?ls[s]:b)-b)-(dl[s]||0);
+    const otherR=((rs[s]!==undefined?rs[s]:b)-b)-(dr[s]||0);
+    out[s]=Math.max(0,b+otherL+otherR+(dm[s]||0));
+  }
+  return out;
+}
+
+// Recalculate the fields that depend on the merged history.
+function _syncRecompute(M){
+  try{
+    M.todayChecked=_todayCheckedFromHistory(M,todayStr());
+    [].concat(M.customQuests||[],M.completedQuests||[]).forEach(q=>{
+      if(q&&q.dailyLogs)q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
+    });
+    if(!_syncIsObj(M.streaks))M.streaks={};
+    if(Array.isArray(M.customTasks)&&M.customTasks.length)_syncStreaks(M);
+  }catch(e){console.warn('[sync] recompute skipped:',e);}
+  return M;
+}
+
+// Merge this device's data with the cloud's. base may be null.
+function _syncMergeDocs(base,local,remote){
+  const L=_syncNormalize(local,true)||{},R=_syncNormalize(remote,true)||{};
+  // Hard guards, independent of the base: never adopt an empty copy over real data.
+  if(_dataIsEmptyish(L)&&!_dataIsEmptyish(R))return _syncRecompute(JSON.parse(JSON.stringify(R)));
+  if(_dataIsEmptyish(R))return _syncRecompute(JSON.parse(JSON.stringify(L)));
+  const B=base?(_syncNormalize(base,true)||{}):null;
+  let M;
+  if(B){
+    M=_syncMerge3(B,L,R,'',{})||{};
+    M.stats=_syncMergeStats(B,L,R,M);
+  }else{
+    M=_syncMerge3(_syncIntersect(L,R,'')||{},L,R,'',{preferRemote:true})||{};
+    const gain=_syncDeedGain(L,R,M.customTasks);
+    M.stats=Object.assign({},R.stats||{});
+    for(const s in gain)M.stats[s]=(M.stats[s]||0)+gain[s];
+  }
+  return _syncRecompute(JSON.parse(JSON.stringify(M)));
+}
+
+// ── Sync driver ──────────────────────────────────────────────────────────────
+// Every write to the cloud goes through a Firebase transaction that merges with
+// whatever the cloud holds at that moment, so two devices writing at once cannot
+// overwrite each other either.
+const SYNC_BASE_KEY='rpg_sync_base';       // last version this device knows the cloud held
+const SYNC_PENDING_KEY='rpg_sync_pending'; // set while a write may be landing
+const _sync={inFlight:null,again:false,remoteDuringTx:false,timer:null,
+  listenRef:null,listenCb:null,connRef:null,connCb:null};
+
+function _syncReadLocal(){try{return JSON.parse(localStorage.getItem('rpg_tracker_v2')||'null');}catch(e){return null;}}
+function _syncGetBase(uid){
+  try{
+    // If a page closed while a write was landing, the recorded base may be out of
+    // date. Merging without one never double-counts, so fall back to that.
+    if(localStorage.getItem(SYNC_PENDING_KEY)===uid)return null;
+    const b=JSON.parse(localStorage.getItem(SYNC_BASE_KEY)||'null');
+    return(b&&b.uid===uid)?b.doc:null;
+  }catch(e){return null;}
+}
+function _syncSetBase(uid,doc){
+  try{localStorage.setItem(SYNC_BASE_KEY,JSON.stringify({uid,doc:_syncNormalize(doc,true)||{}}));}
+  catch(e){
+    // A stale base is worse than none, so drop it rather than keep an old one.
+    console.warn('[sync] could not store base:',e);
+    try{localStorage.removeItem(SYNC_BASE_KEY);}catch(_){}
+  }
+}
+function _syncSetPending(uid,on){try{on?localStorage.setItem(SYNC_PENDING_KEY,uid):localStorage.removeItem(SYNC_PENDING_KEY);}catch(e){}}
+
+// Firebase drops empty lists. Restore them locally so load() never mistakes an
+// emptied list for old data that still needs migrating.
+const _SYNC_LISTS=['projects','completedProjects','customQuests','completedQuests','budgetTransactions',
+  'budgetHistory','inventory','logbookActivities','customGoals','unlockedTitles','unlockedCosmetics'];
+const _SYNC_MAPS=['streaks','lastCompleted','todayChecked','taskHistory','statLastIncreased','activeStats',
+  'defaultQuests','tutorialsViewed','statsIncreasedToday'];
+function _syncWriteLocal(doc){
+  const d=JSON.parse(JSON.stringify(doc||{}));
+  _SYNC_LISTS.forEach(k=>{if(!Array.isArray(d[k]))d[k]=[];});
+  _SYNC_MAPS.forEach(k=>{if(!_syncIsObj(d[k]))d[k]={};});
+  localStorage.setItem('rpg_tracker_v2',JSON.stringify(d));
+}
+function _syncForCloud(doc){const o=_syncNormalize(doc,true)||{};o.updatedAt=Date.now();o._syncV=SYNC_V;return o;}
+function _syncRef(uid){return fbDb.ref('users/'+uid+'/data');}
+
+function _syncSchedule(delay){
+  if(!window._fbUser)return;
+  clearTimeout(_sync.timer);
+  _sync.timer=setTimeout(()=>{_syncNow();},delay==null?800:delay);
+}
+
+function _syncNow(opts){
+  const force=!!(opts&&opts.force);
+  const user=window._fbUser;
+  if(!user)return Promise.resolve();
+  if(_sync.inFlight){_sync.again=true;return _sync.inFlight;}
+  const uid=user.uid;
+  const base=_syncGetBase(uid);
+  if(!force&&base&&_syncSig(_syncReadLocal())===_syncSig(base))return Promise.resolve(); // nothing new here
+  const ref=_syncRef(uid);
+  let txLocal=null;
+  _fbSetSyncDot('syncing');
+  // Read first so the transaction starts from the real cloud value, not an empty cache.
+  const run=ref.once('value').then(()=>ref.transaction(current=>{
+    const local=_syncReadLocal();
+    txLocal=local;
+    if(current===null){
+      if(_dataIsEmptyish(_syncNormalize(local,true)||{}))return; // never create the cloud copy from empty data
+      _syncSetPending(uid,true);
+      return _syncForCloud(local);
+    }
+    const merged=_syncMergeDocs(base,local,current);
+    if(_syncSig(merged)===_syncSig(current))return; // the cloud already has everything
+    _syncSetPending(uid,true);
+    return _syncForCloud(merged);
+  },undefined,false)).then(res=>{
+    _syncSetPending(uid,false);
+    const V=res&&res.snapshot?res.snapshot.val():null;
+    if(V)_syncApply(uid,V,txLocal);
+    _fbSetSyncDot('online');_updateFooterSyncTime();
+  }).catch(e=>{
+    _syncSetPending(uid,false);
+    console.error('[sync] failed:',e);
+    _fbSetSyncDot('offline');
+    _fbShowBanner('SYNC ERROR: '+_fbErrHint(e));
+  }).finally(()=>{
+    _sync.inFlight=null;
+    if(_sync.remoteDuringTx){
+      _sync.remoteDuringTx=false;
+      ref.once('value').then(s=>_syncOnRemote(uid,s.val())).catch(()=>{});
+    }
+    if(_sync.again){_sync.again=false;_syncSchedule(50);}
+  });
+  _sync.inFlight=run;
+  return run;
+}
+
+// Take in a version of the cloud data, keeping this device's unsynced edits.
+// prevLocal is the local data a just-finished write was computed from, if any.
+function _syncApply(uid,V,prevLocal){
+  const Vn=_syncNormalize(V,true)||{};
+  const localNow=_syncReadLocal();
+  const before=_syncNormalize(localNow,true)||{};
+  const next=_syncMergeDocs(prevLocal||_syncGetBase(uid),localNow,Vn);
+  const changed=_syncSig(next)!==_syncSig(before);
+  if(changed&&_dataScore(next)<_dataScore(before)-15)_makeBackup(localNow,'before-sync');
+  _syncSetBase(uid,Vn);
+  if(!_syncEq(_syncNormalize(next,true),before))_syncWriteLocal(next);
+  if(changed)_syncRerender();
+  if(_syncSig(next)!==_syncSig(Vn))_syncSchedule(300);
+  return changed;
+}
+
+function _syncOnRemote(uid,V){
+  if(!V||!window._fbUser||window._fbUser.uid!==uid)return;
+  if(_sync.inFlight){_sync.remoteDuringTx=true;return;}
+  const base=_syncGetBase(uid);
+  // Our own write coming back, or a change to recalculated fields only.
+  if(base&&_syncSig(V)===_syncSig(base)){_syncSetBase(uid,V);return;}
+  if(_syncApply(uid,V,null))_fbShowBanner('✓ DATA SYNCED FROM ANOTHER DEVICE','#1a5c1a');
+}
+
+function _syncStart(user){
+  const uid=user.uid;
+  _syncStop();
+  _syncNow({force:true}).then(()=>{
+    if(!window._fbUser||window._fbUser.uid!==uid)return;
+    _dailyBackup(load());
+    const ref=_syncRef(uid);
+    _sync.listenRef=ref;
+    _sync.listenCb=ref.on('value',snap=>_syncOnRemote(uid,snap.val()),e=>{
+      console.error('[sync] listener error:',e);
+      _fbShowBanner('SYNC LISTENER ERROR: '+_fbErrHint(e));
+    });
+    _sync.connRef=fbDb.ref('.info/connected');
+    _sync.connCb=_sync.connRef.on('value',snap=>{
+      if(snap.val()===true){_fbSetSyncDot('online');_syncSchedule(200);}
+      else if(window._fbUser)_fbSetSyncDot('offline');
+    });
+    _syncRerender();
+  });
+}
+function _syncStop(){
+  clearTimeout(_sync.timer);
+  if(_sync.listenRef&&_sync.listenCb)_sync.listenRef.off('value',_sync.listenCb);
+  if(_sync.connRef&&_sync.connCb)_sync.connRef.off('value',_sync.connCb);
+  _sync.listenRef=_sync.listenCb=_sync.connRef=_sync.connCb=null;
+}
+
+function _syncRerender(){
+  try{
     const d=load();checkNewDay(d);
     renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();renderGoals(d);
-    _fbStartSync(uid);
-  }).catch(e=>{
-    console.error('[Firebase] initial load:',e);
-    _fbShowBanner('CLOUD LOAD ERROR: '+_fbErrHint(e));
-  });
+    if(document.getElementById('tab-quests').classList.contains('active'))renderQuests(d);
+    if(document.getElementById('tab-inventory').classList.contains('active'))renderInventoryTab(d);
+    const ni=document.getElementById('char-name');
+    if(ni&&document.activeElement!==ni)ni.value=d.characterName||'Adventurer';
+  }catch(e){console.warn('[sync] re-render failed:',e);}
+}
+
+// Restore and import deliberately replace the data on every device.
+function _syncReplaceAll(doc){
+  const wait=_sync.inFlight||Promise.resolve();
+  return wait.then(()=>{
+    _syncWriteLocal(_syncNormalize(doc,true)||{});
+    const user=window._fbUser;
+    if(!user)return'local';
+    const uid=user.uid,body=_syncForCloud(doc);
+    const write=_syncRef(uid).set(body).then(()=>{_syncSetBase(uid,body);return'synced';});
+    // Offline, the write waits for a connection. The local copy is already in place,
+    // and the next sync pushes it, so don't hold the page hostage.
+    const timeout=new Promise(res=>setTimeout(()=>res('pending'),6000));
+    return Promise.race([write,timeout]);
+  }).catch(e=>{console.error('[sync] replace failed:',e);return'failed';});
 }
 
 function _fbOnLogin(user){
@@ -5144,10 +5440,11 @@ function _fbOnLogin(user){
   // Hide auth overlay
   const ov=document.getElementById('auth-overlay');
   if(ov)ov.classList.add('hidden');
-  _fbMigrateOrLoad(user.uid);
+  _syncStart(user);
 }
 
 function _fbOnLogout(){
+  _syncStop();
   window._fbUser=null;
   const bar=document.getElementById('user-info-bar');
   if(bar)bar.classList.remove('visible');
@@ -5214,7 +5511,7 @@ fbAuth.onAuthStateChanged(user=>{
 
 // Offline/online detection
 window.addEventListener('online',()=>{
-  if(window._fbUser){_fbSaveData(load());}_fbSetSyncDot('online');
+  _syncSchedule(200);_fbSetSyncDot('online');
 });
 window.addEventListener('offline',()=>_fbSetSyncDot('offline'));
 
