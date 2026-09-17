@@ -82,19 +82,20 @@ body::before{
   background:linear-gradient(180deg,#07071a 0%,#0d0d28 100%);
   border-bottom:5px solid var(--b1);}
 .tab-btn{
-  font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1.2vw,8.75px);letter-spacing:1.25px;
-  color:var(--b3);background:var(--b1);
-  border:2.5px solid var(--b2);border-radius:3.75px;
-  padding:10px 20px;cursor:pointer;white-space:nowrap;
-  position:relative;transition:transform .08s,box-shadow .08s,background .12s,color .12s;
-  transform:translateY(-3.75px);
-  box-shadow:0 5px 0 rgba(0,0,0,.55),inset 0 1.25px 0 rgba(255,255,255,.12);}
-.tab-btn:hover{color:var(--white);background:var(--b2);transform:translateY(-2.5px);
-  box-shadow:0 3.75px 0 rgba(0,0,0,.55),inset 0 1.25px 0 rgba(255,255,255,.18);}
-.tab-btn.active{color:var(--white);background:var(--b2);transform:translateY(0);
-  box-shadow:0 1.25px 0 rgba(0,0,0,.4),inset 0 2.5px 6.25px rgba(0,0,0,.35);}
-.tab-btn:active{transform:translateY(0)!important;
-  box-shadow:0 1.25px 0 rgba(0,0,0,.4),inset 0 2.5px 6.25px rgba(0,0,0,.35)!important;}
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:9px;letter-spacing:.1em;
+  color:var(--key-ink);background:var(--key-face);
+  border:0;border-radius:6px;padding:11px 20px;min-height:var(--hit);
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;white-space:nowrap;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:var(--key-bevel);
+  transition:transform 80ms,box-shadow 80ms,background 120ms,color 120ms;
+}
+.tab-btn.active{
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.72 0.13 200));
+  color:#08131a;
+}
+.tab-btn:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
 
 /* ── PAGE + PANELS ── */
 #page{max-width:1375px;margin:0 auto;padding:17.5px 12.5px 75px;position:relative;z-index:1}
@@ -313,10 +314,21 @@ body::before{
 
 /* ── QUESTS ── */
 .quest-subtabs{display:flex;gap:7.5px;margin-bottom:15px;flex-wrap:wrap}
-.quest-subtab{font-family:'Press Start 2P',monospace;font-size:clamp(5px,.85vw,6.875px);padding:6.25px 12.5px;
-  background:transparent;border:2.5px solid var(--b1);color:var(--dim);cursor:pointer;letter-spacing:1.25px;transition:all .15s}
-.quest-subtab.active{border-color:var(--teal);color:var(--teal);background:rgba(0,206,209,.08)}
-.quest-subtab:hover:not(.active){border-color:var(--b2);color:var(--white)}
+/* Sub-tabs are chiclets too — same part, smaller. */
+.quest-subtab{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:9px;letter-spacing:.1em;
+  background:var(--key-face);color:var(--key-ink);
+  border:0;border-radius:6px;padding:11px 16px;min-height:var(--hit);
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  box-shadow:var(--key-bevel);
+  transition:transform 80ms,box-shadow 80ms,background 120ms,color 120ms;
+}
+.quest-subtab.active{
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.72 0.13 200));
+  color:#08131a;
+}
+.quest-subtab:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
 .quest-section{display:none}.quest-section.active{display:block}
 .achv-card{border:2.5px solid var(--b1);background:rgba(10,10,30,.6);padding:12.5px 15px;margin-bottom:10px}
 .achv-card.completed{border-color:var(--gold);background:rgba(255,215,0,.06)}
@@ -699,19 +711,37 @@ body::before{
 #cosm-unlock-icon{font-size:50px;margin:7.5px 0}
 #cosm-unlock-name{font-size:clamp(7.5px,1.3vw,10px);color:var(--white);margin-bottom:7.5px}
 #cosm-unlock-hint{font-size:clamp(5px,.85vw,6.25px);color:var(--dim);margin-bottom:17.5px;letter-spacing:1.25px;line-height:2}
-#cosm-unlock-close{font-size:clamp(6.25px,1vw,7.5px);color:var(--teal);cursor:pointer;border:2.5px solid var(--teal);padding:6.25px 17.5px;letter-spacing:2.5px;display:inline-block}
+/* styling comes from the action key class */
 #cosm-unlock-close:hover{background:rgba(29,233,182,.1)}
 
 /* ── SHARED BUTTONS + MODALS ── */
-.px-btn{font-family:'Press Start 2P',monospace;font-size:clamp(5px,.9vw,7.5px);
-  letter-spacing:1.25px;color:var(--b2);background:var(--panel-face);
-  border:3.75px solid var(--b1);padding:6.25px 10px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-.px-btn:hover{color:var(--gold);border-color:var(--gold);box-shadow:0 0 10px var(--gold)}
-.px-btn.danger{color:var(--red);border-color:var(--red)}
-.px-btn.danger:hover{color:#fff;background:var(--red);box-shadow:0 0 10px var(--red)}
-.px-btn.success{color:var(--green);border-color:var(--green)}
-.px-btn.success:hover{background:rgba(0,230,118,.15);box-shadow:0 0 10px var(--green)}
-.px-btn.sm{font-size:clamp(5px,.8vw,6.25px);padding:3.75px 7.5px}
+/* Membrane pill: the app's general-purpose button. */
+.px-btn{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;
+  color:var(--key-ink);background:var(--key-face);
+  border:0;border-radius:20px;padding:13px 18px;min-height:var(--hit);
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;white-space:nowrap;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:var(--key-bevel);
+  transition:transform 80ms,box-shadow 80ms,background 120ms,color 120ms;
+}
+.px-btn:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
+/* Confirms are the action key. Red is reserved for the stopwatch STOP key, so a
+   destructive action is a plain pill: quiet, not alarming. */
+.px-btn.success{
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.70 0.13 200));
+  color:#06131a;font-size:11px;letter-spacing:.06em;
+  box-shadow:0 5px 0 oklch(0.48 0.10 200), 0 8px 14px rgba(0,0,0,.4),
+             inset 0 2px 0 rgba(255,255,255,.6);
+}
+.px-btn.success:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 oklch(0.48 0.10 200), inset 0 2px 5px rgba(0,0,0,.35);
+}
+.px-btn.sm{font-size:9px;letter-spacing:.1em;padding:9px 14px}
+.px-btn[disabled]{opacity:.45;cursor:default}
+.px-btn[disabled]:active{transform:none;box-shadow:var(--key-bevel)}
 .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.8);
   display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:20px;}
 .modal-overlay.open{opacity:1;pointer-events:auto}
@@ -730,7 +760,16 @@ body::before{
 .modal-head{background:var(--b1);padding:10px 15px;display:flex;align-items:center;justify-content:space-between;
   border-bottom:3.75px solid var(--b2);font-size:clamp(7.5px,1.3vw,10px);letter-spacing:1.25px;}
 #modal-customize .modal-head{font-size:clamp(6.25px,1vw,7.5px);}
-.modal-close{cursor:pointer;font-size:17.5px;color:var(--b3);transition:color .15s}.modal-close:hover{color:var(--red)}
+/* The close key: a small round key on the window's label row. */
+.modal-close{
+  width:22px;height:22px;border-radius:50%;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:11px;line-height:1;
+  background:var(--key-face);color:var(--key-ink);
+  box-shadow:var(--key-bevel);cursor:pointer;touch-action:manipulation;
+  transition:transform 80ms,box-shadow 80ms;
+}
+.modal-close:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
 .modal-body{padding:17.5px 20px}
 .form-row{margin-bottom:15px}
 .form-label{font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;display:block;margin-bottom:6.25px}
@@ -759,18 +798,30 @@ body::before{
 #lu-title{font-size:clamp(15px,4vw,25px);color:var(--gold);text-shadow:0 0 25px var(--gold),2.5px 2.5px 0 #000;letter-spacing:2.5px;animation:flicker 1.5s infinite}
 @keyframes flicker{0%,100%{opacity:1}50%{opacity:.85}}
 #lu-sub{font-size:clamp(7.5px,1.5vw,8.75px);color:var(--teal);margin:17.5px 0 22.5px;letter-spacing:1.25px;line-height:2.2;white-space:pre-line}
-#lu-close{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--dim);cursor:pointer;border:2.5px solid var(--dim);padding:7.5px 17.5px;letter-spacing:2.5px;display:inline-block}
+/* styling comes from the action key class */
 #lu-close:hover{color:var(--white);border-color:var(--white)}
 
 /* ── FLOAT + MISC ── */
 .float-txt{position:fixed;pointer-events:none;z-index:9999;font-family:'Press Start 2P',monospace;font-size:13.75px;
   color:var(--gold);text-shadow:2.5px 2.5px 0 #000,0 0 12.5px var(--gold);animation:floatUp 1.2s ease-out forwards;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-62.5px) scale(1.2)}100%{opacity:0;transform:translateY(-100px) scale(.9)}}
-#sound-btn{position:fixed;bottom:17.5px;right:17.5px;z-index:100;font-family:'Press Start 2P',monospace;font-size:17.5px;
-  background:var(--panel-face);border:3.75px solid var(--b1);color:var(--b2);
-  width:45px;height:45px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
-#sound-btn:hover{color:var(--gold);border-color:var(--gold)}
-#sound-btn.muted{opacity:.4}
+/* Sound is the app's one setting, so it is the toggle switch. Text is hidden:
+   the knob position carries the state. */
+#sound-btn{
+  position:fixed;bottom:17.5px;right:17.5px;z-index:100;
+  width:66px;height:26px;border-radius:13px;padding:2px;border:0;
+  display:flex;align-items:center;justify-content:flex-end;
+  background:oklch(0.72 0.13 200);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.45);
+  cursor:pointer;touch-action:manipulation;font-size:0;color:transparent;
+  transition:background 120ms;
+}
+#sound-btn::after{
+  content:'';width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(180deg,#f4f6f0,#cdd2c2);
+  box-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+#sound-btn.muted{background:rgba(0,0,0,.35);justify-content:flex-start;opacity:1}
 #footer{border-top:5px solid var(--b1);padding:12.5px 20px;display:flex;justify-content:space-between;
   align-items:center;flex-wrap:wrap;gap:10px;max-width:1375px;margin:0 auto;position:relative;z-index:1;}
 .footer-txt{font-size:clamp(5px,.9vw,6.25px);color:var(--dim);letter-spacing:1.25px}
@@ -799,6 +850,79 @@ body::before{
 .sync-dot.syncing{background:var(--gold);animation:sdBlink .8s infinite}
 .sync-dot.offline{background:var(--dim)}
 @keyframes sdBlink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CONTROL VOCABULARY (Phase 3)
+   Four part types cover the whole app: chiclet, action key, membrane pill and
+   the settings toggle. All of them depress: 2px of travel, 4px for the action
+   key, the drop shadow collapsing to an inset, over 80ms.
+   Faces and ink come from the shell material, so the keys belong to the device.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --key-bevel:0 3px 0 rgba(0,0,0,.34), 0 5px 10px rgba(0,0,0,.25);
+  --key-pressed:inset 0 2px 4px rgba(0,0,0,.4);
+  --hit:44px;                                  /* minimum touch target */
+}
+.chiclet,.pill,.action-key{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;
+  border:0;cursor:pointer;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:var(--hit);
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:transform 80ms,box-shadow 80ms,background 120ms,color 120ms;
+}
+/* Chiclet — tab navigation and settings rows. */
+.chiclet{
+  font-size:9px;letter-spacing:.1em;padding:11px 20px;border-radius:6px;
+  background:var(--key-face);color:var(--key-ink);
+  box-shadow:var(--key-bevel);
+}
+.chiclet.lit{
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.72 0.13 200));
+  color:#08131a;
+}
+/* Membrane pill — secondary and destructive actions. Flush and quiet. */
+.pill{
+  font-size:10px;letter-spacing:.14em;padding:13px 18px;border-radius:20px;
+  background:var(--key-face);color:var(--key-ink);
+  box-shadow:var(--key-bevel);
+}
+.pill.block,.chiclet.block{flex:1;padding-left:0;padding-right:0}
+/* Action key — one per screen, the only confirm. */
+.action-key{
+  font-size:11px;letter-spacing:.06em;padding:13px 20px;border-radius:20px;
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.70 0.13 200));
+  color:#06131a;
+  box-shadow:0 5px 0 oklch(0.48 0.10 200), 0 8px 14px rgba(0,0,0,.4),
+             inset 0 2px 0 rgba(255,255,255,.6);
+}
+.action-key.round{width:58px;height:58px;padding:0;border-radius:50%}
+.chiclet:active,.pill:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
+.action-key:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 oklch(0.48 0.10 200), inset 0 2px 5px rgba(0,0,0,.35);
+}
+.chiclet[disabled],.pill[disabled],.action-key[disabled]{opacity:.45;cursor:default}
+.chiclet[disabled]:active,.pill[disabled]:active,.action-key[disabled]:active{
+  transform:none;box-shadow:var(--key-bevel);
+}
+/* Toggle switch — settings. */
+.toggle{
+  width:66px;height:26px;border-radius:13px;padding:2px;border:0;
+  display:inline-flex;align-items:center;justify-content:flex-start;
+  background:rgba(0,0,0,.35);box-shadow:inset 0 2px 4px rgba(0,0,0,.45);
+  cursor:pointer;touch-action:manipulation;transition:background 120ms;
+}
+.toggle.on{background:oklch(0.72 0.13 200);justify-content:flex-end}
+.toggle::after{
+  content:'';width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(180deg,#f4f6f0,#cdd2c2);
+  box-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+
+/* A control inside a sentence on the screen stays flat: it is text, not a key. */
+.inline-link{color:oklch(0.86 0.14 200);cursor:pointer;text-decoration:underline;touch-action:manipulation}
+
 /* ══════════════════════════════════════════════════════════════════════════
    THE DEVICE — shell, bezel, screen (Phase 2)
    Outside to inside: the shell is the body of the device and is never dark; the
@@ -875,7 +999,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   <div id="header-title">✦ RPG TASK TRACKER ✦</div>
   <div id="char-name-row">
     <input id="char-name" type="text" value="Adventurer" maxlength="24" spellcheck="false"/>
-    <span class="edit-btn" onclick="document.getElementById('char-name').focus()">✎</span>
+    <span class="edit-btn px-btn sm" onclick="document.getElementById('char-name').focus()">✎</span>
   </div>
   <div id="header-sub">DAILY CHARACTER SHEET</div>
 </header>
@@ -969,7 +1093,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
             <button class="px-btn sm" onclick="showTutorial('daily')" title="Help">?</button>
           </span>
         </div>
-        <div id="yesterday-reminder">⚠ Tasks missed yesterday? <span onclick="openBackdate()">LOG THEM</span></div>
+        <div id="yesterday-reminder">⚠ Tasks missed yesterday? <span class="inline-link" onclick="openBackdate()">LOG THEM</span></div>
         <div class="panel-body" id="tasks-list"></div>
       </section>
 
@@ -1072,7 +1196,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <div class="panel-body">
           <div id="logbook">
             <div id="logbook-page"></div>
-            <button id="logbook-manage-btn" title="Manage activities" onclick="openManageActivities()">✏️</button>
+            <button id="logbook-manage-btn" class="px-btn sm" title="Manage activities" onclick="openManageActivities()">✏️</button>
           </div>
         </div>
       </section>
@@ -1152,7 +1276,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   <div id="lu-box">
     <div id="lu-title">★ LEVEL UP! ★</div>
     <div id="lu-sub"></div>
-    <div id="lu-close" onclick="hideLU()">[ OK ]</div>
+    <div id="lu-close" class="px-btn success" onclick="hideLU()">[ OK ]</div>
   </div>
 </div>
 
@@ -1182,7 +1306,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <div style="font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;margin-bottom:7.5px">TRANSACTIONS</div>
       <div class="txn-list" id="txn-list"></div>
       <button class="px-btn sm" style="margin-bottom:15px" onclick="openAddTxn(null)">+ ADD TRANSACTION</button>
-      <button class="close-month-btn" id="close-month-btn" onclick="closeMonth()">CLOSE MONTH &amp; COLLECT GOLD</button>
+      <button class="close-month-btn px-btn success" id="close-month-btn" onclick="closeMonth()">CLOSE MONTH &amp; COLLECT GOLD</button>
     </div>
   </div>
 </div>
@@ -1679,7 +1803,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
     <div id="cosm-unlock-icon">🗡️</div>
     <div id="cosm-unlock-name">Basic Sword</div>
     <div id="cosm-unlock-hint">Go to CUSTOMIZE → COSMETICS to equip it!</div>
-    <div id="cosm-unlock-close" onclick="document.getElementById('cosm-unlock-overlay').classList.remove('show')">✓ AWESOME</div>
+    <div id="cosm-unlock-close" class="px-btn success" onclick="document.getElementById('cosm-unlock-overlay').classList.remove('show')">✓ AWESOME</div>
   </div>
 </div>
 <div id="sound-btn" title="Toggle sound" onclick="toggleSound()">♪</div>
@@ -5370,6 +5494,14 @@ function applyShellMaterial(id){
   if (meta) meta.textContent = 'MK-I · ' + m.name;
   return m;
 }
+// A short haptic tap, on the action key only, where the platform offers one.
+function initHaptics(){
+  document.addEventListener('pointerdown', e => {
+    const key = e.target.closest && e.target.closest('.action-key, .px-btn.success');
+    if (key && !key.hasAttribute('disabled') && navigator.vibrate) navigator.vibrate(10);
+  }, {passive:true});
+}
+
 function initShell(){
   const mark = document.getElementById('shell-wordmark');
   if (mark) mark.textContent = APP_NAME;
@@ -5435,6 +5567,7 @@ function init(){
   const data=load();
   applyTheme(data.appTheme||'blue');
   initShell();
+  initHaptics();
   initDailySprite();
   checkNewDay(data);
   checkMonthRollover(data);
