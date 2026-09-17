@@ -23,5 +23,5 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory.
 
 | Item | Why it waits |
 |---|---|
-| The legacy `zoom: 1.25` on the page | Removing it rescales every fixed pixel value in the app. It belongs with the shell work in Phase 2, not with the sprite. Until then the sprite picks a pixel scale that stays whole through the zoom, so it renders correctly but smaller than its window. See `fitSpriteCanvas` |
+| ~~The legacy `zoom: 1.25`~~ | **Done in Phase 2.** Removed, with all 1,220 legacy pixel values multiplied by 1.25 so the existing app kept its size. New work uses the handoff's real pixel values |
 | The old five-state mood constants | They stay until the moods are rewired, so the current avatar and Wellness report keep working meanwhile |
