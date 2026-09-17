@@ -799,6 +799,15 @@ body::before{
 .sync-dot.syncing{background:var(--gold);animation:sdBlink .8s infinite}
 .sync-dot.offline{background:var(--dim)}
 @keyframes sdBlink{0%,100%{opacity:1}50%{opacity:.25}}
+/* ── Device sprite window (Phase 1) ── */
+#sprite-window{
+  position:relative;width:100%;aspect-ratio:4/3;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:#0a1016;                      /* matches the sprite's own background */
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:6px;
+}
+#sprite-canvas{display:block;image-rendering:pixelated}
 </style>
 </head>
 <body>
@@ -836,6 +845,10 @@ body::before{
         <div class="panel-body" style="padding:12px 8px">
           <div id="daily-char-inner" class="mood-happy">
             <div id="daily-sprite-col-large">
+              <!-- device sprite (Phase 1) -->
+              <div id="sprite-window">
+                <canvas id="sprite-canvas"></canvas>
+              </div>
               <!-- thought bubble -->
               <div id="daily-thought-bubble" onclick="openWellnessReport()" style="
                 position:relative;background:rgba(10,10,25,.96);border:2px solid var(--b2);
@@ -4943,12 +4956,311 @@ function renderTitlesSection(data){
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  BEGIN vendored: sprite-eyes.js — copied from the design handoff.
+//  DO NOT EDIT. The geometry constants interlock; "cleanups" break the sprite.
+//  Only change: the `export` keywords are stripped, as the app has no modules.
+// ═══════════════════════════════════════════════════════════════════════════
+/**
+ * sprite-eyes.js — framework-agnostic pixel sprite renderer.
+ *
+ * Ported verbatim from the approved design prototype (Sprite Identity.dc.html).
+ * This is the ONE file in this handoff that should be copied rather than
+ * re-implemented: the geometry is tuned and any "cleanup" will break it.
+ *
+ * Usage:
+ *   import { mountSprite } from './sprite-eyes.js';
+ *   const sprite = mountSprite(canvasEl, { mood: 'steady', shape: 'round', bg: 'grid' });
+ *   sprite.set({ mood: 'thriving' });   // change state at any time
+ *   sprite.react();                     // BEAM emote — call on every deed completion
+ *   sprite.destroy();                   // on unmount
+ *
+ * The canvas must be sized by CSS (e.g. width:100%; aspect-ratio:4/3) and carry
+ * image-rendering: pixelated. The renderer derives its pixel grid from the
+ * element's rendered box, so it stays square-pixelled at any size.
+ */
+
+const MOODS = {
+  thriving:  {ryK:1.18,rxK:1.04,lidTop:0,lidBot:0,brow:'arch',browLift:5,gaze:'wander',gazeAmp:1.6,bob:1.7,bobHz:1.5,pupilK:1.12,extra:'spark',blinkEvery:2.4},
+  happy:     {ryK:0.92,rxK:1.06,lidTop:0,lidBot:.42,brow:'arch',browLift:4,gaze:'wander',gazeAmp:1.1,bob:1.1,bobHz:1.0,pupilK:1.0,extra:null,blinkEvery:3.2},
+  steady:    {ryK:1.0,rxK:1.0,lidTop:0,lidBot:0,brow:'flat',browLift:3,gaze:'wander',gazeAmp:1.4,bob:.7,bobHz:.55,pupilK:1.0,extra:null,blinkEvery:3.6},
+  concerned: {ryK:.94,rxK:1.0,lidTop:.12,lidBot:0,brow:'worry',browLift:2,gaze:'away',gazeAmp:1.5,bob:.5,bobHz:.4,pupilK:.92,extra:null,blinkEvery:4.6},
+  frustrated:{ryK:.8,rxK:1.02,lidTop:.3,lidBot:0,brow:'angry',browLift:1,gaze:'fix',gazeAmp:.5,bob:.5,bobHz:2.4,pupilK:.88,extra:'tick',blinkEvery:5.2},
+  drained:   {ryK:.88,rxK:1.0,lidTop:.46,lidBot:0,brow:'droop',browLift:1,gaze:'low',gazeAmp:.7,bob:.9,bobHz:.28,pupilK:.95,extra:'droop',blinkEvery:2.0}
+};
+
+const FIELD_W = 48;          // logical pixel columns; rows derive from aspect ratio
+const SCLERA = '#f2f6fa';
+const PUPIL_CORE = '#08131a';
+const DEFAULT_IRIS = 'oklch(0.86 0.14 200)';
+
+function drawBg(ctx, kind, t, W, H) {
+  if (kind === 'stripe') {
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#1a0f2b'); g.addColorStop(1, '#0a1a24');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(245,139,60,.13)';
+    for (let i = -H; i < W; i += 6) for (let y = 0; y < H; y++) { const x = Math.floor(i + y); if (x >= 0 && x < W) ctx.fillRect(x, y, 3, 1); }
+  } else if (kind === 'void') {
+    ctx.fillStyle = '#07090d'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(255,255,255,.05)';
+    for (let y = 0; y < H; y += 3) for (let x = (y / 3) % 2 ? 0 : 1; x < W; x += 3) ctx.fillRect(x, y, 1, 1);
+  } else if (kind === 'sky') {
+    const bands = ['#12203a', '#1b2c4d', '#2a3a5e', '#3c4a6b'];
+    for (let i = 0; i < bands.length; i++) { ctx.fillStyle = bands[i]; ctx.fillRect(0, Math.round(i * H / bands.length), W, Math.ceil(H / bands.length)); }
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    for (let i = 0; i < 9; i++) { const x = (i * 13 + 3) % W, y = (i * 7) % Math.max(6, Math.floor(H * .4)); if ((Math.floor(t * 2) + i) % 7) ctx.fillRect(x, y, 1, 1); }
+  } else if (kind === 'none') {
+    ctx.clearRect(0, 0, W, H);
+  } else { // 'grid' — the default screen background
+    ctx.fillStyle = '#0a1016'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(63,215,232,.13)';
+    for (let x = 0; x < W; x += 6) ctx.fillRect(x, 0, 1, H);
+    for (let y = 0; y < H; y += 6) ctx.fillRect(0, y, W, 1);
+    ctx.fillStyle = 'rgba(63,215,232,.28)';
+    ctx.fillRect(0, Math.floor((t * 7) % H), W, 1);   // scanline sweep
+  }
+}
+
+function drawEyes(ctx, m, shape, irisColor, t, W, H, react) {
+  const phase = (t % m.blinkEvery) / m.blinkEvery;
+  let blink = 1;
+  if (phase > .93) blink = Math.max(.08, Math.abs(Math.cos((phase - .93) / .07 * Math.PI)));
+  const bob = Math.sin(t * m.bobHz * Math.PI * 2) * m.bob;
+
+  let gx = 0, gy = 0;
+  const slow = Math.floor(t / 1.8);
+  const rnd = (n) => { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); };
+  if (m.gaze === 'wander') { gx = (rnd(slow) * 2 - 1) * m.gazeAmp; gy = (rnd(slow + 9) * 2 - 1) * m.gazeAmp * .5; }
+  else if (m.gaze === 'away') { gx = -m.gazeAmp; gy = m.gazeAmp * .6; }
+  else if (m.gaze === 'low') { gy = m.gazeAmp; gx = (rnd(slow) * 2 - 1) * .4; }
+  else if (m.gaze === 'fix') { gx = Math.sin(t * 9) * .3; }
+
+  // BEAM reaction: mood params are OVERRIDDEN for the duration, never replaced.
+  // The mood itself is untouched, so a drained sprite goes straight back to drooping.
+  const ep = react ? react.p : 0;                    // 0..1 over 950ms
+  const swell = react ? Math.sin(ep * Math.PI) : 0;
+  let lidTop = m.lidTop, lidBot = m.lidBot, brow = m.brow, browLift = m.browLift, pupilK = m.pupilK, hop = 0;
+  if (react) {
+    lidTop = m.lidTop * (1 - swell);                 // open the top lid
+    lidBot = Math.max(m.lidBot, 0.62 * swell);       // squeeze up from the bottom into happy arcs
+    brow = 'arch'; browLift = m.browLift + 3 * swell;
+    hop = -Math.abs(Math.sin(ep * Math.PI * 2)) * 3.2;  // two bounces
+  }
+
+  const cy = Math.round(H / 2 + bob + hop);
+  const rx = Math.round(5 * m.rxK);
+  const centres = [Math.round(W / 2 - 9), Math.round(W / 2 + 9)];
+  const occupied = new Set();                        // face pixels, dilated 2px — particles never overdraw these
+
+  centres.forEach((cx, side) => {
+    const inner = side === 0 ? 1 : -1;
+    const ry = Math.max(1, Math.round(6 * m.ryK * (react ? 1 : blink)));
+    const mask = [];
+    for (let y = -ry; y <= ry; y++) for (let x = -rx; x <= rx; x++) {
+      let inside;
+      if (shape === 'slab') inside = !(Math.abs(x) > rx - 1 && Math.abs(y) > ry - 1);
+      else if (shape === 'sharp') { const yy = y - x * inner * .3; inside = (x / rx) ** 2 + (yy / (ry * .95)) ** 2 <= 1.02; }
+      else inside = (x / rx) ** 2 + (y / ry) ** 2 <= 1.05;
+      if (!inside) continue;
+      if (y < -ry + lidTop * ry * 2) continue;        // top lid
+      if (y > ry - lidBot * ry * 2) continue;         // bottom lid (smile squint)
+      mask.push([cx + x, cy + y]);
+    }
+    ctx.fillStyle = SCLERA;
+    for (const [x, y] of mask) ctx.fillRect(x, y, 1, 1);
+    if (!mask.length) return;
+
+    const set = new Set(mask.map(p => p[0] + ',' + p[1]));
+    for (const [mx, my] of mask) for (let oy = -2; oy <= 2; oy++) for (let ox = -2; ox <= 2; ox++) occupied.add((mx + ox) + ',' + (my + oy));
+    const visY = mask.map(p => p[1]);
+    const bandTop = Math.min.apply(null, visY), bandBot = Math.max.apply(null, visY);
+    const band = bandBot - bandTop + 1;
+    // iris radius is clamped to the visible lid band, so a squint never occludes it
+    const pr = Math.max(2, Math.min(4, Math.round(3.4 * pupilK), Math.floor((band - 1) / 2)));
+    const dr = Math.max(1, pr - 2);
+    const px0 = cx + Math.round(gx * 1.2);
+    const py0 = Math.min(bandBot - pr, Math.max(bandTop + pr, Math.round((bandTop + bandBot) / 2) + Math.round(gy)));
+    const inEllipse = (x, y, r) => (x * x + y * y) <= r * r + r * 0.6;
+
+    const iris = new Set();
+    ctx.fillStyle = irisColor;
+    for (let y = -pr; y <= pr; y++) for (let x = -pr; x <= pr; x++) {
+      if (!inEllipse(x, y, pr)) continue;
+      const kx = px0 + x, ky = py0 + y;
+      if (!set.has(kx + ',' + ky)) continue;          // clipped by the eye mask
+      iris.add(kx + ',' + ky); ctx.fillRect(kx, ky, 1, 1);
+    }
+    // solid pupil: only pixels fully surrounded by iris, leaving a clean 1px ring
+    ctx.fillStyle = PUPIL_CORE;
+    for (let y = -dr; y <= dr; y++) for (let x = -dr; x <= dr; x++) {
+      const kx = px0 + x, ky = py0 + y;
+      const ring = iris.has(kx + ',' + ky) && iris.has((kx + 1) + ',' + ky) && iris.has((kx - 1) + ',' + ky)
+        && iris.has(kx + ',' + (ky + 1)) && iris.has(kx + ',' + (ky - 1));
+      if (ring) ctx.fillRect(kx, ky, 1, 1);
+    }
+    if (blink > .8 || react) {                         // specular highlight, hidden mid-blink
+      ctx.fillStyle = 'rgba(255,255,255,.95)';
+      const hx = px0 + pr, hy = py0 - pr;
+      if (set.has(hx + ',' + hy)) ctx.fillRect(hx, hy, 1, 1);
+    }
+
+    // brows: 2px thick, shaped per mood, never drawn over the eye
+    const eyeTop = Math.min.apply(null, visY);
+    const dys = [];
+    for (let i = -rx; i <= rx; i++) {
+      let dy = 0;
+      if (brow === 'arch') dy = Math.round(Math.abs(i) / rx * 1.6) - 1;
+      else if (brow === 'worry') dy = Math.round(-i * inner / rx * 1.3);
+      else if (brow === 'angry') dy = Math.round(i * inner / rx * 1.4);
+      else if (brow === 'droop') dy = Math.round(i * inner / rx * 0.9) + 1;
+      dys.push(dy);
+    }
+    const by = eyeTop - 4 - Math.max.apply(null, dys) - Math.max(0, Math.round(browLift) - 3);
+    ctx.fillStyle = SCLERA;
+    for (let i = -rx; i <= rx; i++) {
+      const x = cx + i, y0 = by + dys[i + rx];
+      for (let k = 0; k < 2; k++) {
+        const y = y0 + k;
+        if (set.has(x + ',' + y) || set.has(x + ',' + (y + 1)) || set.has(x + ',' + (y + 2))) continue;
+        ctx.fillRect(x, y, 1, 1);
+        for (let oy = -2; oy <= 2; oy++) for (let ox = -2; ox <= 2; ox++) occupied.add((x + ox) + ',' + (y + oy));
+      }
+    }
+  });
+
+  if (react) {                                        // eight sparks bursting outward, thinning as they go
+    const cxm = Math.round(W / 2), cym = Math.round(H / 2 + bob + hop);
+    const clear = (x, y) => x >= 1 && x < W - 1 && y >= 1 && y < H - 1 && !occupied.has(x + ',' + y);
+    const rad = 18 + ep * 13;                         // starts OUTSIDE the face, never on it
+    ctx.fillStyle = 'oklch(0.86 0.20 130)';
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + 0.2;
+      const x = Math.round(cxm + Math.cos(a) * rad), y = Math.round(cym + Math.sin(a) * rad * 0.72);
+      if (!clear(x, y)) continue;
+      ctx.fillRect(x, y, 1, ep < .7 ? 2 : 1);
+      if (ep < .55 && clear(x - 1, y + 1) && clear(x + 1, y + 1)) ctx.fillRect(x - 1, y + 1, 3, 1);
+    }
+  }
+
+  if (m.extra === 'spark') {
+    const s = Math.floor(t * 5) % 4;
+    ctx.fillStyle = 'oklch(0.86 0.20 130)';
+    [[8, Math.round(H * .2)], [39, Math.round(H * .26)], [6, Math.round(H * .74)], [41, Math.round(H * .7)]]
+      .forEach((p, i) => { if ((i + s) % 2 === 0) { ctx.fillRect(p[0], p[1], 1, 3); ctx.fillRect(p[0] - 1, p[1] + 1, 3, 1); } });
+  } else if (m.extra === 'tick') {
+    ctx.fillStyle = 'oklch(0.74 0.17 55)';
+    if (Math.floor(t * 3) % 2 === 0) { const y = Math.round(H * .22); ctx.fillRect(40, y, 1, 4); ctx.fillRect(43, y - 1, 1, 4); }
+  } else if (m.extra === 'droop') {
+    ctx.fillStyle = 'rgba(190,170,230,.75)';
+    const o = Math.floor((t * 2) % 3), dy0 = Math.round(H * .22);
+    ctx.fillRect(38 - o, dy0 - o, 2, 1); ctx.fillRect(40, dy0 + 4, 3, 1);
+  }
+}
+
+const REACTION_MS = 950;
+
+/** Draw one frame. Exposed for host-driven render loops (RN, RAF elsewhere, tests).
+ *  opts.reactAt — timestamp (same clock as t, seconds) of the last completion. */
+function paintSprite(canvas, opts, t) {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (!w || !h) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = FIELD_W;
+  const H = Math.max(24, Math.min(140, Math.round(W * h / w)));
+  const scale = Math.max(1, Math.floor(Math.min(w / W, h / H)));
+  const cw = W * scale, ch = H * scale;
+  if (canvas.width !== cw * dpr) { canvas.width = cw * dpr; canvas.height = ch * dpr; }
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  const m = MOODS[opts.mood] || MOODS.steady;
+  let react = null;
+  if (opts.reactAt != null) {
+    const p = (t - opts.reactAt) / (REACTION_MS / 1000);
+    if (p >= 0 && p < 1) react = { p };
+  }
+  drawBg(ctx, opts.bg || 'grid', t, W, H);
+  drawEyes(ctx, m, opts.shape || 'round', opts.iris || DEFAULT_IRIS, t + (opts.seed || 0) * 7, W, H, react);
+}
+
+/** Attach a 25fps render loop to a canvas. Returns { set, destroy }. */
+function mountSprite(canvas, opts = {}) {
+  let state = { mood: 'steady', shape: 'round', bg: 'grid', iris: DEFAULT_IRIS, seed: 0, ...opts };
+  const t0 = performance.now();
+  const id = setInterval(() => {
+    try { paintSprite(canvas, state, (performance.now() - t0) / 1000); }
+    catch (e) { console.error('sprite paint failed', e); clearInterval(id); }
+  }, 40);
+  return {
+    set(patch) { state = { ...state, ...patch }; },
+    /** Call every time the user marks a deed complete. Safe to call mid-reaction (restarts it). */
+    react() { state = { ...state, reactAt: (performance.now() - t0) / 1000 }; },
+    destroy() { clearInterval(id); }
+  };
+}
+// ═══════════════════════════════════════════════════════════════════════════
+//  END vendored: sprite-eyes.js
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── Pixel sprite host (Phase 1) ─────────────────────────────────────────────
+// The renderer sizes its pixel grid from the canvas box, so the box has to be an
+// exact multiple of that grid. Left at width:100%, a fractional remainder gets
+// stretched across the last column and the pixels stop being square. The window
+// around it carries the sprite's own background colour, so the few leftover
+// pixels at the edge are invisible.
+let _sprite = null;
+function fitSpriteCanvas(){
+  const wrap = document.getElementById('sprite-window');
+  const cv = document.getElementById('sprite-canvas');
+  if (!wrap || !cv) return;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  if (!w || !h) return;
+  const W = FIELD_W;
+  const H = Math.max(24, Math.min(140, Math.round(W * h / w)));
+  let scale = Math.max(1, Math.floor(Math.min(w / W, h / H)));
+  // The page still carries the legacy zoom:1.25, so one CSS pixel is 1.25 screen
+  // pixels and a scale of 6 would render each sprite pixel 7.5 screen pixels wide.
+  // Pick a scale that stays whole after the zoom. Remove this once the zoom goes.
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;width:100px;height:0;visibility:hidden';
+  wrap.appendChild(probe);
+  const zoom = probe.getBoundingClientRect().width / 100 || 1;
+  probe.remove();
+  let step = 1;
+  for (let q = 1; q <= 8; q++) { if (Math.abs(q * zoom - Math.round(q * zoom)) < 0.001) { step = q; break; } }
+  scale = Math.max(step, Math.floor(scale / step) * step);
+  cv.style.width = (W * scale) + 'px';
+  cv.style.height = (H * scale) + 'px';
+}
+function mountDailySprite(){
+  const cv = document.getElementById('sprite-canvas');
+  if (!cv || _sprite) return;
+  fitSpriteCanvas();
+  // Mood is a placeholder in this phase; real evaluation arrives later.
+  _sprite = mountSprite(cv, {mood:'steady', shape:'round', bg:'grid'});
+}
+function unmountDailySprite(){ if (_sprite) { _sprite.destroy(); _sprite = null; } }
+function initDailySprite(){
+  const wrap = document.getElementById('sprite-window');
+  if (!wrap) return;
+  mountDailySprite();
+  if (window.ResizeObserver) new ResizeObserver(() => fitSpriteCanvas()).observe(wrap);
+  else window.addEventListener('resize', fitSpriteCanvas);
+  // 25fps is cheap, but a backgrounded tab should paint nothing at all.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) unmountDailySprite(); else mountDailySprite();
+  });
+}
+
 function init(){
   const sp=localStorage.getItem('rpg_sound');
   if(sp==='0'){soundOn=false;const b=document.getElementById('sound-btn');b.textContent='✕';b.classList.add('muted');}
 
   const data=load();
   applyTheme(data.appTheme||'blue');
+  initDailySprite();
   checkNewDay(data);
   checkMonthRollover(data);
 
