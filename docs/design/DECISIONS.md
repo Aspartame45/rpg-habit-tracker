@@ -189,6 +189,38 @@ the Goals segments. Records drills into the chart view from 4d.
   average week, and every chart's total, average and bars, compared against the
   pre-Phase-8 build.
 
+**Decided after Phase 8:** time stays a **per-day total** for each activity and
+project, however many sessions it is split across. Individual sessions are not
+recorded.
+
+## Phase 9 — the completion reaction and mood
+
+- **BEAM** plays on every tick (never on an untick). A quick second tick restarts
+  it rather than queueing, and the mood underneath is untouched, so a drained
+  sprite beams and then droops again.
+- **The sprite's mood is derived, never stored.** It combines today's completion
+  ratio, task-run state, and the existing wellness pressure (stat neglect and
+  failing goals, decision 5), in this order:
+
+  | Mood | When |
+  |---|---|
+  | drained | heavy neglect with little done today, or nothing logged in 3+ days |
+  | frustrated | a task run of 3+ days broke yesterday, or a goal just missed its period, and it isn't made up yet today |
+  | concerned | some neglect or failing goals, with little done today |
+  | happy | most of today done (60%+) |
+  | thriving | everything done today, or 80%+ with a 7+ day run extended today |
+  | steady | the default, and always for a brand-new user |
+
+  With neglect present, a good day lifts it one step instead (steady or happy).
+  A stat that has never been raised isn't counted as neglected. That was a quirk
+  of the old logic, which rated every new user "critical".
+- **It never flickers:** a change of mood is held for at least 4 seconds, and the
+  latest mood shows when the hold ends.
+- **The stored `characterMood` keeps its old five states** (happy, neutral,
+  concerned, sad, critical), because the live version reads it. The sprite's six
+  moods are only ever computed. Wellness now names the sprite's mood and its reason.
+  The old badge and thought-bubble code, which had nothing left to draw on, is gone.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.
@@ -203,4 +235,4 @@ the Goals segments. Records drills into the chart view from 4d.
 | Item | Why it waits |
 |---|---|
 | ~~The legacy `zoom: 1.25`~~ | **Done in Phase 2.** Removed, with all 1,220 legacy pixel values multiplied by 1.25 so the existing app kept its size. New work uses the handoff's real pixel values |
-| The old five-state mood constants | They stay until the moods are rewired, so the current avatar and Wellness report keep working meanwhile |
+| ~~The old five-state mood constants~~ | **Rewired in Phase 9.** The stored mood keeps its five states for the live version; the sprite uses its own six, computed |

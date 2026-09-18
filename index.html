@@ -3459,6 +3459,7 @@ function toggleTask(tid){
     save(data);
     spawnFloat('task-'+tid,`+${task.points} ${STATS_DEF.find(s=>s.key===task.stat).label}`);
     flashTask(tid);playCheck();
+    if(_sprite)_sprite.react();
     const newVal=data.stats[task.stat];
     save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);updateMoodDisplay(data);checkAchievements(data);
     if(newVal%10===0){
@@ -4554,33 +4555,81 @@ function calculateMood(data){
   return'happy';
 }
 
+// ── The sprite's mood (Phase 9) ──
+// Derived every time, never stored. It combines today's completion ratio with the
+// streak state and the existing wellness pressure (stat neglect and failing goals,
+// from calculateMood, which still feeds the stored five-state characterMood used by
+// the live version).
+//   drained    — heavy neglect with little done today, or nothing done in 3+ days
+//   frustrated — a task run of 3+ days broke yesterday, or a goal just missed its period
+//   concerned  — neglect or failing goals, with little done today
+//   happy      — most of today done (60%+)
+//   thriving   — everything done today, or 80%+ with a 7+ day run extended today
+//   steady     — the default
+function spriteMood(data){
+  const tasks=data.customTasks||[],today=todayStr(),yest=yestStr();
+  const hist=data.taskHistory||{};
+  const doneOn=(tid,ds)=>ds===today?!!data.todayChecked[tid]:!!(hist[ds]&&hist[ds][tid]);
+  const done=tasks.filter(t=>doneOn(t.id,today)).length;
+  const ratio=tasks.length?done/tasks.length:0;
+  const day=(ds,n)=>{const d=_dd(ds);d.setDate(d.getDate()+n);return _ds(d);};
+  // the longest run extended today
+  let bestRun=0;tasks.forEach(t=>{if(doneOn(t.id,today)){const r=calcStreak(data,t.id);if(r>bestRun)bestRun=r;}});
+  // a run of 3+ days that ended yesterday and hasn't been picked up again today
+  const broken=tasks.filter(t=>{
+    if(doneOn(t.id,yest)||doneOn(t.id,today))return false;
+    let n=0,d=day(yest,-1);while(n<400&&doneOn(t.id,d)){n++;d=day(d,-1);}
+    return n>=3;
+  });
+  // a goal whose period ended unmet in the last two days
+  const missed=(data.customGoals||[]).filter(g=>g.lastPeriodMet===false&&g.openPeriod&&daysBetween(g.openPeriod,today)<=1&&g.status!=='onTrack');
+  // days since anything at all was done
+  let lastDone=null;for(const ds in hist){if(ds<=today&&Object.values(hist[ds]).some(Boolean)&&(!lastDone||ds>lastDone))lastDone=ds;}
+  if(done)lastDone=today;
+  const idle=lastDone?daysBetween(lastDone,today):9999;
+  // A brand-new user has nothing to be drained about.
+  if(!lastDone)return{mood:'steady',why:'A fresh start: nothing logged yet.'};
+  // A stat that has never been raised has no date; it isn't neglect, so it doesn't count here.
+  const sli={...(data.statLastIncreased||{})};STATS_DEF.forEach(st=>{if(!sli[st.key])sli[st.key]=today;});
+  const pressure={happy:0,neutral:0,concerned:1,sad:2,critical:3}[calculateMood({...data,statLastIncreased:sli})]||0;
+  const pos=(ratio>=0.999&&tasks.length)||(ratio>=0.8&&bestRun>=7)?2:ratio>=0.6?1:0;
+  const nm=t=>t.name.length>40?t.name.slice(0,38)+'…':t.name;
+  if(pos===0&&(pressure>=3||idle>=3))
+    return{mood:'drained',why:idle>=3?`Nothing has been logged for ${idle===9999?'a long while':idle+' days'}.`:'Several stats have gone untouched for ten days or more.'};
+  if((broken.length||missed.length)&&pos<2)
+    return{mood:'frustrated',why:broken.length?`${nm(broken[0])} lost a run of three days or more yesterday.`:`${goalTitle(missed[0],data)} ended its ${missed[0].period==='month'?'month':'week'} short.`};
+  if(pressure>=1)
+    return pos===2?{mood:'happy',why:'A strong day, though some stats or goals still need attention.'}
+      :pos===1?{mood:'steady',why:'Most of today is done; some stats or goals still need attention.'}
+      :{mood:'concerned',why:'Some stats or goals are slipping.'};
+  if(pos===2)return{mood:'thriving',why:ratio>=0.999?'Everything is done today.':`Most of today is done, and a ${bestRun}-day run was extended.`};
+  if(pos===1)return{mood:'happy',why:'Most of today is done.'};
+  return{mood:'steady',why:'Nothing is slipping.'};
+}
+// A new mood shows at once, unless the last change was under MOOD_HOLD_MS ago, in
+// which case the latest one shows when the hold ends. So it can never flicker.
+const MOOD_HOLD_MS=4000;
+let _moodShown=null,_moodAt=0,_moodTimer=0,_moodPending=null;
+function _showMood(m){
+  _moodShown=m;_moodAt=Date.now();_moodPending=null;
+  if(_sprite)_sprite.set({mood:m});
+  document.querySelectorAll('.mood-text').forEach(el=>{el.textContent=m.toUpperCase();});
+}
+function _applySpriteMood(data){
+  const m=spriteMood(data).mood;
+  if(_moodShown===null){_showMood(m);return;}
+  if(m===_moodShown){_moodPending=null;clearTimeout(_moodTimer);_moodTimer=0;return;}
+  _moodPending=m;
+  const wait=_moodAt+MOOD_HOLD_MS-Date.now();
+  if(wait<=0){clearTimeout(_moodTimer);_moodTimer=0;_showMood(m);return;}
+  if(!_moodTimer)_moodTimer=setTimeout(()=>{_moodTimer=0;if(_moodPending)_showMood(_moodPending);},wait);
+}
 function updateMoodDisplay(data){
   const mood=calculateMood(data);
   const prevMood=data.characterMood||'happy';
   data.characterMood=mood;
-  // badge
-  const badge=document.getElementById('mood-badge');
-  if(badge){badge.textContent=MOOD_EMOJIS[mood]+' '+MOOD_LABELS[mood];
-    badge.className='mood-badge mbadge-'+mood;}
-  // thought bubble (character tab removed — element may not exist)
-  const tb=document.getElementById('thought-bubble');
-  if(tb){
-    if(mood==='happy'){tb.style.display='none';}
-    else{
-      tb.style.display='block';
-      ['tb-neutral','tb-concerned','tb-sad','tb-critical'].forEach(c=>tb.classList.remove(c));
-      if(mood!=='neutral')tb.classList.add('tb-'+mood);
-      const sli=data.statLastIncreased||{};const today=todayStr();
-      const active=data.activeStats||{};
-      let worstStat=null,worstDays=0;
-      STATS_DEF.forEach(s=>{if(active[s.key]===false)return;const d=daysBetween(sli[s.key],today);if(d>=7&&d>worstDays){worstDays=d;worstStat=s;}});
-      const failGoal=(data.customGoals||[]).find(g=>g.status==='failing');
-      const riskGoal=!failGoal&&(data.customGoals||[]).find(g=>g.status==='atRisk');
-      if(worstStat){tb.textContent=`${STAT_EMOJI_MAP[worstStat.key]||worstStat.emoji} ${worstStat.fullLabel}: ${worstDays}d ago`;}
-      else if(failGoal){tb.textContent=`🎯 ${goalDescription(failGoal,data)} — FAILING`;}
-      else if(riskGoal){tb.textContent=`🎯 ${goalDescription(riskGoal,data)} — AT RISK`;}
-    }
-  }
+  // the sprite's mood follows, from the same data
+  _applySpriteMood(data);
   // mood drop notification
   if(prevMood==='happy'&&mood!=='happy'){
     const sli2=data.statLastIncreased||{};const today2=todayStr();const active2=data.activeStats||{};
@@ -4596,8 +4645,9 @@ function openWellnessReport(){
   calculateMood(data); // ensures goal statuses are up to date
   const mood=data.characterMood||calculateMood(data);
   const sli=data.statLastIncreased||{};const today=todayStr();
-  const moodCol={happy:'green',neutral:'teal',concerned:'orange2',sad:'red',critical:'pink'}[mood]||'white';
-  let html=`<div class="wellness-mood-line" style="color:var(--${moodCol})">${MOOD_EMOJIS[mood]||''} OVERALL: ${MOOD_LABELS[mood]||mood.toUpperCase()}</div>`;
+  const sm=spriteMood(data);
+  const smCol={thriving:'green',happy:'green',steady:'teal',concerned:'orange2',frustrated:'red',drained:'pink'}[sm.mood]||'white';
+  let html=`<div class="wellness-mood-line" style="color:var(--${smCol})">OVERALL: ${sm.mood.toUpperCase()}</div><div class="wellness-why" style="margin:6px 0 12px;font:13px/1.5 'Space Grotesk',sans-serif;color:var(--white)">${sm.why}</div>`;
   html+=`<div class="wellness-section-hd" style="border-top:none;padding-top:0">STAT STATUS</div>`;
   STATS_DEF.forEach(s=>{
     const days=daysBetween(sli[s.key],today);
@@ -5520,10 +5570,9 @@ function mountDailySprite(){
   const cv = document.getElementById('sprite-canvas');
   if (!cv || _sprite) return;
   fitSpriteCanvas();
-  // Mood is a placeholder in this phase; real evaluation arrives later.
-  _sprite = mountSprite(cv, {mood:'steady', shape:'round', bg:'grid'});
-  const badge = document.getElementById('sprite-badge-mood');
-  document.querySelectorAll('.mood-text').forEach(el => { el.textContent = 'STEADY'; });
+  const mood = _moodShown || spriteMood(load()).mood;
+  _sprite = mountSprite(cv, {mood, shape:'round', bg:'grid'});
+  if (!_moodShown) _showMood(mood);
 }
 function unmountDailySprite(){ if (_sprite) { _sprite.destroy(); _sprite = null; } }
 // ── Phone device behaviour (Phase 5.5) ─────────────────────────────────────
