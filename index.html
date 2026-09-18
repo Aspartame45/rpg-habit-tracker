@@ -77,10 +77,31 @@ body::before{
 #header-sub{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--b2);letter-spacing:3.75px}
 
 /* ── TABS ── */
-#tab-bar{display:flex;justify-content:center;align-items:center;gap:12.5px;flex-wrap:wrap;
-  position:relative;z-index:9;padding:12.5px 20px;
-  background:linear-gradient(180deg,#07071a 0%,#0d0d28 100%);
-  border-bottom:5px solid var(--b1);}
+/* ── Cartridge bar (Phase 4) ── */
+.cartridge{
+  position:relative;z-index:9;
+  display:flex;align-items:center;gap:12px;
+  max-width:1375px;margin:14px auto 22px;
+  width:calc(100% - 25px);
+  padding:11px 13px;border-radius:16px;
+  background:var(--shell-face);
+  box-shadow:0 10px 24px rgba(0,0,0,.45),
+             inset 0 2px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.28);
+}
+.cartridge-brand{display:flex;align-items:center;gap:7px}
+.app-wordmark{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:.16em;color:var(--shell-ink);
+}
+#tab-bar{display:flex;gap:7px;margin-left:auto}
+/* On a phone the device's own header carries the name, so the bar is just the
+   three keys, sharing the width. */
+@media(max-width:600px){
+  .cartridge{width:calc(100vw - 32px);margin:12px auto 16px}
+  .cartridge-brand{display:none}
+  #tab-bar{flex:1;gap:8px;margin-left:0}
+  #tab-bar .tab-btn{flex:1;padding:14px 0;border-radius:7px}
+}
 .tab-btn{
   font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:9px;letter-spacing:.1em;
   color:var(--key-ink);background:var(--key-face);
@@ -842,8 +863,9 @@ body::before{
 .auth-skip{color:var(--dim);font-size:clamp(5px,.7vw,6.25px);text-align:center;cursor:pointer;text-decoration:underline;margin-top:5px}
 .auth-skip:hover{color:var(--white)}
 /* ── User info bar in tab strip ── */
-#user-info-bar{display:none;align-items:center;gap:7.5px;padding:0 12.5px;font-size:clamp(5px,.7vw,6.25px);color:var(--dim);white-space:nowrap;
-  position:absolute;right:0;top:50%;transform:translateY(-50%)}
+#user-info-bar{display:none;align-items:center;justify-content:flex-end;gap:7.5px;
+  max-width:1375px;margin:-10px auto 14px;padding:0 20px;
+  font-size:clamp(5px,.7vw,6.25px);color:var(--dim);white-space:nowrap}
 #user-info-bar.visible{display:flex}
 #user-email-lbl{color:var(--teal);max-width:150px;overflow:hidden;text-overflow:ellipsis}
 .sync-dot{width:7.5px;height:7.5px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0}
@@ -1020,15 +1042,19 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   <div id="header-sub">DAILY CHARACTER SHEET</div>
 </header>
 
-<div id="tab-bar">
-  <button class="tab-btn active"  onclick="switchTab('daily')">⚔ DAILY</button>
-  <button class="tab-btn"         onclick="switchTab('quests')">⚔ QUESTS</button>
-  <button class="tab-btn"         onclick="switchTab('inventory')">💰 INVENTORY</button>
-  <div id="user-info-bar">
-    <span class="sync-dot" id="sync-dot"></span>
-    <span id="user-email-lbl"></span>
-    <button class="px-btn sm" onclick="fbSignOut()">SIGN OUT</button>
+<!-- The cartridge bar: one shell strip, above the panels on every page. -->
+<nav id="cartridge" class="cartridge" aria-label="Pages">
+  <div class="cartridge-brand"><span class="led"></span><span class="app-wordmark">HABITRON</span></div>
+  <div id="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('daily')">DAILY</button>
+    <button class="tab-btn" onclick="switchTab('quests')">GOALS</button>
+    <button class="tab-btn" onclick="switchTab('inventory')">TOOLS</button>
   </div>
+</nav>
+<div id="user-info-bar">
+  <span class="sync-dot" id="sync-dot"></span>
+  <span id="user-email-lbl"></span>
+  <button class="px-btn sm" onclick="fbSignOut()">SIGN OUT</button>
 </div>
 
 <div id="page">
@@ -1039,7 +1065,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
     <div class="shell" id="shell">
       <div class="shell-tex"></div>
       <div class="shell-header">
-        <div class="shell-brand"><span class="led"></span><span id="shell-wordmark">HABITRON</span></div>
+        <div class="shell-brand"><span class="led"></span><span id="shell-wordmark" class="app-wordmark">HABITRON</span></div>
         <div id="shell-meta" class="shell-meta">MK-I</div>
       </div>
       <div class="bezel">
@@ -1102,7 +1128,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
       <!-- Column 2: Daily Deeds -->
       <section class="panel">
-        <div class="panel-head"><span>⚔</span> DAILY DEEDS
+        <div class="panel-head"><span>⚔</span> DAILY TASKS
           <span class="panel-head-right" style="display:flex;gap:5px">
             <button class="px-btn sm" onclick="openBackdate()">LOG PAST</button>
             <button class="px-btn sm" onclick="openTaskMgr()">MANAGE</button>
@@ -1115,7 +1141,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
       <!-- Column 3: Attributes -->
       <section class="panel">
-        <div class="panel-head"><span>★</span> ATTRIBUTES</div>
+        <div class="panel-head"><span>★</span> STATS</div>
         <div class="panel-body" id="stats-list"></div>
       </section>
 
@@ -1131,7 +1157,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
       <!-- Column 1: Custom Quests -->
       <section class="panel">
-        <div class="panel-head"><span>⚔</span> QUESTS
+        <div class="panel-head"><span>⚔</span> PROJECTS
           <span class="panel-head-right" style="display:flex;gap:5px">
             <button class="px-btn sm" onclick="openCreateQuest()">+ NEW</button>
             <button class="px-btn sm" onclick="showTutorial('quests')" title="Help">?</button>
@@ -1139,7 +1165,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         </div>
         <div class="panel-body">
           <div class="quest-subtabs">
-            <button class="quest-subtab active" id="qst-tab-custom"    onclick="switchQuestTab('custom')">⚔ QUESTS</button>
+            <button class="quest-subtab active" id="qst-tab-custom"    onclick="switchQuestTab('custom')">ACTIVE</button>
             <button class="quest-subtab"         id="qst-tab-completed" onclick="switchQuestTab('completed')">✓ COMPLETED</button>
           </div>
           <div id="qst-section-custom"    class="quest-section active"></div>
@@ -1157,7 +1183,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
       <!-- Column 3: Achievements -->
       <section class="panel">
-        <div class="panel-head"><span>🏆</span> ACHIEVEMENTS</div>
+        <div class="panel-head"><span>🏆</span> AWARDS</div>
         <div class="panel-body">
           <div class="quest-subtabs">
             <button class="quest-subtab active" id="achv-tab-active" onclick="switchAchvTab('active')">🏆 IN PROGRESS</button>
@@ -1177,11 +1203,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <!-- Left: gold + history -->
       <div>
         <section class="panel">
-          <div class="panel-head"><span>💰</span> TREASURY</div>
+          <div class="panel-head"><span>💰</span> RESERVE</div>
           <div class="panel-body">
             <div class="gold-card" onclick="openBudgetModal()">
               <div class="gold-amount"><span>💰</span><span id="gold-display">0</span></div>
-              <div class="gold-hint">GOLD ACCUMULATED · CLICK FOR BUDGET</div>
+              <div class="gold-hint">MARKS BANKED · OPEN THE LEDGER</div>
             </div>
             <div style="font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;margin-bottom:7.5px">MONTH HISTORY</div>
             <div id="budget-history-list"><div class="empty-state">No history yet.</div></div>
@@ -1204,7 +1230,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       </div>
       <!-- Right: Logbook -->
       <section class="panel">
-        <div class="panel-head"><span>📖</span> LOGBOOK
+        <div class="panel-head"><span>📖</span> RECORDS
           <span class="panel-head-right" style="display:flex;gap:5px">
             <button class="px-btn sm" onclick="showTutorial('inventory')" title="Help">?</button>
           </span>
@@ -1322,7 +1348,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <div style="font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;margin-bottom:7.5px">TRANSACTIONS</div>
       <div class="txn-list" id="txn-list"></div>
       <button class="px-btn sm" style="margin-bottom:15px" onclick="openAddTxn(null)">+ ADD TRANSACTION</button>
-      <button class="close-month-btn px-btn success" id="close-month-btn" onclick="closeMonth()">CLOSE MONTH &amp; COLLECT GOLD</button>
+      <button class="close-month-btn px-btn success" id="close-month-btn" onclick="closeMonth()">CLOSE MONTH · BANK</button>
     </div>
   </div>
 </div>
@@ -1451,11 +1477,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
           </div></div>
       </div>
       <div class="form-row">
-        <label class="form-label">LINK TO LOGBOOK ACTIVITY (optional)</label>
+        <label class="form-label">LINK TO RECORDS ACTIVITY (optional)</label>
         <select class="form-select" id="edit-task-activity" onchange="onTaskActivityChange()">
           <option value="">— None —</option>
         </select>
-        <div class="form-hint">Auto-completes this deed when enough time is logged</div>
+        <div class="form-hint">Auto-completes this task when enough time is logged</div>
       </div>
       <div class="form-row-inline" id="task-minlink-row" style="display:none">
         <div class="form-row" style="margin-bottom:0"><label class="form-label">MIN HOURS</label>
@@ -1556,7 +1582,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 <!-- MODAL: MANAGE STATS (Phase 5.4) -->
 <div class="modal-overlay" id="modal-managestats">
   <div class="modal-box">
-    <div class="modal-head">⚙ MANAGE ACTIVE ATTRIBUTES<span class="modal-close" onclick="closeModal('modal-managestats')">✕</span></div>
+    <div class="modal-head">⚙ MANAGE ACTIVE STATS<span class="modal-close" onclick="closeModal('modal-managestats')">✕</span></div>
     <div class="modal-body">
       <div class="form-hint" style="margin-bottom:15px;line-height:1.8">
         Select which stats affect your character's mood and wellness. Unchecked stats will still track progress but won't make your character sad if neglected.
@@ -1573,31 +1599,31 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 <!-- MODAL: CREATE/EDIT CUSTOM QUEST -->
 <div class="modal-overlay" id="modal-quest">
   <div class="modal-box">
-    <div class="modal-head"><span id="quest-modal-title">CREATE QUEST</span><span class="modal-close" onclick="closeModal('modal-quest')">✕</span></div>
+    <div class="modal-head"><span id="quest-modal-title">CREATE PROJECT</span><span class="modal-close" onclick="closeModal('modal-quest')">✕</span></div>
     <div class="modal-body">
       <input type="hidden" id="edit-quest-id"/>
-      <label class="form-label">QUEST NAME</label>
-      <input type="text" class="form-input" id="quest-name" placeholder="Name your quest..." maxlength="80"/>
+      <label class="form-label">PROJECT NAME</label>
+      <input type="text" class="form-input" id="quest-name" placeholder="Name your project..." maxlength="80"/>
       <label class="form-label">DESCRIPTION (optional)</label>
-      <input type="text" class="form-input" id="quest-desc" placeholder="What does this quest involve?" maxlength="200"/>
+      <input type="text" class="form-input" id="quest-desc" placeholder="What does this project involve?" maxlength="200"/>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12.5px">
         <input type="checkbox" id="quest-track-time" onchange="onQuestTrackTimeChange()" style="width:17.5px;height:17.5px"/>
-        <label class="form-label" style="margin:0;cursor:pointer" for="quest-track-time">Track time spent on this quest</label>
+        <label class="form-label" style="margin:0;cursor:pointer" for="quest-track-time">Track time spent on this project</label>
       </div>
       <div id="quest-avg-section" style="display:none;margin-bottom:12.5px">
         <label class="form-label">AVERAGE TIME CALCULATION</label>
         <div style="display:flex;flex-direction:column;gap:7.5px">
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(5px,.85vw,6.25px);color:var(--dim)"><input type="radio" name="quest-avg" value="allDays" checked/> All days since quest started</label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(5px,.85vw,6.25px);color:var(--dim)"><input type="radio" name="quest-avg" value="allDays" checked/> All days since project started</label>
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:clamp(5px,.85vw,6.25px);color:var(--dim)"><input type="radio" name="quest-avg" value="workDays"/> Only days with logged work</label>
         </div>
       </div>
       <div id="quest-logbook-section" style="display:none;margin-bottom:12.5px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <input type="checkbox" id="quest-in-logbook" onchange="onQuestLogbookChange()" style="width:17.5px;height:17.5px"/>
-          <label class="form-label" style="margin:0;cursor:pointer" for="quest-in-logbook">Show in Logbook (ongoing quest)</label>
+          <label class="form-label" style="margin:0;cursor:pointer" for="quest-in-logbook">Show in Records (active project)</label>
         </div>
         <div id="quest-icon-row" style="display:none">
-          <label class="form-label">LOGBOOK ICON</label>
+          <label class="form-label">RECORDS ICON</label>
           <input class="form-input" id="quest-icon" type="text" maxlength="4" placeholder="⚔"/>
           <div class="form-hint">Click the field to pick an emoji</div>
         </div>
@@ -1607,7 +1633,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <button class="px-btn sm" onclick="addQuestRewardRow()" style="margin-bottom:15px">+ ADD REWARD</button>
       <div class="form-actions">
         <button class="px-btn" onclick="closeModal('modal-quest')">CANCEL</button>
-        <button class="px-btn success" onclick="saveQuest()">SAVE QUEST</button>
+        <button class="px-btn success" onclick="saveQuest()">SAVE PROJECT</button>
       </div>
     </div>
   </div>
@@ -1665,13 +1691,13 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <input type="text" id="welcome-name-input" class="form-input" maxlength="24" placeholder="Your name..." style="width:100%;font-size:clamp(8.75px,1.4vw,11.25px);text-align:center;padding:10px"/>
       </div>
       <div class="form-hint" style="margin-bottom:15px;line-height:1.8">
-        <p style="margin-bottom:12.5px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 attributes (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), level up, unlock class titles, and earn cosmetics for your pixel-art character.</p>
+        <p style="margin-bottom:12.5px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 stats (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), level up, unlock class titles, and earn cosmetics for your pixel-art character.</p>
         <p style="margin-bottom:12.5px"><strong>Getting started:</strong></p>
         <ul style="margin:0 0 12.5px 22.5px;padding:0">
-          <li>Check off tasks on the DAILY tab to earn attribute points and build streaks.</li>
+          <li>Check off tasks on the DAILY tab to earn stat points and build streaks.</li>
           <li>Add your own custom tasks from PROJECTS / task management.</li>
           <li>Visit the CHARACTER tab to see your sprite, class title, and total level.</li>
-          <li>Your mood reflects how recently you've worked on each active attribute — keep them all warm!</li>
+          <li>Your mood reflects how recently you've worked on each active stat — keep them all warm!</li>
           <li>Unlock and equip cosmetics (hats, weapons, capes) as you level up your stats.</li>
         </ul>
         <p style="margin-bottom:0"><strong>⚠ Your data is stored only in this browser (localStorage).</strong> It is not synced or backed up anywhere. Use the EXPORT button regularly to save a backup file, and IMPORT to restore it.</p>
@@ -1782,7 +1808,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <div class="form-row">
           <label class="form-label">ACTIVITY</label>
           <select class="form-select" id="goal-act-id"></select>
-          <div class="form-hint">From your Logbook (Inventory tab)</div>
+          <div class="form-hint">From your Records (Tools page)</div>
         </div>
         <div class="form-row-inline">
           <div class="form-row" style="margin-bottom:0"><label class="form-label">HOURS</label>
@@ -2487,8 +2513,8 @@ function cleanFutureEntries(){
   if(!total){console.log('Nothing to clean — no future-dated entries.');return;}
   if(!confirm(`Delete ${total} future-dated entr${total===1?'y':'ies'}?\n\n`+
       `Task days: ${removed.taskHistory.join(', ')||'none'}\n`+
-      `Logbook: ${removed.logbook.join(', ')||'none'}\n`+
-      `Quests: ${removed.quests.join(', ')||'none'}\n\n`+
+      `Records: ${removed.logbook.join(', ')||'none'}\n`+
+      `Projects: ${removed.quests.join(', ')||'none'}\n\n`+
       `This cannot be undone. Export a backup first if unsure.`))return;
   removed.taskHistory.forEach(d=>{delete data.taskHistory[d];});
   (data.logbookActivities||[]).forEach(a=>{for(const d in(a.dailyLogs||{})){if(d>today)delete a.dailyLogs[d];}});
@@ -2619,7 +2645,7 @@ function renderTasks(data){
     let linkBadge='';
     if(t.linkedActivityId){
       const la=(data.logbookActivities||[]).find(a=>a.id===t.linkedActivityId);
-      if(la){const mm=t.linkedMinMinutes||0;linkBadge=`<span class="task-link-badge" title="Auto-completes from Logbook: ${la.name}${mm>0?' ≥ '+fmtHM(mm/60):''}">📖 ${la.icon||''} ${mm>0?'≥'+fmtHM(mm/60):'any'}</span>`;}
+      if(la){const mm=t.linkedMinMinutes||0;linkBadge=`<span class="task-link-badge" title="Auto-completes from Records: ${la.name}${mm>0?' ≥ '+fmtHM(mm/60):''}">📖 ${la.icon||''} ${mm>0?'≥'+fmtHM(mm/60):'any'}</span>`;}
     }
     div.innerHTML=`<div class="task-cb">${done?'✓':''}</div>
       <div style="flex:1">
@@ -2800,7 +2826,7 @@ function renderLogbookIndex(){
   const data=load();
   const page=document.getElementById('logbook-page');if(!page)return;
   const acts=data.logbookActivities||[];
-  let html=`<div class="lb-title">✦ LOGBOOK ✦</div><div class="lb-sub">AVG HOURS / WEEK · PAST 12 MONTHS</div>`;
+  let html=`<div class="lb-title">✦ RECORDS ✦</div><div class="lb-sub">AVG HOURS / WEEK · PAST 12 MONTHS</div>`;
   if(!acts.length){
     html+=`<div class="lb-empty" style="padding:32.5px 15px;line-height:2.2">No activities tracked yet.<br>Tap the ✏️ button<br>to add one.</div>`;
   } else {
@@ -3010,7 +3036,7 @@ function renderBudgetModal(data){
   }
 
   const btn=document.getElementById('close-month-btn');
-  btn.textContent=`CLOSE MONTH & COLLECT GOLD${balance>0?' (+'+fmtNum(balance)+' GOLD)':''}`;
+  btn.textContent=`CLOSE MONTH · BANK${balance>0?' +'+fmtNum(balance)+' MARKS':''}`;
 }
 
 // ── Transaction CRUD ──
@@ -3063,8 +3089,8 @@ function closeMonth(){
   const cur=data.currentMonth||monthStr();
 
   const msg=surplus>0
-    ?`Close ${monthLabel(cur)}?\n\nBalance: +${fmtNum(surplus)}\nThis will be added to your Gold!`
-    :`Close ${monthLabel(cur)}?\n\nBalance: ${fmtNum(surplus)}\n(No gold collected this month)`;
+    ?`Close ${monthLabel(cur)}?\n\nBalance: +${fmtNum(surplus)}\nThis will be banked as Marks!`
+    :`Close ${monthLabel(cur)}?\n\nBalance: ${fmtNum(surplus)}\n(No marks banked this month)`;
   if(!confirm(msg))return;
 
   // Archive
@@ -3078,10 +3104,10 @@ function closeMonth(){
   renderInventoryTab(data);
   if(surplus>0){
     playCoin();
-    showLU(`Month closed!\n+${fmtNum(surplus)} GOLD collected!\nTotal Gold: ${fmtNum(data.gold)}`);
-    spawnFloatCenter(`💰 +${fmtNum(surplus)} GOLD`);
+    showLU(`Month closed!\n+${fmtNum(surplus)} MARKS banked!\nTotal Marks: ${fmtNum(data.gold)}`);
+    spawnFloatCenter(`💰 +${fmtNum(surplus)} MARKS`);
   } else {
-    alert(`Month closed. No gold this time — keep saving!`);
+    alert(`Month closed. No marks this time — keep saving!`);
   }
 }
 
@@ -3309,7 +3335,7 @@ function checkMonthRollover(data){
       const income=txns.filter(t=>t.type==='income').reduce((s,t)=>s+Number(t.amount),0);
       const expenses=txns.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
       const surplus=income-expenses;
-      if(confirm(`📅 ${label} has ended!\n\nBalance: ${surplus>=0?'+':''}${fmtNum(surplus)}\n\nClose month & collect gold now?`))
+      if(confirm(`📅 ${label} has ended!\n\nBalance: ${surplus>=0?'+':''}${fmtNum(surplus)}\n\nClose the month and bank the marks now?`))
         closeMonth();
     },800);
   }
@@ -3456,7 +3482,7 @@ function checkAchievements(data){
     const lines=[];
     Object.entries(q.reward||{}).forEach(([k,v])=>{if(v>0){data.stats[k]=(data.stats[k]||0)+v;const sd=STATS_DEF.find(s=>s.key===k);lines.push(`+${v} ${sd?sd.fullLabel:k}`);}});
     changed=true;
-    setTimeout(()=>{spawnFloatCenter(`🏆 ACHIEVEMENT: ${q.name}!`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`);playLU();},600);
+    setTimeout(()=>{spawnFloatCenter(`🏆 AWARD: ${q.name}!`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`);playLU();},600);
   });
   if(changed){save(data);renderStats(data);renderAchievements(data);}
   return changed;
@@ -3506,15 +3532,15 @@ function renderAchievements(data){
     <div class="achv-prog-txt">${prog.current}/${prog.target}</div>`:''}`;
     (done?wrapDone:wrapActive).appendChild(div);
   });
-  if(!wrapActive.children.length)wrapActive.innerHTML='<div class="empty-state">All achievements completed! 🎉</div>';
-  if(!wrapDone.children.length)wrapDone.innerHTML='<div class="empty-state">No achievements completed yet.</div>';
+  if(!wrapActive.children.length)wrapActive.innerHTML='<div class="empty-state">All awards completed! 🎉</div>';
+  if(!wrapDone.children.length)wrapDone.innerHTML='<div class="empty-state">No awards completed yet.</div>';
 }
 
 function renderCustomQuests(data){
   const wrap=document.getElementById('qst-section-custom');if(!wrap)return;
   wrap.innerHTML='';
   const quests=data.customQuests||[];
-  if(!quests.length){wrap.innerHTML='<div class="empty-state">No custom quests yet.<br>Click + NEW QUEST to create one.</div>';return;}
+  if(!quests.length){wrap.innerHTML='<div class="empty-state">No projects yet.<br>Click + NEW to create one.</div>';return;}
   quests.forEach(q=>{
     const totalH=calcQuestHours(q);
     const days=daysSince(q.startDate);
@@ -3556,7 +3582,7 @@ function renderCompletedQuests(data){
   const wrap=document.getElementById('qst-section-completed');if(!wrap)return;
   wrap.innerHTML='';
   const quests=[...(data.completedQuests||[])].reverse();
-  if(!quests.length){wrap.innerHTML='<div class="empty-state">No completed quests yet.</div>';return;}
+  if(!quests.length){wrap.innerHTML='<div class="empty-state">No completed projects yet.</div>';return;}
   quests.forEach(q=>{
     const div=document.createElement('div');div.className='completed-card';
     div.innerHTML=`<span style="font-size:20px">🏆</span>
@@ -3579,7 +3605,7 @@ function logQuestHours(qid,val){
 }
 
 function completeQuest(qid){
-  if(!confirm('Mark this quest as complete and claim rewards?'))return;
+  if(!confirm('Mark this project as complete and claim rewards?'))return;
   const data=load();const idx=(data.customQuests||[]).findIndex(q=>q.id===qid);if(idx===-1)return;
   const q=data.customQuests.splice(idx,1)[0];
   q.completed=true;q.completedDate=todayStr();q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
@@ -3591,12 +3617,12 @@ function completeQuest(qid){
   if(!data.completedGoalCount)data.completedGoalCount=0;
   save(data);
   renderStats(data);updateMoodDisplay(data);renderQuests(data);checkAchievements(data);
-  spawnFloatCenter('🏆 QUEST COMPLETE!');tone(659,'square',.3,.1);
-  if(lines.length)setTimeout(()=>showLU('Quest Rewards:\n'+lines.join(', ')),800);
+  spawnFloatCenter('🏆 PROJECT COMPLETE!');tone(659,'square',.3,.1);
+  if(lines.length)setTimeout(()=>showLU('Project Rewards:\n'+lines.join(', ')),800);
 }
 
 function deleteQuest(qid){
-  if(!confirm('Delete this quest? All logged hours will be lost.'))return;
+  if(!confirm('Delete this project? All logged hours will be lost.'))return;
   const data=load();data.customQuests=(data.customQuests||[]).filter(q=>q.id!==qid);save(data);renderQuests(data);
 }
 
@@ -3609,7 +3635,7 @@ function deleteCompletedQuest(qid){
 let _questRewardStats=[];
 function openCreateQuest(qid){
   const data=load();const q=qid?(data.customQuests||[]).find(x=>x.id===qid):null;
-  document.getElementById('quest-modal-title').textContent=q?'EDIT QUEST':'CREATE QUEST';
+  document.getElementById('quest-modal-title').textContent=q?'EDIT PROJECT':'CREATE PROJECT';
   document.getElementById('edit-quest-id').value=q?q.id:'';
   document.getElementById('quest-name').value=q?q.name:'';
   document.getElementById('quest-desc').value=q?q.description||'':'';
@@ -3662,7 +3688,7 @@ function addQuestRewardRow(){
 }
 
 function saveQuest(){
-  const name=document.getElementById('quest-name').value.trim();if(!name){alert('Quest name required.');return;}
+  const name=document.getElementById('quest-name').value.trim();if(!name){alert('Project name required.');return;}
   const data=load();const id=document.getElementById('edit-quest-id').value;
   const desc=document.getElementById('quest-desc').value.trim();
   const trackTime=document.getElementById('quest-track-time').checked;
@@ -3985,7 +4011,7 @@ const SKIN_COLORS=[
 const CLOTH_COLORS=[
   {name:'Blue',  hex:'#2980B9'},{name:'Red',   hex:'#E74C3C'},{name:'Green', hex:'#27AE60'},
   {name:'Purple',hex:'#8E44AD'},{name:'Black', hex:'#2C3E50'},{name:'White', hex:'#ECF0F1'},
-  {name:'Gold',  hex:'#F39C12'},
+  {name:'Amber', hex:'#F39C12'},
 ];
 const PRESETS=[
   {name:'CLASSIC',   hair:'#6B4423',skin:'#D4A76A',clothing:'#2980B9'},
@@ -4320,18 +4346,18 @@ const ACHIEVEMENT_QUESTS=[
 // ── Per-tab tutorial content ──
 const TUTORIALS={
   daily:{title:'📅 DAILY TAB',items:[
-    {e:'✅',t:'<strong>Check off tasks</strong> each day to earn attribute points and build streaks.'},
-    {e:'📊',t:'<strong>Your attributes grow</strong> as you complete tasks — each task maps to a stat.'},
+    {e:'✅',t:'<strong>Check off tasks</strong> each day to earn stat points and build streaks.'},
+    {e:'📊',t:'<strong>Your stats grow</strong> as you complete tasks — each task maps to a stat.'},
     {e:'😊',t:'<strong>Your character\'s mood</strong> reflects how consistently you\'ve worked each stat.'},
     {e:'🔧',t:'<strong>Manage Tasks</strong> — add, edit, or remove your daily habits.'},
     {e:'📝',t:'<strong>Log Past</strong> — backdate tasks if you forgot to check them off.'},
-    {e:'💊',t:'<strong>Attributes panel</strong> on the right shows all 9 stats with streak info.'},
+    {e:'💊',t:'<strong>Stats panel</strong> on the right shows all 9 stats with streak info.'},
   ]},
-  quests:{title:'⚔ QUESTS TAB',items:[
-    {e:'🏆',t:'<strong>Achievement Quests</strong> auto-track your progress — complete them to earn stat bonuses.'},
-    {e:'🎯',t:'<strong>Custom Quests</strong> let you create project goals with optional time tracking.'},
-    {e:'⏱️',t:'<strong>Log hours</strong> on custom quests each day and see your average work rate.'},
-    {e:'✅',t:'<strong>Mark quests complete</strong> to earn stat rewards and archive them.'},
+  quests:{title:'⚔ GOALS PAGE',items:[
+    {e:'🏆',t:'<strong>Awards</strong> auto-track your progress — complete them to earn stat bonuses.'},
+    {e:'🎯',t:'<strong>Projects</strong> let you create long-running goals with optional time tracking.'},
+    {e:'⏱️',t:'<strong>Log hours</strong> on projects each day and see your average work rate.'},
+    {e:'✅',t:'<strong>Mark projects complete</strong> to earn stat rewards and archive them.'},
     {e:'📋',t:'<strong>Personal Goals</strong> on the right track recurring habits — they reset each week or month.'},
   ]},
   charsheet:{title:'🦸 CHARACTER TAB',items:[
@@ -4339,13 +4365,13 @@ const TUTORIALS={
     {e:'✨',t:'<strong>Unlocked Titles</strong> show class levels earned from leveling your stats.'},
     {e:'👔',t:'<strong>Cosmetics</strong> — equip helmets, capes, and weapons unlocked via stats.'},
     {e:'💓',t:'<strong>Wellness Report</strong> shows mood reasons and which stats need attention.'},
-    {e:'⚙',t:'<strong>Manage Stats</strong> — toggle which attributes affect your character\'s mood.'},
+    {e:'⚙',t:'<strong>Manage Stats</strong> — toggle which stats affect your character\'s mood.'},
   ]},
-  inventory:{title:'🎒 INVENTORY TAB',items:[
-    {e:'💰',t:'<strong>Gold</strong> is earned from monthly budget surplus when you close a budget month.'},
-    {e:'📊',t:'<strong>Budget Tracker</strong> — log income and expenses, then close the month to earn gold.'},
-    {e:'⏱',t:'<strong>Stopwatch</strong> — time a session and log it towards a Quest or a Logbook activity.'},
-    {e:'📖',t:'<strong>Logbook</strong> tracks hours spent on activities (reading, meditating…). Tap ✏️ to manage them.'},
+  inventory:{title:'🎒 TOOLS PAGE',items:[
+    {e:'💰',t:'<strong>Marks</strong> are earned from monthly budget surplus when you close a budget month.'},
+    {e:'📊',t:'<strong>Budget Tracker</strong> — log income and expenses, then close the month to earn marks.'},
+    {e:'⏱',t:'<strong>Stopwatch</strong> — time a session and log it towards a Project or a Records activity.'},
+    {e:'📖',t:'<strong>Records</strong> track hours spent on activities (reading, meditating…). Tap ✏️ to manage them.'},
     {e:'📓',t:'<strong>Tap an activity</strong> to see its hours chart, filter by date, and log time manually.'},
   ]},
 };
@@ -4654,10 +4680,10 @@ function openAddGoal(gid){
   const quests=data.customQuests||[];
   const curVal=(goal&&goal.type==='activityTime')?(_goalTimeKind(goal)+':'+_goalTimeId(goal)):'';
   if(!acts.length&&!quests.length){
-    const opt=document.createElement('option');opt.value='';opt.textContent='— No activities or quests yet —';asel.appendChild(opt);
+    const opt=document.createElement('option');opt.value='';opt.textContent='— No activities or projects yet —';asel.appendChild(opt);
   }
   if(acts.length){
-    const grp=document.createElement('optgroup');grp.label='LOGBOOK ACTIVITIES';
+    const grp=document.createElement('optgroup');grp.label='RECORDS ACTIVITIES';
     acts.forEach(a=>{const o=document.createElement('option');o.value='activity:'+a.id;o.textContent=`${a.icon||'📓'} ${a.name}`;if(o.value===curVal)o.selected=true;grp.appendChild(o);});
     asel.appendChild(grp);
   }
@@ -4715,7 +4741,7 @@ function saveGoal(){
     goalObj={id:id||'goal-'+Date.now(),type:'taskFrequency',taskId,taskName:task?task.name:taskId,frequency:freq,period,startDate:todayStr(),createdDate:keepCreated,currentProgress:0,status:'onTrack'};
   } else if(type==='activityTime'){
     const val=document.getElementById('goal-act-id').value;
-    if(!val){alert('Create a Logbook activity or a Quest first, then set this goal.');return;}
+    if(!val){alert('Create a Records activity or a Project first, then set this goal.');return;}
     const [kind,tid]=val.split(':');
     const targetKind=kind==='quest'?'quest':'activity';
     const src=targetKind==='quest'?(data.customQuests||[]).find(x=>x.id===tid):(data.logbookActivities||[]).find(x=>x.id===tid);
@@ -5519,8 +5545,7 @@ function initHaptics(){
 }
 
 function initShell(){
-  const mark = document.getElementById('shell-wordmark');
-  if (mark) mark.textContent = APP_NAME;
+  document.querySelectorAll('.app-wordmark').forEach(el => { el.textContent = APP_NAME; });
   applyShellMaterial(SHELL_MATERIAL);
 }
 
