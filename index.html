@@ -923,6 +923,22 @@ body::before{
 /* A control inside a sentence on the screen stays flat: it is text, not a key. */
 .inline-link{color:oklch(0.86 0.14 200);cursor:pointer;text-decoration:underline;touch-action:manipulation}
 
+/* On the screen, nothing is tactile. A control that sits on the screen rather
+   than on the shell is flat: no bevel, no travel, just a change of fill when
+   pressed. Tied to the screen itself, so it keeps holding as pages move in. */
+.screen .px-btn,.screen .pill,.screen .chiclet,.screen .quest-subtab,.screen .tab-btn{
+  background:rgba(255,255,255,.05);color:#e9edf2;
+  border:1px solid rgba(255,255,255,.1);border-radius:5px;
+  font-size:9px;letter-spacing:.1em;box-shadow:none;
+}
+.screen .px-btn:active,.screen .pill:active,.screen .chiclet:active,.screen .quest-subtab:active,.screen .tab-btn:active{
+  transform:none;box-shadow:none;background:rgba(255,255,255,.1);
+}
+.screen .px-btn.success,.screen .action-key,.screen .quest-subtab.active,.screen .chiclet.lit,.screen .tab-btn.active{
+  background:oklch(0.86 0.14 200);color:#06131a;border-color:transparent;box-shadow:none;
+}
+.screen .px-btn.success:active,.screen .action-key:active{transform:none;box-shadow:none;background:oklch(0.80 0.14 200)}
+
 /* ══════════════════════════════════════════════════════════════════════════
    THE DEVICE — shell, bezel, screen (Phase 2)
    Outside to inside: the shell is the body of the device and is never dark; the

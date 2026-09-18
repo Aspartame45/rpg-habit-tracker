@@ -1,6 +1,6 @@
 # Redesign decisions
 
-Settled questions, so they are not reopened. Raised from the Phase 0 inventory.
+Settled questions, so they are not reopened. Raised from the Phase 0 inventory and the Phase 3 review.
 
 | # | Question | Decision |
 |---|---|---|
@@ -9,6 +9,10 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory.
 | 3 | Six app colour themes exist today | **Retire them.** Shell materials replace them |
 | 4 | The mobile Daily screen needs a "highlighted task" flag that does not exist | **Build it**, as a new feature, set manually by the user |
 | 5 | Two mood systems would otherwise coexist | **Keep the current mood behaviour**, driven by attribute neglect and feeding the Wellness report, but **replace its five states with the six from the spec**: thriving, happy, steady, concerned, frustrated, drained |
+| 6 | Should destructive actions be red? | **No.** Red is reserved for the stopwatch STOP key. Destructive actions are plain membrane pills |
+| 7 | The spec includes a d-pad, but nothing navigates between days, quests or slots yet | **No d-pad for now.** Add it when a feature needs it, or if testing shows an existing screen would benefit |
+| 8 | Keys sitting on the screen currently depress, because Phase 3 asked for it | **Accepted for now.** They move onto the shell as each layout is rebuilt |
+| 9 | Which keys are tactile? | **The shell is tactile, the screen is flat.** On mobile, any key not built into the shell is flat. On desktop, each panel follows the same rule: the sprite unit's WELLNESS, CUSTOMISE and ADD TASK keys sit on its shell and stay tactile, while everything inside its screen is flat. Applied as one rule on the screen, so it holds as pages move in. Supersedes 8 |
 
 ## Working arrangement
 
