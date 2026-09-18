@@ -132,6 +132,37 @@ Built against turn 4b on desktop and 6b on the phone.
 - **Awards are checked at start-up** as well as on every tick, so an award that is
   already earned (a new one, or one met on another device) completes straight away.
 
+## Phase 7 — popups
+
+Built against turns 4c and 4g. A popup is a small shell unit on a dimmed desk:
+label row with a round ✕ key, bezel, a screen holding flat fields, then CANCEL (pill)
+and the confirm (action key, about 1 : 1.4) on the shell below. Edit reuses the Add
+window, pre-filled, with the confirm reading SAVE. Destructive actions (DELETE
+PROJECT, DELETE ENTRY, DISCARD SESSION) are quiet text controls on the shell, never
+red keys. Validation is inline: a red hairline and a short line under the field,
+no alert boxes.
+- **Project:** name, description, and "Track time on this", which now really
+  decides whether the project is offered to the stopwatch (before, every project
+  was). The existing averaging choice and "Show in Records" appear once time is
+  tracked; stat rewards are rows of stat + stepper.
+- **Goal:** type as radio rows, the relevant task / stat / activity, a target
+  stepper, one WEEKLY / MONTHLY choice for every type, and a plain summary line
+  that follows the form. Editing a goal now keeps its streak and period record
+  when it still measures the same thing (before, any edit reset the streak).
+- **Stopwatch start:** timed projects (PROJECT), then Records activities
+  (ACTIVITY), then "Just time it" (NO TARGET, kept from before).
+- **Stopwatch stop:** no ✕ and no backdrop dismiss; the clock is held and
+  visible; RESUME / REGISTER, with DISCARD SESSION underneath (asks first). Every
+  way of ending a session now passes through it, including the Tools page's old
+  reset key. The session is also kept on the device, so a reload or a closed tab
+  no longer loses it: a running clock carries on, a held one reopens the popup.
+- **Reserve ledger:** month balance and banked total, the month's entries (tap
+  one to edit), + INCOME / − EXPENSE, and CLOSE MONTH with the amount on the key
+  itself. As the README asks, the key replaces the separate confirmation.
+  Entries open in a sixth popup of the same pattern.
+
+The other seventeen popups keep their old look until Phase 11.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.
