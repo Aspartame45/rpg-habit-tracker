@@ -1153,6 +1153,164 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .ldg-row .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ldg-row .a{flex:none;font:11px 'Share Tech Mono',monospace}
 .ldg-empty{padding:18px 4px;text-align:center;font:12px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TOOLS PAGE (Phase 8) — turn 4e, the chart view from 4d, the phone from 6c
+   ══════════════════════════════════════════════════════════════════════════ */
+.tools-units{display:grid;grid-template-columns:392px minmax(0,1fr);gap:24px;align-items:start;padding:0 22px 34px}
+.unit-sw{grid-column:1/-1;border-radius:22px}
+.unit-reserve{border-radius:22px 22px 48px 22px}
+.unit-records{border-radius:22px 22px 22px 48px}
+.unit-tool .unit-label{align-items:center;padding:2px 3px 10px;min-height:30px;box-sizing:content-box}
+.unit-label-keys{display:flex;gap:6px;align-items:center}
+.sm-key{min-height:30px;padding:9px 14px;border-radius:14px;font-size:9px;letter-spacing:.1em}
+.unit-records:not(.chart) .rec-chart-only,.unit-records.chart .rec-list-only{display:none}
+.tools-units .seg-screen{height:410px}
+
+/* the stopwatch: the only thing on the page that moves */
+.sw-row{position:relative;display:flex;align-items:center;gap:20px}
+.sw-row>.bezel{flex:1;min-width:0}
+.sw-screen{
+  display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"lcd label" "lcd name" "lcd line";
+  column-gap:24px;align-content:center;padding:16px 20px;min-height:78px;
+}
+.lcd{
+  grid-area:lcd;align-self:center;padding:12px 18px;border-radius:6px;text-align:center;
+  background:#07100d;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 2px 10px rgba(0,0,0,.6);
+}
+.lcd-digits{
+  font:52px/52px 'Share Tech Mono',monospace;letter-spacing:.06em;white-space:nowrap;
+  color:oklch(0.86 0.20 130);text-shadow:0 0 16px oklch(0.86 0.20 130 / .45);
+}
+.lcd.idle .lcd-digits{color:oklch(0.86 0.20 130 / .32);text-shadow:none}
+.lcd.paused .lcd-digits{opacity:.7}
+.sw-label{grid-area:label;align-self:end;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.sw-name{grid-area:name;margin-top:5px;font:600 19px/1.2 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.sw-line{grid-area:line;align-self:start;display:flex;align-items:center;gap:7px;margin-top:9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.sw-dot{width:6px;height:6px;border-radius:50%;flex:none;background:oklch(0.86 0.20 130);box-shadow:0 0 6px oklch(0.86 0.20 130 / .8)}
+.unit-sw.idle .sw-dot{display:none}
+.unit-sw.paused .sw-dot{opacity:.35;box-shadow:none}
+.sw-today{display:none}
+.sw-keys{position:relative;display:flex;align-items:center;gap:12px;flex:none}
+.sw-keys .pill{min-height:41px;padding:14px 26px;border-radius:22px;font-size:10px;letter-spacing:.14em}
+.sw-keys .action-key{min-height:46px;padding:14px 34px;border-radius:24px;font-size:11px;letter-spacing:.16em}
+/* STOP: the largest control in the app, and the only red one */
+.stop-key{
+  width:74px;height:74px;border-radius:50%;border:0;flex:none;padding:1px 6px;cursor:pointer;
+  font:700 12px 'Chakra Petch',sans-serif;letter-spacing:.06em;color:#2a0d0d;
+  background:linear-gradient(180deg,#f0837c,#c9463f);
+  box-shadow:0 6px 0 #7d2521,0 10px 16px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.5);
+  transition:transform 80ms,box-shadow 80ms;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.stop-key:active{transform:translateY(4px);box-shadow:0 2px 0 #7d2521,0 4px 8px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.5)}
+.stop-key.sm{width:64px;height:64px;font-size:11px}
+.device-sw{display:none}
+
+/* Reserve */
+.reserve-screen{cursor:pointer;outline:none}
+.reserve-screen:focus-visible{box-shadow:0 0 0 2px oklch(0.80 0.14 200 / .7)}
+.reserve-screen .seg-list{display:block;padding:18px 16px}
+.rsv-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.rsv-bank{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+#gold-display{font:44px/44px 'Share Tech Mono',monospace;color:oklch(0.86 0.14 200)}
+.rsv-unit{font:700 12px 'Chakra Petch',sans-serif;letter-spacing:.16em;color:rgba(233,237,242,.55)}
+.rsv-month{
+  display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);
+  font:10px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5);
+}
+#rsv-bar{margin-top:8px}
+.rsv-hist-label{margin-top:18px}
+.rsv-hist{display:flex;flex-direction:column;gap:9px;margin-top:9px}
+.rsv-row{display:flex;justify-content:space-between;font:10px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.5)}
+.rsv-none{font:12px 'Space Grotesk',sans-serif;color:rgba(233,237,242,.45)}
+
+/* Records: a handheld's notes screen, not a book */
+.rec-screen .seg-list{padding:13px 14px;gap:7px}
+.rec-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.chip{
+  padding:7px 14px;border-radius:4px;border:0;cursor:pointer;min-height:26px;
+  font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;color:rgba(233,237,242,.6);background:rgba(255,255,255,.05);
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.chip.on{background:oklch(0.80 0.14 200);color:#06131a}
+.rec-row{
+  display:flex;align-items:center;gap:12px;width:100%;padding:12px 13px;border-radius:7px;flex:none;text-align:left;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:inherit;
+}
+.rec-row:active{background:rgba(255,255,255,.09)}
+.rec-row>div{flex:1;min-width:0}
+.rec-name{font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.rec-sub{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.rec-val{flex:none;font:14px 'Share Tech Mono',monospace;color:oklch(0.86 0.14 200);white-space:nowrap}
+.rec-empty{padding:26px 8px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
+.rec-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.rec-title{font:600 24px/1.1 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.rec-range{display:flex;align-items:center;gap:4px;margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.rec-range input{
+  background:none;border:0;border-bottom:1px dashed rgba(233,237,242,.2);padding:2px 0;color:rgba(233,237,242,.6);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color-scheme:dark;width:96px;
+}
+.rec-stats{display:flex;gap:22px;text-align:right}
+.rec-stat-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.rec-stat-v{margin-top:3px;font:20px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap}
+.rec-stat-v.cy{color:oklch(0.86 0.14 200)}
+.rec-view .rec-chips{margin-top:16px}
+.rec-chart{display:flex;align-items:flex-end;gap:8px;height:160px;margin-top:14px;flex:none}
+.rec-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}
+.rec-bar{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg, oklch(0.86 0.14 200), oklch(0.62 0.12 200))}
+.rec-bar-v{font:10px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap}
+.rec-bar-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4);white-space:nowrap}
+.rec-chart.dense .rec-bar-v{display:none}
+.rec-chart.dense .rec-col:not(:first-child):not(:last-child) .rec-bar-l{visibility:hidden}
+.rec-log{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)}
+.rec-log label{display:block}
+.rec-log label span{display:block;margin-bottom:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.rec-log input{
+  padding:10px 13px;border-radius:5px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);outline:none;
+  font:12px 'Share Tech Mono',monospace;color:#e9edf2;color-scheme:dark;width:62px;box-sizing:border-box;
+}
+.rec-log input[type=date]{width:136px}
+.rec-log input:focus{border-color:oklch(0.80 0.14 200 / .55)}
+.phone-only{display:none}
+
+@media(max-width:1099px) and (min-width:601px){
+  .tools-units{grid-template-columns:minmax(0,560px);justify-content:center;gap:22px}
+  .sw-row{flex-direction:column;align-items:stretch}
+  .sw-keys{justify-content:center}
+}
+
+/* ── the phone: one instrument at a time, its keys on the shell (6c) ── */
+@media(max-width:600px){
+  .tools-segbar .seg-cell{font-size:9px;letter-spacing:.06em;padding:13px 0 11px}
+  .tools-units{display:block;padding:0}
+  .unit-tool{display:none}
+  .unit-tool.seg-on{display:contents}
+  .unit-tool .shell-tex,.unit-tool .unit-label,.unit-tool .seg-footer,.sw-keys{display:none}
+  .unit-tool .bezel,.sw-row{display:contents}
+  .unit-tool .screen{background:none;border-radius:0}
+  .tools-units .seg-screen{height:auto}
+  .unit-tool .seg-list{overflow:visible}
+  /* the Daily rule flattens every unit screen on a phone; the stopwatch keeps its grid */
+  .unit-tool .sw-screen{
+    display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "name" "lcd" "line" "today";
+    text-align:center;padding:22px 14px 16px;row-gap:0;
+  }
+  .sw-label{align-self:auto}
+  .sw-name{margin:6px 0 16px}
+  .lcd-digits{font-size:40px;line-height:40px}
+  .lcd{padding:18px 10px}
+  .sw-line{justify-content:center;margin-top:14px}
+  .sw-today{grid-area:today;display:block;margin-top:34px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);text-align:left}
+  .sw-today:empty{display:none}
+  .sw-today-row{display:flex;justify-content:space-between;margin-top:7px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.55)}
+  .phone-only{display:inline-flex}
+  #device.show-sw .device-sw{display:flex;gap:9px;align-items:center;margin-top:12px}
+  .device-sw .pill{flex:1;min-height:41px;padding:14px 0;border-radius:22px;font-size:10px;letter-spacing:.14em}
+  .device-sw .action-key{flex:1;min-height:48px;padding:16px 0;border-radius:24px;font-size:11px;letter-spacing:.16em}
+  .rec-head{flex-direction:column;gap:12px}
+  .rec-stats{text-align:left}
+  .rec-chart{height:170px;gap:5px}
+}
 </style>
 </head>
 <body>
@@ -1336,51 +1494,66 @@ body{background:#0b0d12;background-image:none}          /* the desk */
     </div>
   </div>
 
-  <!-- TAB 4: INVENTORY -->
+  <!-- TOOLS: stopwatch, Reserve, Records -->
   <div id="tab-inventory" class="tab-pane">
-    <div class="grid-2">
-      <!-- Left: gold + history -->
-      <div>
-        <section class="panel">
-          <div class="panel-head"><span>💰</span> RESERVE</div>
-          <div class="panel-body">
-            <div class="gold-card" onclick="openBudgetModal()">
-              <div class="gold-amount"><span>💰</span><span id="gold-display">0</span></div>
-              <div class="gold-hint">MARKS BANKED · OPEN THE LEDGER</div>
-            </div>
-            <div style="font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;margin-bottom:7.5px">MONTH HISTORY</div>
-            <div id="budget-history-list"><div class="empty-state">No history yet.</div></div>
-          </div>
-        </section>
+    <!-- On a phone one instrument fills the screen; these cells switch between them. -->
+    <div class="goals-segbar tools-segbar" role="tablist">
+      <button class="seg-cell" data-seg="reserve" onclick="switchToolsSeg('reserve')">RESERVE</button>
+      <button class="seg-cell" data-seg="stopwatch" onclick="switchToolsSeg('stopwatch')">STOPWATCH</button>
+      <button class="seg-cell" data-seg="records" onclick="switchToolsSeg('records')">RECORDS</button>
+    </div>
+    <div class="tools-units">
 
-        <!-- Stopwatch panel -->
-        <section class="panel" style="margin-top:15px">
-          <div class="panel-head"><span>⏱</span> STOPWATCH</div>
-          <div class="panel-body" style="text-align:center;padding:15px 10px">
-            <div id="sw-quest-label" style="font-size:clamp(5px,.8vw,6.25px);color:var(--b2);letter-spacing:1.25px;margin-bottom:10px;min-height:1em"></div>
-            <div id="sw-display" class="sw-display">00:00:00</div>
-            <div style="margin-top:12.5px;display:flex;gap:7.5px;justify-content:center">
-              <button class="px-btn" id="sw-btn" onclick="swAction()">▶ START</button>
-              <button class="px-btn" id="sw-reset-btn" onclick="swHold()" style="display:none">■ END</button>
-            </div>
-            <div id="sw-status" style="font-size:clamp(5px,.75vw,6.25px);color:var(--dim);margin-top:7.5px;letter-spacing:1.25px"></div>
-          </div>
-        </section>
-      </div>
-      <!-- Right: Logbook -->
-      <section class="panel">
-        <div class="panel-head"><span>📖</span> RECORDS
-          <span class="panel-head-right" style="display:flex;gap:5px">
-            <button class="px-btn sm" onclick="showTutorial('inventory')" title="Help">?</button>
-          </span>
-        </div>
-        <div class="panel-body">
-          <div id="logbook">
-            <div id="logbook-page"></div>
-            <button id="logbook-manage-btn" class="px-btn sm" title="Manage activities" onclick="openManageActivities()">✏️</button>
+      <section class="unit unit-tool unit-sw" data-seg="stopwatch">
+        <div class="shell-tex"></div>
+        <div class="sw-row">
+          <div class="bezel"><div class="screen sw-screen">
+            <div class="lcd idle" id="sw-lcd"><div class="lcd-digits" id="sw-display">00:00:00</div></div>
+            <div class="sw-label" id="sw-info-label">IDLE</div>
+            <div class="sw-name" id="sw-quest-label">Nothing tracking</div>
+            <div class="sw-line"><span class="sw-dot"></span><span id="sw-status">PICK AN ACTIVITY AND THE CLOCK STARTS</span></div>
+            <div class="sw-today" id="sw-today"></div>
+          </div></div>
+          <div class="sw-keys">
+            <button class="action-key" id="sw-start" onclick="swAction()">START</button>
+            <button class="pill" id="sw-pause" onclick="swPause()" style="display:none">PAUSE</button>
+            <button class="stop-key" id="sw-stop" onclick="swHold()" style="display:none">STOP</button>
           </div>
         </div>
       </section>
+
+      <section class="unit unit-tool unit-reserve" data-seg="reserve">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">RESERVE</span><span class="unit-readout" id="reserve-open"></span></div>
+        <div class="bezel"><div class="screen seg-screen reserve-screen" role="button" tabindex="0" aria-label="Open the ledger"
+             onclick="openBudgetModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBudgetModal();}">
+          <div class="seg-list">
+            <div class="rsv-label">BANKED</div>
+            <div class="rsv-bank"><span id="gold-display">0</span><span class="rsv-unit">MARKS</span></div>
+            <div class="rsv-month"><span>THIS MONTH</span><span id="rsv-month-bal"></span></div>
+            <div class="segbar" id="rsv-bar"><i></i></div>
+            <div class="rsv-label rsv-hist-label">MONTH HISTORY</div>
+            <div class="rsv-hist" id="budget-history-list"></div>
+          </div>
+          <div class="seg-footer"><span>TAP FOR TRANSACTIONS AND MONTH CLOSE</span><span class="seg-more">SCROLL ▾</span></div>
+        </div></div>
+      </section>
+
+      <section class="unit unit-tool unit-records" data-seg="records">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">RECORDS</span>
+          <span class="unit-label-keys">
+            <button class="pill sm-key rec-list-only" onclick="showTutorial('inventory')" title="Help">?</button>
+            <button class="pill sm-key rec-list-only" onclick="openManageActivities()">MANAGE</button>
+            <button class="pill sm-key rec-chart-only" onclick="lbBackToIndex()">◂ BACK</button>
+            <button class="pill unit-add" onclick="recordsLogTime()">+ LOG TIME</button>
+          </span></div>
+        <div class="bezel"><div class="screen seg-screen rec-screen">
+          <div class="seg-list" id="logbook-page"></div>
+          <div class="seg-footer"><span id="rec-foot"></span><span class="seg-more">SCROLL ▾</span></div>
+        </div></div>
+      </section>
+
     </div>
   </div>
 
@@ -1401,6 +1574,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
    </div><!-- /device-screen -->
   </div><!-- /device-bezel -->
   <div class="device-keys">
+    <div class="device-sw" id="device-sw">
+      <button class="action-key" id="dsw-start" onclick="swAction()">START</button>
+      <button class="pill" id="dsw-pause" onclick="swPause()" style="display:none">PAUSE</button>
+      <button class="stop-key sm" id="dsw-stop" onclick="swHold()" style="display:none">STOP</button>
+    </div>
     <div class="device-nav">
       <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">DAILY</button>
       <button class="tab-btn" data-tab="quests" onclick="switchTab('quests')">GOALS</button>
@@ -1606,6 +1784,19 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <button class="px-btn" onclick="cancelCustomize()">CLOSE</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay pop" id="modal-logtime" style="--pop-w:360px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>LOG TIME</span><button class="modal-close" onclick="closeModal('modal-logtime')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <label class="fld"><span class="fld-label">ACTIVITY</span><select class="fld-in" id="lt-act"></select></label>
+      <label class="fld"><span class="fld-label">DATE</span><input class="fld-in" id="lt-date" type="date"/></label>
+      <div class="fld"><span class="fld-label">TIME</span><div class="step-row"><span class="stepper lg"><button type="button" class="step" onclick="numStep('lt-h',-1,0,24)" aria-label="Less">−</button><input id="lt-h" type="number" min="0" max="24" value="0"/><button type="button" class="step plus" onclick="numStep('lt-h',+1,0,24)" aria-label="More">+</button></span><span class="step-unit">H</span><span class="stepper lg"><button type="button" class="step" onclick="numStep('lt-m',-1,0,55,5)" aria-label="Less">−</button><input id="lt-m" type="number" min="0" max="55" step="5" value="0"/><button type="button" class="step plus" onclick="numStep('lt-m',+1,0,55,5)" aria-label="More">+</button></span><span class="step-unit">MIN</span></div></div>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-logtime')">CANCEL</button><button class="action-key" onclick="saveLogTime()">LOG TIME</button></div>
   </div>
 </div>
 
@@ -2624,23 +2815,40 @@ function buildProjectCard(proj){
 //  RENDER: INVENTORY TAB
 // ══════════════════════════════════════════
 function renderInventoryTab(data){
-  // Gold card
+  const signed=v=>(v>0?'+':v<0?'−':'')+fmtNum(Math.abs(v));
   document.getElementById('gold-display').textContent=fmtNum(data.gold||0);
-
-  // Budget history
+  const txns=data.budgetTransactions||[];
+  const income=txns.filter(t=>t.type==='income').reduce((s,t)=>s+Number(t.amount),0);
+  const expenses=txns.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+  const bal=Math.round((income-expenses)*100)/100;
+  const mb=document.getElementById('rsv-month-bal');mb.textContent=signed(bal);mb.className=bal>0?'pos':bal<0?'neg':'';
+  // The bar is the share of this month's income still kept.
+  const kept=income>0?Math.max(0,Math.min(100,bal/income*100)):0;
+  const bar=document.getElementById('rsv-bar');
+  bar.style.setProperty('--c','oklch(0.86 0.20 130)');bar.querySelector('i').style.width=kept.toFixed(1)+'%';
+  bar.title=income>0?Math.round(kept)+'% of this month’s income kept':'No income logged this month';
+  const ms=data.currentMonth||monthStr();
+  const open=Math.max(1,daysBetween(ms+'-01',todayStr())+1);
+  document.getElementById('reserve-open').textContent=open+' DAY'+(open===1?'':'S')+' OPEN';
   const hw=document.getElementById('budget-history-list');hw.innerHTML='';
-  if(!data.budgetHistory||!data.budgetHistory.length){hw.innerHTML='<div class="empty-state">No history yet.</div>';}
-  else{
-    [...data.budgetHistory].reverse().forEach(h=>{
-      const div=document.createElement('div');div.className='budget-history-item';
-      div.innerHTML=`<span class="bhi-month">${monthLabel(h.month)}</span>
-        <span class="bhi-surplus" style="${h.surplus<=0?'color:var(--dim)':''}">${h.surplus>0?'+':''} ${fmtNum(h.surplus)} GOLD</span>`;
-      hw.appendChild(div);
-    });
-  }
-
-  // Logbook
+  const hist=[...(data.budgetHistory||[])].reverse();
+  if(!hist.length)hw.innerHTML='<div class="rsv-none">No months closed yet.</div>';
+  hist.forEach(h=>{
+    const r=document.createElement('div');r.className='rsv-row';
+    r.innerHTML=`<span>${monthLabel(h.month).toUpperCase()}</span><span class="${h.surplus>0?'pos':h.surplus<0?'neg':''}">${signed(h.surplus)}</span>`;
+    hw.appendChild(r);
+  });
   renderLogbook();
+  _swRender();
+  requestAnimationFrame(_segScrollHints);
+}
+let _toolsSeg='stopwatch';
+function switchToolsSeg(seg){
+  _toolsSeg=seg;
+  document.querySelectorAll('#tab-inventory .seg-cell').forEach(c=>c.classList.toggle('lit',c.dataset.seg===seg));
+  document.querySelectorAll('.unit-tool').forEach(u=>u.classList.toggle('seg-on',u.dataset.seg===seg));
+  if(_isPhone()){const sc=document.getElementById('device-screen');if(sc)sc.scrollTop=0;}
+  _updateDeviceAction();_updateDeviceHeader();requestAnimationFrame(_segScrollHints);
 }
 
 // ══════════════════════════════════════════
@@ -2648,6 +2856,13 @@ function renderInventoryTab(data){
 // ══════════════════════════════════════════
 window._lbView='index';   // 'index' or an activity id
 window._lb={};            // {actId,start,end,gran}
+window._recFilter='all';  // 'all' | 'week' | 'act'
+// Durations as the instruments read them: 1H 08M, 45M.
+function _dur(h){const t=Math.round((Number(h)||0)*60),H=Math.floor(t/60),M=t%60;return H?H+'H '+String(M).padStart(2,'0')+'M':M+'M';}
+function _dayLabel(ds){
+  if(ds===todayStr())return'TODAY';if(ds===yestStr())return'YESTERDAY';
+  const d=_dd(ds);return String(d.getDate()).padStart(2,'0')+' '+d.toLocaleDateString('en-GB',{month:'short'}).toUpperCase().slice(0,3)+(ds.slice(0,4)!==todayStr().slice(0,4)?' '+ds.slice(0,4):'');
+}
 
 function _lbFirstDate(a){const ks=Object.keys(a.dailyLogs||{}).sort();return ks[0]||a.createdDate||todayStr();}
 function _lbAvgPerWeek(a){
@@ -2662,42 +2877,58 @@ function renderLogbook(){
   const page=document.getElementById('logbook-page');if(!page)return;
   if(window._lbView==='index')renderLogbookIndex();
   else renderLogbookActivity(window._lbView);
+  const u=document.querySelector('.unit-records');if(u)u.classList.toggle('chart',window._lbView!=='index');
+  requestAnimationFrame(_segScrollHints);
 }
 
 function renderLogbookIndex(){
   const data=load();
   const page=document.getElementById('logbook-page');if(!page)return;
   const acts=data.logbookActivities||[];
-  let html=`<div class="lb-title">✦ RECORDS ✦</div><div class="lb-sub">AVG HOURS / WEEK · PAST 12 MONTHS</div>`;
+  const f=window._recFilter||'all';
+  const chip=(k,t)=>`<button class="chip${f===k?' on':''}" onclick="window._recFilter='${k}';renderLogbook()">${t}</button>`;
+  let html=`<div class="rec-chips">${chip('all','ALL ACTIVITIES')}${chip('week','THIS WEEK')}${chip('act','BY ACTIVITY')}
+    <button class="chip phone-only" style="margin-left:auto" onclick="openManageActivities()">MANAGE</button></div>`;
+  const foot=document.getElementById('rec-foot');
   if(!acts.length){
-    html+=`<div class="lb-empty" style="padding:32.5px 15px;line-height:2.2">No activities tracked yet.<br>Tap the ✏️ button<br>to add one.</div>`;
-  } else {
-    html+=acts.map(a=>`<div class="lb-activity" onclick="lbOpenActivity('${a.id}')">
-      <span class="lb-act-icon">${a.icon||'📓'}</span>
-      <span class="lb-act-name">${a.name}</span>
-      <span class="lb-act-avg">${fmtHM(_lbAvgPerWeek(a))}/wk</span>
-    </div>`).join('');
+    page.innerHTML=html+'<div class="rec-empty">No activities yet.<br>Add one with MANAGE, then log time or run the stopwatch on it.</div>';
+    if(foot)foot.textContent='NO ACTIVITIES';return;
   }
+  if(f==='act'){
+    // one row per activity, with its average week over the past year
+    html+=acts.map(a=>{
+      const days=Object.keys(a.dailyLogs||{}).filter(d=>Number(a.dailyLogs[d])>0&&d<=todayStr()).sort();
+      const last=days.length?'LAST · '+_dayLabel(days[days.length-1]):'NOTHING LOGGED YET';
+      return `<button class="rec-row" onclick="lbOpenActivity('${a.id}')"><div><div class="rec-name"></div><div class="rec-sub">${last}</div></div><span class="rec-val">${_dur(_lbAvgPerWeek(a))} / WK</span></button>`;
+    }).join('');
+    page.innerHTML=html;
+    page.querySelectorAll('.rec-name').forEach((el,i)=>el.textContent=acts[i].name);
+    if(foot)foot.textContent=acts.length+' ACTIVIT'+(acts.length===1?'Y':'IES')+' · AVERAGE WEEK, PAST YEAR';
+    return;
+  }
+  // every day each activity was logged, newest first
+  const from=f==='week'?getStartOfWeek():'';
+  const rows=[];
+  acts.forEach(a=>{for(const d in(a.dailyLogs||{})){const h=Number(a.dailyLogs[d])||0;if(h>0&&d<=todayStr()&&d>=from)rows.push({a,d,h});}});
+  rows.sort((x,y)=>y.d.localeCompare(x.d)||x.a.name.localeCompare(y.a.name));
+  const shown=rows.slice(0,300);
+  html+=shown.map(r=>`<button class="rec-row" onclick="lbOpenActivity('${r.a.id}')"><div><div class="rec-name"></div><div class="rec-sub">${_dayLabel(r.d)}</div></div><span class="rec-val">${_dur(r.h)}</span></button>`).join('');
+  if(!rows.length)html+=`<div class="rec-empty">${f==='week'?'Nothing logged this week yet.':'Nothing logged yet.'}</div>`;
   page.innerHTML=html;
+  page.querySelectorAll('.rec-name').forEach((el,i)=>el.textContent=shown[i].a.name);
+  if(foot)foot.textContent='OPEN AN ACTIVITY FOR ITS CHART';
 }
 
-function lbFlip(renderFn){
-  const page=document.getElementById('logbook-page');
-  if(!page){renderFn();return;}
-  page.classList.remove('flipping');void page.offsetWidth;
-  page.classList.add('flipping');
-  setTimeout(renderFn,215);
-  setTimeout(()=>page.classList.remove('flipping'),460);
-}
 
 function lbOpenActivity(actId){
   const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
   const range=_defaultRange(_lbFirstDate(a));
   window._lb={actId,start:range.start,end:range.end,gran:'week'};
   window._lbView=actId;
-  lbFlip(()=>renderLogbookActivity(actId));
+  renderLogbook();
+  const l=document.getElementById('logbook-page');if(l)l.scrollTop=0;
 }
-function lbBackToIndex(){window._lbView='index';window._lb={};lbFlip(renderLogbookIndex);}
+function lbBackToIndex(){window._lbView='index';window._lb={};renderLogbook();}
 
 function renderLogbookActivity(actId){
   const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);
@@ -2724,45 +2955,42 @@ function renderLogbookActivity(actId){
     else{const a2=new Date(avgStart),b2=new Date(avgEnd);nBuckets=Math.max(1,(b2.getFullYear()-a2.getFullYear())*12+(b2.getMonth()-a2.getMonth())+1);}
   }
   const avg=total/nBuckets;
-  const chart=keys.length
-    ?`<div class="lb-chart">`+keys.map((k,i)=>{
-        const v=vals[i];const h=Math.round((v/mx)*100);
-        return`<div class="lb-bar-col"><div class="lb-bar-wrap"><div class="lb-bar-num">${fmtHM(v)}</div><div class="lb-bar" style="height:${Math.max(3,h)}px"></div></div><div class="lb-bar-lbl">${_bucketLabel(k,st.gran)}</div></div>`;
-      }).join('')+`</div>`
-    :'<div class="lb-empty">No hours logged in this range.</div>';
   const todayH=Number(logs[todayStr()]||0);
-  page.innerHTML=`
-    <span class="lb-back" onclick="lbBackToIndex()">← BACK</span>
-    <div class="lb-title" style="margin-top:2.5px">${a.icon||'📓'} ${a.name}</div>
-    <div class="lb-daterange">
-      <label>FROM</label><input type="date" value="${st.start}" onchange="window._lb.start=this.value;renderLogbookActivity('${actId}')"/>
-      <label>TO</label><input type="date" value="${st.end}" onchange="window._lb.end=this.value;renderLogbookActivity('${actId}')"/>
+  const dmy=ds=>ds.slice(8)+'/'+ds.slice(5,7)+'/'+ds.slice(0,4);
+  const bars=keys.length?`<div class="rec-chart${keys.length>16?' dense':''}">`+keys.map((k,i)=>{
+      const v=vals[i];return`<div class="rec-col" title="${_bucketLabel(k,st.gran)}: ${fmtHM(v)}"><span class="rec-bar-v">${_dur(v)}</span><div class="rec-bar" style="height:${Math.max(2,Math.round(v/mx*100))}%"></div><span class="rec-bar-l">${_bucketLabel(k,st.gran)}</span></div>`;
+    }).join('')+'</div>':'<div class="rec-empty">No time logged in this range.</div>';
+  const gchip=(g,t)=>`<button class="chip${st.gran===g?' on':''}" onclick="window._lb.gran='${g}';renderLogbookActivity('${actId}')">${t}</button>`;
+  page.innerHTML=`<div class="rec-view">
+    <div class="rec-head">
+      <div><div class="rec-title"></div>
+        <div class="rec-range"><input type="date" aria-label="From" value="${st.start}" onchange="window._lb.start=this.value;renderLogbookActivity('${actId}')"/>→<input type="date" aria-label="To" value="${st.end}" onchange="window._lb.end=this.value;renderLogbookActivity('${actId}')"/></div></div>
+      <div class="rec-stats"><div><div class="rec-stat-l">TOTAL</div><div class="rec-stat-v cy">${_dur(total)}</div></div>
+        <div><div class="rec-stat-l">AVG / ${st.gran.toUpperCase()}</div><div class="rec-stat-v">${_dur(avg)}</div></div></div>
     </div>
-    <div class="lb-total-line">TOTAL <b>${fmtHM(total)}</b> · AVG <b>${fmtHM(avg)}/${st.gran}</b></div>
-    <div class="lb-toggle">
-      <button class="${st.gran==='day'?'active':''}" onclick="window._lb.gran='day';renderLogbookActivity('${actId}')">DAY</button>
-      <button class="${st.gran==='week'?'active':''}" onclick="window._lb.gran='week';renderLogbookActivity('${actId}')">WEEK</button>
-      <button class="${st.gran==='month'?'active':''}" onclick="window._lb.gran='month';renderLogbookActivity('${actId}')">MONTH</button>
-    </div>
-    ${chart}
-    <div class="lb-input-row">
-      <div><div class="lb-input-lbl">DATE</div><input type="date" id="lb-in-date" value="${todayStr()}" max="${todayStr()}"/></div>
-      <div><div class="lb-input-lbl">HOURS</div><input type="number" min="0" id="lb-in-h" placeholder="0"/></div>
-      <div><div class="lb-input-lbl">MINUTES</div><input type="number" min="0" max="59" id="lb-in-m" placeholder="0"/></div>
-      <button class="lb-submit" onclick="lbSubmitTime('${actId}')">+ LOG TIME</button>
-    </div>
-    <div class="lb-logged-today">Logged today: ${fmtHM(todayH)}</div>`;
+    <div class="rec-chips">${gchip('day','DAY')}${gchip('week','WEEK')}${gchip('month','MONTH')}
+      <button class="chip phone-only" style="margin-left:auto" onclick="lbBackToIndex()">◂ BACK</button></div>
+    ${bars}
+    <div class="rec-log" onkeydown="if(event.key==='Enter'){event.preventDefault();lbSubmitTime('${actId}');}">
+      <label><span>DATE</span><input type="date" id="lb-in-date" value="${todayStr()}" max="${todayStr()}"/></label>
+      <label><span>HOURS</span><input type="number" min="0" max="24" id="lb-in-h" placeholder="0" inputmode="numeric"/></label>
+      <label><span>MINUTES</span><input type="number" min="0" max="59" id="lb-in-m" placeholder="0" inputmode="numeric"/></label>
+    </div></div>`;
+  page.querySelector('.rec-title').textContent=a.name;
+  const foot=document.getElementById('rec-foot');if(foot)foot.textContent='LOGGED TODAY '+_dur(todayH);
 }
 
 function lbSubmitTime(actId){
   const h=parseFloat(document.getElementById('lb-in-h').value)||0;
   const m=parseFloat(document.getElementById('lb-in-m').value)||0;
   const add=h+m/60;
-  if(add<=0){spawnFloatCenter('Enter hours or minutes');return;}
+  if(add<=0){spawnFloatCenter('Enter hours or minutes');const f=document.getElementById('lb-in-h');if(f)f.focus();return;}
   const df=document.getElementById('lb-in-date');
-  let date=(df&&df.value)||todayStr();
+  _logActivityTime(actId,(df&&df.value)||todayStr(),add);
+}
+function _logActivityTime(actId,date,add){
   if(date>todayStr())date=todayStr(); // no future logging
-  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return;
+  const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===actId);if(!a)return false;
   if(!a.dailyLogs)a.dailyLogs={};
   a.dailyLogs[date]=parseFloat(((a.dailyLogs[date]||0)+add).toFixed(3));
   const autoDone=autoCheckLinkedTasks(data,actId,date);
@@ -2770,9 +2998,29 @@ function lbSubmitTime(actId){
   // If logging earlier than the currently-viewed range, expand it so the entry shows
   if(window._lb&&window._lb.actId===actId&&date<window._lb.start)window._lb.start=date;
   const past=date!==todayStr();
-  spawnFloatCenter(`📖 +${fmtHM(add)} → ${a.name}${past?' ('+fmtDate(date)+')':''}`);
-  renderLogbookActivity(actId);
+  spawnFloatCenter(`+${fmtHM(add)} → ${a.name}${past?' ('+fmtDate(date)+')':''}`);
+  renderLogbook();_swRender();
   if(autoDone.length){renderTasks(data);renderStats(data);updateMoodDisplay(data);autoDone.forEach(nm=>setTimeout(()=>spawnFloatCenter(`✓ ${nm} auto-completed`),250));}
+  return true;
+}
+// + LOG TIME on the shell: in an activity's chart it logs the row; in the list it asks which activity.
+function recordsLogTime(){
+  if(window._lbView&&window._lbView!=='index'){lbSubmitTime(window._lbView);return;}
+  const acts=load().logbookActivities||[];
+  if(!acts.length){openManageActivities();return;}
+  popClear('modal-logtime');
+  const sel=document.getElementById('lt-act');sel.innerHTML='';
+  acts.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.name;sel.appendChild(o);});
+  const d=document.getElementById('lt-date');d.value=todayStr();d.max=todayStr();
+  document.getElementById('lt-h').value=0;document.getElementById('lt-m').value=0;
+  openModal('modal-logtime');
+}
+function saveLogTime(){
+  const add=(parseInt(document.getElementById('lt-h').value)||0)+(parseInt(document.getElementById('lt-m').value)||0)/60;
+  if(add<=0){popError('lt-m','Set some time to log.');return;}
+  const date=document.getElementById('lt-date').value;
+  if(!date){popError('lt-date','Pick a date.');return;}
+  if(_logActivityTime(document.getElementById('lt-act').value,date,add))closeModal('modal-logtime');
 }
 
 // ── Manage activities ──
@@ -2945,36 +3193,78 @@ let _swAccum=0;      // accumulated ms before last pause
 let _swTarget=null;  // '' / null, or 'quest:<id>' / 'act:<id>'
 let _swInterval=null;
 let _swSession=null; // when the session began (ms), for the stop popup
+let _swHeld=false;   // true while the stop popup is waiting for a choice
 // The session is kept on this device, so a reload or a closed tab never loses it.
 function _swSave(){
   try{
     if(_swState==='idle')localStorage.removeItem('rpg_sw');
-    else localStorage.setItem('rpg_sw',JSON.stringify({state:_swState,start:_swStart?_swStart.getTime():null,accum:_swAccum,target:_swTarget,session:_swSession}));
+    else localStorage.setItem('rpg_sw',JSON.stringify({state:_swState,start:_swStart?_swStart.getTime():null,accum:_swAccum,target:_swTarget,session:_swSession,held:_swHeld}));
   }catch(e){}
 }
-function _swShowSession(){
-  const disp=document.getElementById('sw-display');
-  if(disp){disp.textContent=swFmtMs(swElapsed());disp.classList.toggle('running',_swState==='running');disp.classList.toggle('paused',_swState==='paused');}
-  const btn=document.getElementById('sw-btn');if(btn)btn.textContent=_swState==='running'?'■ STOP':'▶ RESUME';
-  const rst=document.getElementById('sw-reset-btn');if(rst)rst.style.display='';
-  const tName=_swTargetName(load());
-  const lbl=document.getElementById('sw-quest-label');if(lbl)lbl.textContent=tName?`TRACKING: ${tName}`:'NO TARGET';
-  const st=document.getElementById('sw-status');if(st)st.textContent=_swState==='running'?'TIMER RUNNING…':'CLOCK HELD';
+function _swShowSession(){_swRender();}
+// Everything the stopwatch shows, from its state: idle → START; running → PAUSE + STOP;
+// paused → RESUME + STOP. STOP always goes through the stop popup.
+function _swRender(){
+  const st=_swState,data=load();
+  const disp=document.getElementById('sw-display');if(disp)disp.textContent=swFmtMs(swElapsed());
+  const lcd=document.getElementById('sw-lcd');if(lcd){lcd.classList.toggle('idle',st==='idle');lcd.classList.toggle('paused',st==='paused');}
+  const unit=document.querySelector('.unit-sw');if(unit){unit.classList.toggle('idle',st==='idle');unit.classList.toggle('paused',st==='paused');}
+  const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+  const show=(ids,on)=>ids.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=on?'':'none';});
+  show(['sw-start','dsw-start'],st==='idle');show(['sw-pause','dsw-pause','sw-stop','dsw-stop'],st!=='idle');
+  set('sw-pause',st==='running'?'PAUSE':'RESUME');set('dsw-pause',st==='running'?'PAUSE':'RESUME');
+  if(st==='idle'){
+    set('sw-info-label','IDLE');set('sw-quest-label','Nothing tracking');set('sw-status','PICK AN ACTIVITY AND THE CLOCK STARTS · TIME LANDS IN RECORDS');
+  } else {
+    const name=_swTargetName(data);
+    set('sw-info-label',st==='running'?'TRACKING':'PAUSED');
+    set('sw-quest-label',name||'Just timing');
+    const [kind,tid]=(_swTarget||':').split(':');let logged=null;
+    if(kind==='quest'){const q=(data.customQuests||[]).find(x=>x.id===tid);if(q)logged=Number((q.dailyLogs||{})[todayStr()]||0);}
+    else if(kind==='act'){const a=(data.logbookActivities||[]).find(x=>x.id===tid);if(a)logged=Number((a.dailyLogs||{})[todayStr()]||0);}
+    const since=_swSession?new Date(_swSession):null;
+    const t=since?String(since.getHours()).padStart(2,'0')+':'+String(since.getMinutes()).padStart(2,'0'):'';
+    set('sw-status',(t?'SINCE '+t+' · ':'')+(logged===null?'NOT REGISTERED ANYWHERE':_dur(logged)+' LOGGED TODAY'));
+  }
+  // the phone shows today's time under the clock
+  const today=document.getElementById('sw-today');
+  if(today){
+    const rows=[];
+    (data.logbookActivities||[]).forEach(a=>{const h=Number((a.dailyLogs||{})[todayStr()]||0);if(h>0)rows.push([a.name,h]);});
+    (data.customQuests||[]).forEach(q=>{const h=Number((q.dailyLogs||{})[todayStr()]||0);if(h>0)rows.push([q.name,h]);});
+    today.innerHTML=rows.length?'<div class="rsv-label">TODAY</div>'+rows.map(()=>'<div class="sw-today-row"><span></span><span></span></div>').join(''):'';
+    today.querySelectorAll('.sw-today-row').forEach((r,i)=>{r.children[0].textContent=rows[i][0].toUpperCase();r.children[1].textContent=_dur(rows[i][1]);});
+  }
+  if(typeof _updateDeviceHeader==='function'&&_lastPage==='inventory')_updateDeviceHeader();
+}
+// PAUSE holds the clock without asking anything; RESUME carries on.
+function swPause(){
+  if(_swState==='running'){
+    clearInterval(_swInterval);_swInterval=null;_swAccum=swElapsed();_swStart=null;_swState='paused';_swHeld=false;
+  } else if(_swState==='paused'){
+    _swStart=new Date();_swState='running';_swHeld=false;
+    clearInterval(_swInterval);_swInterval=setInterval(swTick,500);
+  } else return;
+  _swSave();_swRender();
 }
 function _swRestore(){
   let saved=null;try{saved=JSON.parse(localStorage.getItem('rpg_sw')||'null');}catch(e){}
   if(!saved||!saved.state||saved.state==='idle')return;
   _swTarget=saved.target||null;_swAccum=saved.accum||0;_swSession=saved.session||Date.now();
   if(saved.state==='running'&&saved.start){
-    _swStart=new Date(saved.start);_swState='running';_swShowSession();
+    _swStart=new Date(saved.start);_swState='running';_swRender();
     clearInterval(_swInterval);_swInterval=setInterval(swTick,500);
-  } else {_swStart=null;_swState='paused';swHold();}
+  } else {
+    _swStart=null;_swState='paused';
+    // held in the stop popup when the page went away: ask again; merely paused: stay paused
+    if(saved.held!==false)swHold();else _swRender();
+  }
 }
 // Pause the clock and ask what to do with the session.
 function swHold(){
   if(_swState==='idle')return;
   if(_swState==='running'){clearInterval(_swInterval);_swInterval=null;_swAccum=swElapsed();_swStart=null;_swState='paused';}
-  _swShowSession();_swSave();
+  _swHeld=true;_swRender();_swSave();
   const data=load();
   const hrs=parseFloat((_swAccum/3600000).toFixed(2));
   const tName=_swTargetName(data);
@@ -3050,7 +3340,7 @@ function swAction(){
 }
 
 function swResume(){
-  closeModal('modal-sw-stop');
+  closeModal('modal-sw-stop');_swHeld=false;
   if(_swState==='paused'){
     _swStart=new Date();_swState='running';
     _swShowSession();_swSave();
@@ -3071,7 +3361,7 @@ function swConfirmStart(){
   const tName=_swTargetName(data);
   const lbl=document.getElementById('sw-quest-label');
   if(lbl)lbl.textContent=tName?`TRACKING: ${tName}`:'NO TARGET';
-  const st=document.getElementById('sw-status');if(st)st.textContent='TIMER RUNNING…';
+  _swHeld=false;_swRender();
   clearInterval(_swInterval);
   _swInterval=setInterval(swTick,500);
 }
@@ -3099,7 +3389,7 @@ function swConfirmStop(){
         if(!a.dailyLogs)a.dailyLogs={};
         a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+hrs).toFixed(3));
         const autoDone=autoCheckLinkedTasks(data,tid,today);
-        save(data);renderLogbook();
+        save(data);renderLogbook();renderInventoryTab(data);
         spawnFloatCenter(`📖 +${fmtHM(hrs)} → ${a.name}`);
         if(autoDone.length){renderTasks(data);renderStats(data);updateMoodDisplay(data);autoDone.forEach(nm=>setTimeout(()=>spawnFloatCenter(`✓ ${nm} auto-completed`),250));}
       }
@@ -3116,7 +3406,7 @@ function swReset(){
   const btn=document.getElementById('sw-btn');if(btn)btn.textContent='▶ START';
   const rst=document.getElementById('sw-reset-btn');if(rst)rst.style.display='none';
   const lbl=document.getElementById('sw-quest-label');if(lbl)lbl.textContent='';
-  const st=document.getElementById('sw-status');if(st)st.textContent='';
+  _swHeld=false;_swRender();
 }
 
 // ══════════════════════════════════════════
@@ -3302,8 +3592,8 @@ function _segScrollHints(){
 }
 function switchGoalsSeg(seg){
   _goalsSeg=seg;
-  document.querySelectorAll('.seg-cell').forEach(c=>c.classList.toggle('lit',c.dataset.seg===seg));
-  document.querySelectorAll('.unit-seg').forEach(u=>u.classList.toggle('seg-on',u.dataset.seg===seg));
+  document.querySelectorAll('#tab-quests .seg-cell').forEach(c=>c.classList.toggle('lit',c.dataset.seg===seg));
+  document.querySelectorAll('#tab-quests .unit-seg').forEach(u=>u.classList.toggle('seg-on',u.dataset.seg===seg));
   if(_isPhone()){const sc=document.getElementById('device-screen');if(sc)sc.scrollTop=0;}
   _updateDeviceAction();_updateDeviceHeader(load());
 }
@@ -5281,17 +5571,22 @@ function _updateDeviceAction(){
   const key = document.getElementById('device-action');
   if (!key) return;
   const verb = _lastPage === 'daily' ? ['+ ADD TASK', 'task']
-    : _lastPage === 'quests' ? ({ goals: ['+ ADD GOAL', 'goal'], projects: ['+ ADD PROJECT', 'project'] })[_goalsSeg] : null;
+    : _lastPage === 'quests' ? ({ goals: ['+ ADD GOAL', 'goal'], projects: ['+ ADD PROJECT', 'project'] })[_goalsSeg]
+    : _lastPage === 'inventory' ? ({ reserve: ['OPEN LEDGER', 'ledger'], records: ['+ LOG TIME', 'logtime'] })[_toolsSeg] : null;
   key.style.display = verb ? '' : 'none';
   if (verb) { key.textContent = verb[0]; key.dataset.action = verb[1]; }
+  // on the stopwatch its own keys take the shell, above the navigation (6c)
+  const dev = document.getElementById('device');
+  if (dev) dev.classList.toggle('show-sw', _lastPage === 'inventory' && _toolsSeg === 'stopwatch');
 }
 // On Goals the shell's header names the page and reads out the segment, as the
 // panel label row does on desktop. Daily keeps the wordmark and material.
 function _updateDeviceHeader(data){
   const head = document.querySelector('.device-header'); if (!head) return;
   const mark = head.querySelector('.app-wordmark'), meta = document.getElementById('device-meta');
-  const onGoals = _lastPage === 'quests';
-  head.classList.toggle('page-label', onGoals);
+  const onGoals = _lastPage === 'quests', onTools = _lastPage === 'inventory';
+  head.classList.toggle('page-label', onGoals || onTools);
+  if (onTools) { mark.textContent = 'TOOLS'; if (meta) meta.textContent = _swState === 'running' ? 'RUNNING' : _swState === 'paused' ? 'PAUSED' : 'IDLE'; return; }
   if (!onGoals) { mark.textContent = APP_NAME; const m = MATERIALS.find(x => x.id === SHELL_MATERIAL); if (meta && m) meta.textContent = m.name; return; }
   const c = _goalsCounts(data || load());
   mark.textContent = 'GOALS';
@@ -5311,10 +5606,12 @@ function _devicePageChanged(name){
 }
 function deviceAction(){
   const a = (document.getElementById('device-action') || {}).dataset.action;
-  if (a === 'goal') openAddGoal(); else if (a === 'project') openCreateQuest(); else openAddTask();
+  if (a === 'goal') openAddGoal(); else if (a === 'project') openCreateQuest();
+  else if (a === 'ledger') openBudgetModal(); else if (a === 'logtime') recordsLogTime(); else openAddTask();
 }
 function initDevice(){
   switchGoalsSeg(_goalsSeg);
+  switchToolsSeg(_toolsSeg);
   document.querySelectorAll('.seg-list').forEach(l => l.addEventListener('scroll', _segScrollHints, { passive: true }));
   window.addEventListener('resize', _segScrollHints);
   const sc = document.getElementById('device-screen');
@@ -5347,6 +5644,7 @@ function init(){
   initHaptics();
   initDailySprite();
   _swRestore();
+  renderInventoryTab(data);
   checkNewDay(data);
   if(!data.goalHitsCounted){_backfillGoalHits(data);save(data);}
   checkMonthRollover(data);

@@ -163,6 +163,32 @@ no alert boxes.
 
 The other seventeen popups keep their old look until Phase 11.
 
+## Phase 8 — the Tools page
+
+Desktop is option 2 from turn 4e, as the README specifies: the stopwatch as a
+full-width instrument on top, then Reserve (392px) and Records. The phone uses
+sub-tabs from 6c (RESERVE · STOPWATCH · RECORDS, opening on STOPWATCH), built like
+the Goals segments. Records drills into the chart view from 4d.
+- **Stopwatch states:** idle shows a dimmed `00:00:00`, IDLE, and START alone;
+  running shows PAUSE and the red STOP (74px, 64px on the phone); paused shows
+  RESUME and STOP. **PAUSE is new:** it holds the clock without asking anything.
+  STOP always opens the stop popup. The LCD green is used only here. On the phone,
+  the stopwatch keys sit on the shell above the navigation, as in 6c, and the
+  action key steps aside. Under the clock the phone lists today's logged time.
+- **Reserve:** banked total, this month's balance with a bar showing the share of
+  the month's income still kept, and month history; the whole panel opens the
+  ledger. The readout counts the days the month has been open.
+- **Records** has no book or paper left. Its list shows **one row per activity
+  per day, not per session**: the data keeps one total per day for each activity,
+  so there are no session start times to show (the mockup's `TODAY 09:20`). Filters
+  are ALL ACTIVITIES, THIS WEEK, and BY ACTIVITY, which keeps each activity's
+  average week. The chart view keeps the same total, average, date range and
+  DAY / WEEK / MONTH buckets as before, all checked against the previous build.
+  Time is logged from the chart's row, or from a small popup when you're in the list.
+- **Every number is unchanged**: banked total, month history, each activity's
+  average week, and every chart's total, average and bars, compared against the
+  pre-Phase-8 build.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.
