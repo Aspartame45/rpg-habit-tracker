@@ -14,6 +14,35 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory a
 | 8 | Keys sitting on the screen currently depress, because Phase 3 asked for it | **Accepted for now.** They move onto the shell as each layout is rebuilt |
 | 9 | Which keys are tactile? | **The shell is tactile, the screen is flat.** On mobile, any key not built into the shell is flat. On desktop, each panel follows the same rule: the sprite unit's WELLNESS, CUSTOMISE and ADD TASK keys sit on its shell and stay tactile, while everything inside its screen is flat. Applied as one rule on the screen, so it holds as pages move in. Supersedes 8 |
 
+## Phase 5 — how the Daily page was reconciled
+
+Where the README and turn 3 of the reference disagree, turn 3 wins, because the
+phase is accepted against it:
+- the sprite window is **5:7 portrait on desktop** (the README says 4:3, which is
+  kept for the one-column layout),
+- unit padding is **14/14/16**,
+- the stat rack sweeps **bottom-right**, like the sprite unit.
+
+- **The sprite covers its window.** It takes the next whole pixel scale up and the
+  window crops the few spare pixels at its edges, so pixels stay exactly square and
+  the grid still reaches every edge. The reference stretched its canvas instead.
+- **Points, not XP.** The reference says  and .
+  The app has no XP, so these read  and ,
+  and  is the existing total level, the number of titles earned.
+- **Stat bars show the value**, clamped to 4–100%, as in the reference. The old
+  tier pips are gone; a stat over 100 shows a full bar.
+- **Homes for controls the reference does not draw:** LOG PAST, MANAGE TASKS and
+  help sit on the task unit's shell; MANAGE STATS sits on the stat unit's shell.
+- **The old character panel left Daily.** The pixel avatar and the equipped title
+  remain in Customise; the old mood badge and thought bubble are replaced by the
+  sprite's badge, with Wellness holding the explanation; goals to watch and the
+  yesterday reminder moved into the task list's screen.
+
+Not yet scheduled: the phone design in the README and turn 6 — one device filling
+the screen, navigation keys at its foot, the sprite collapsing into a header strip
+as you scroll, and highlighted tasks (decision 4). The plan's Phase 5 asks only for
+the three units stacked, which is what is built.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.

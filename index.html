@@ -1020,15 +1020,148 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 /* Avatar canvases: bitmap size is fixed, so follow the wrapper instead. */
 #daily-sprite-preview-wrap-large canvas{width:100%;height:100%}
 
-/* ── Device sprite window (Phase 1) ── */
+/* ══════════════════════════════════════════════════════════════════════════
+   DAILY PAGE (Phase 5) — values taken from turn 3 of the reference
+   ══════════════════════════════════════════════════════════════════════════ */
+.daily-units{
+  display:grid;grid-template-columns:392px minmax(0,1fr) 268px;
+  gap:26px;align-items:start;padding:0 22px 34px;
+}
+.unit{
+  position:relative;padding:14px 14px 16px;
+  background:var(--shell-face);
+  box-shadow:0 18px 40px rgba(0,0,0,.55),
+             inset 0 2px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.28);
+}
+/* corners sweep away from the centre; the task panel sweeps bottom-left */
+.unit-sprite{border-radius:22px 22px 48px 22px}
+.unit-tasks {border-radius:22px 22px 22px 48px}
+.unit-stats {border-radius:22px 22px 48px 22px}
+.unit-label,.unit-keys{position:relative}
+.unit-label{display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px 11px}
+.unit-title{font:700 15px 'Chakra Petch',sans-serif;letter-spacing:.12em;color:var(--shell-ink)}
+.unit-readout{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:var(--shell-ink-soft)}
+.unit-keys{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.unit-keys-row{display:flex;gap:8px}
+.unit-keys-row .px-btn{flex:1;padding-left:0;padding-right:0}
+.unit-keys.unit-keys-row{flex-direction:row}
+.unit-keys-row .px-btn[title="Help"]{flex:none;width:52px}
+.unit-bar{width:100%;padding:14px 0;font-size:10px;letter-spacing:.14em}
+
+/* the sprite unit's screen */
+.status-line{
+  display:flex;justify-content:space-between;padding:9px 12px 7px;
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);
+}
 #sprite-window{
-  position:relative;width:100%;aspect-ratio:4/3;margin-bottom:8px;
-  overflow:hidden;
-  background:#0a1016;                      /* matches the sprite's own background */
+  position:relative;margin:0 10px 10px;aspect-ratio:5/7;
+  border-radius:6px;overflow:hidden;cursor:pointer;
   border:1px solid rgba(255,255,255,.13);
-  border-radius:6px;
+  background:#0a1016;                     /* the sprite's own background */
 }
 #sprite-canvas{position:absolute;display:block;image-rendering:pixelated}
+/* Three independent slots: background, centre (the eyes), foreground. Only the
+   centre is drawn in code; the other two wait for art. */
+.sprite-slot,.sprite-glass{position:absolute;inset:0;pointer-events:none}
+.sprite-glass{
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px),
+    linear-gradient(115deg, transparent 40%, rgba(255,255,255,.11) 45%, transparent 51%),
+    radial-gradient(140% 120% at 50% 45%, transparent 55%, rgba(0,0,0,.5));
+}
+.sprite-badge-wrap{position:absolute;left:10px;bottom:9px;display:flex;align-items:center;gap:6px}
+.sprite-badge{
+  font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.12em;
+  color:#08131a;background:oklch(0.86 0.14 200);
+  padding:3px 7px;border-radius:2px;border:0;cursor:pointer;touch-action:manipulation;
+}
+.sprite-badge-count{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.7)}
+
+/* the task list's screen */
+.screen-tasks{display:flex;flex-direction:column;min-height:540px}
+.daily-headline{padding:15px 14px 4px;font:600 17px/1.35 'Space Grotesk',sans-serif;color:#e9edf2}
+#tasks-list{display:flex;flex-direction:column;gap:6px;padding:10px 11px 12px}
+.task-row{
+  display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:7px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer;
+}
+.task-row.done{opacity:.5;background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06)}
+#tasks-list .task-cb{
+  width:17px;height:17px;min-width:17px;flex:none;margin:0;padding:0;
+  border:2px solid oklch(0.80 0.14 200);border-radius:3px;background:none;
+  font-size:0;color:transparent;cursor:pointer;box-shadow:none;
+}
+#tasks-list .task-row.done .task-cb{background:oklch(0.80 0.14 200);border-color:transparent}
+.task-name{flex:1;min-width:0;font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.task-row.done .task-name{text-decoration:line-through}
+.task-run,.task-auto{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;flex:none}
+.task-run{color:oklch(0.74 0.17 55)}
+.task-auto{color:rgba(233,237,242,.45)}
+.task-tag{
+  flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;
+  padding:2px 6px;border-radius:2px;border:1px solid;
+}
+.task-row.done .task-tag{color:rgba(233,237,242,.5)!important;border-color:rgba(233,237,242,.2)!important}
+#yesterday-reminder{
+  margin:12px 11px 0;padding:9px 11px;border-radius:5px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:oklch(0.74 0.17 55);
+}
+.screen-footer{
+  margin-top:auto;display:flex;justify-content:space-between;gap:10px;
+  padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);
+}
+/* goals needing attention, shown under the tasks when there are any */
+#daily-goals-watch:empty{display:none}
+#daily-goals-watch{padding:4px 11px 12px}
+#daily-goals-watch .dgw-title{
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);
+  padding:8px 2px 6px;border-top:1px solid rgba(255,255,255,.06);
+}
+#daily-goals-watch .dgw-row{padding:6px 2px}
+#daily-goals-watch .dgw-label{font:500 12px 'Space Grotesk',sans-serif;color:#e9edf2}
+#daily-goals-watch .dgw-pct{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.55)}
+#daily-goals-watch .goal-bar-outer{position:relative;height:9px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.06);border:0;margin-top:5px!important}
+#daily-goals-watch .goal-bar-outer::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 4px,#0d1016 4px 5px);
+}
+#daily-goals-watch .goal-bar-inner{height:100%}
+#daily-goals-watch .gbar-on{background:oklch(0.86 0.20 130)}
+#daily-goals-watch .gbar-risk{background:oklch(0.74 0.17 55)}
+#daily-goals-watch .gbar-fail{background:#e0645c}
+
+/* the stat rack: readout only */
+.screen-stats{padding:12px 11px}
+.rack-row{margin-bottom:11px}
+.rack-head{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:4px}
+.rack-name{font:700 10px 'Chakra Petch',sans-serif;letter-spacing:.14em;color:#e9edf2}
+.rack-flag{flex:1;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:oklch(0.68 0.10 300)}
+.rack-row.off{opacity:.45}
+.rack-val{font:10px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.55)}
+.rack-bar{position:relative;height:9px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.06)}
+.rack-fill{position:absolute;left:0;top:0;bottom:0}
+.rack-bar::after{
+  content:'';position:absolute;inset:0;          /* segment mask: a pixel meter, not a web bar */
+  background:repeating-linear-gradient(90deg,transparent 0 4px,#0d1016 4px 5px);
+}
+.rack-footer{
+  margin-top:14px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);
+  font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.4);
+}
+
+/* One column when there is no room for three. The sprite window turns landscape
+   there, as on the phone, so it doesn't push the tasks off the screen. */
+@media(max-width:1099px){
+  .daily-units{grid-template-columns:minmax(0,560px);justify-content:center;gap:22px;padding:0 0 24px}
+  #sprite-window{aspect-ratio:4/3}
+  .screen-tasks{min-height:0}
+}
+@media(max-width:600px){
+  .daily-units{grid-template-columns:calc(100vw - 32px);margin:0 calc(50% - 50vw + 16px)}
+  .daily-headline{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -1061,93 +1194,75 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
   <!-- TAB 1: DAILY -->
   <div id="tab-daily" class="tab-pane active">
-    <!-- device: shell -> bezel -> screen -->
-    <div class="shell" id="shell">
-      <div class="shell-tex"></div>
-      <div class="shell-header">
-        <div class="shell-brand"><span class="led"></span><span id="shell-wordmark" class="app-wordmark">HABITRON</span></div>
-        <div id="shell-meta" class="shell-meta">MK-I</div>
-      </div>
-      <div class="bezel">
-       <div class="screen" id="screen">
-    <div id="daily-char-panel" class="grid-daily">
+    <!-- Daily: three separate shell units on the desk, as in turn 3 -->
+    <div class="daily-units">
 
-      <!-- Column 1: Character Sprite -->
-      <section class="panel">
-        <div class="panel-head"><span>✦</span> CHARACTER</div>
-        <div class="panel-body" style="padding:15px 10px">
-          <div id="daily-char-inner" class="mood-happy">
-            <div id="daily-sprite-col-large">
-              <!-- device sprite (Phase 1) -->
-              <div id="sprite-window">
-                <canvas id="sprite-canvas"></canvas>
+      <!-- Sprite unit: the device, with its controls on its own shell -->
+      <section class="unit unit-sprite" id="shell">
+        <div class="shell-tex"></div>
+        <div class="shell-header">
+          <div class="shell-brand"><span class="led"></span><span id="shell-wordmark" class="app-wordmark">HABITRON</span></div>
+          <div id="shell-meta" class="shell-meta">MK-I</div>
+        </div>
+        <div class="bezel">
+          <div class="screen" id="screen">
+            <div class="status-line"><span id="status-time"></span><span id="status-date"></span></div>
+            <div id="sprite-window" onclick="openCustomize()" title="Customise">
+              <div class="sprite-slot slot-bg" aria-hidden="true"></div>
+              <canvas id="sprite-canvas"></canvas>
+              <div class="sprite-slot slot-fg" aria-hidden="true"></div>
+              <div class="sprite-glass" aria-hidden="true"></div>
+              <div class="sprite-badge-wrap">
+                <button class="sprite-badge" id="sprite-badge" onclick="event.stopPropagation();openWellnessReport()" title="Why?"><span id="sprite-badge-mood">STEADY</span></button>
+                <span class="sprite-badge-count" id="sprite-badge-count"></span>
               </div>
-              <!-- thought bubble -->
-              <div id="daily-thought-bubble" onclick="openWellnessReport()" style="
-                position:relative;background:rgba(10,10,25,.96);border:2.5px solid var(--b2);
-                padding:3.75px 8.75px;white-space:nowrap;cursor:pointer;display:none;margin-bottom:7.5px;
-                font-size:clamp(5px,.8vw,6.25px);color:var(--white);letter-spacing:1.25px;text-align:center;
-                box-shadow:0 0 0 1.25px var(--b1),2.5px 2.5px 0 rgba(0,0,0,.7);">
-              </div>
-              <!-- sprite canvas -->
-              <div style="position:relative;margin:0 auto;width:160px;height:240px;
-                filter:drop-shadow(0 0 15px rgba(88,101,242,.5))">
-                <div id="daily-sprite-preview-wrap-large" style="position:relative;width:160px;height:240px">
-                  <span id="d-cosm-ac" class="cosm-layer cosm-layer-ac" style="display:none"></span>
-                  <canvas id="d-base" width="128" height="192" style="position:absolute;top:0;left:0"></canvas>
-                  <canvas id="d-acc1" width="128" height="192" style="position:absolute;top:0;left:0"></canvas>
-                  <canvas id="d-acc2" width="128" height="192" style="position:absolute;top:0;left:0"></canvas>
-                  <canvas id="d-aura" width="128" height="192" style="position:absolute;top:0;left:0"></canvas>
-                  <span id="d-cosm-wp" class="cosm-layer cosm-layer-wp" style="display:none"></span>
-                  <span id="d-cosm-hw" class="cosm-layer cosm-layer-hw" style="display:none"></span>
-                </div>
-              </div>
-              <!-- mood badge -->
-              <div id="daily-mood-badge" class="mood-badge mbadge-happy" style="margin-top:10px">😊 HAPPY</div>
-              <!-- class title & level -->
-              <div id="daily-class-title-lg">NOVICE ADVENTURER</div>
-              <div id="daily-level-lg">TOTAL POINTS: 0</div>
-              <!-- buttons -->
-              <div style="display:flex;flex-direction:column;gap:6.25px;margin-top:12.5px;width:100%;align-items:center">
-                <div style="display:flex;gap:6.25px;justify-content:center">
-                  <button class="px-btn sm" onclick="openWellnessReport()">📊 WELLNESS</button>
-                  <button class="px-btn sm" onclick="openCustomize()">✎ CUSTOMIZE</button>
-                </div>
-                <div style="display:flex;justify-content:center">
-                  <button class="px-btn sm" onclick="openManageStats()">⚙ STATS</button>
-                </div>
-              </div>
-              <!-- equipped cosmetics list -->
-              <div id="daily-cosmetics-display" style="margin-top:10px;display:flex;gap:7.5px;flex-wrap:wrap;justify-content:center"></div>
-              <!-- goals needing attention -->
-              <div id="daily-goals-watch" style="margin-top:12.5px;width:100%"></div>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Column 2: Daily Deeds -->
-      <section class="panel">
-        <div class="panel-head"><span>⚔</span> DAILY TASKS
-          <span class="panel-head-right" style="display:flex;gap:5px">
-            <button class="px-btn sm" onclick="openBackdate()">LOG PAST</button>
-            <button class="px-btn sm" onclick="openTaskMgr()">MANAGE</button>
-            <button class="px-btn sm" onclick="showTutorial('daily')" title="Help">?</button>
-          </span>
+        <div class="unit-keys">
+          <div class="unit-keys-row">
+            <button class="px-btn" onclick="openWellnessReport()">WELLNESS</button>
+            <button class="px-btn" onclick="openCustomize()">CUSTOMISE</button>
+          </div>
+          <button class="px-btn success unit-bar" onclick="openAddTask()">+ ADD TASK</button>
         </div>
-        <div id="yesterday-reminder">⚠ Tasks missed yesterday? <span class="inline-link" onclick="openBackdate()">LOG THEM</span></div>
-        <div class="panel-body" id="tasks-list"></div>
       </section>
 
-      <!-- Column 3: Attributes -->
-      <section class="panel">
-        <div class="panel-head"><span>★</span> STATS</div>
-        <div class="panel-body" id="stats-list"></div>
+      <!-- Task list -->
+      <section class="unit unit-tasks">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">DAILY</span><span class="unit-readout" id="tasks-readout"></span></div>
+        <div class="bezel">
+          <div class="screen screen-tasks">
+            <div id="yesterday-reminder">Tasks missed yesterday? <span class="inline-link" onclick="openBackdate()">LOG THEM</span></div>
+            <div class="daily-headline" id="daily-headline"></div>
+            <div id="tasks-list"></div>
+            <div id="daily-goals-watch"></div>
+            <div class="screen-footer"><span id="tasks-count"></span><span id="tasks-points"></span></div>
+          </div>
+        </div>
+        <div class="unit-keys unit-keys-row">
+          <button class="px-btn sm" onclick="openBackdate()">LOG PAST</button>
+          <button class="px-btn sm" onclick="openTaskMgr()">MANAGE TASKS</button>
+          <button class="px-btn sm" onclick="showTutorial('daily')" title="Help">?</button>
+        </div>
       </section>
 
-    </div>
-       </div>
-      </div>
+      <!-- Stat rack: readout only -->
+      <section class="unit unit-stats">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">STATS</span><span class="unit-readout" id="stats-readout"></span></div>
+        <div class="bezel">
+          <div class="screen screen-stats">
+            <div id="stats-list"></div>
+            <div class="rack-footer" id="stats-footer"></div>
+          </div>
+        </div>
+        <div class="unit-keys unit-keys-row">
+          <button class="px-btn sm" onclick="openManageStats()">MANAGE STATS</button>
+        </div>
+      </section>
+
     </div>
   </div>
 
@@ -2627,9 +2742,66 @@ function getTotalStats(data){
 // ══════════════════════════════════════════
 //  RENDER: TASKS
 // ══════════════════════════════════════════
+// Stat hues, from the reference: the four accent colours of the palette.
+const STAT_HUE={
+  strength:'oklch(0.8 0.14 200)',focus:'oklch(0.8 0.14 200)',agility:'oklch(0.8 0.14 200)',
+  intelligence:'oklch(0.68 0.10 300)',charisma:'oklch(0.68 0.10 300)',
+  creativity:'oklch(0.86 0.20 130)',initiative:'oklch(0.86 0.20 130)',
+  discipline:'oklch(0.74 0.17 55)',vitality:'oklch(0.74 0.17 55)'
+};
+const _NUM_WORDS=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+// One plain sentence about today: a neutral count plus the longest run going.
+// Never a quota, never "left before", never "day complete".
+function dailyHeadline(data){
+  const tasks=data.customTasks||[];
+  const done=tasks.filter(t=>data.todayChecked[t.id]).length;
+  const count=done===0?'Nothing logged yet today.'
+    :(done<_NUM_WORDS.length?_NUM_WORDS[done][0].toUpperCase()+_NUM_WORDS[done].slice(1):done)+' done today.';
+  let best=null;
+  tasks.forEach(t=>{const n=calcStreak(data,t.id);if(n>=2&&(!best||n>best.n))best={t,n};});
+  if(!best)return count;
+  const days=best.n<_NUM_WORDS.length?_NUM_WORDS[best.n]:best.n;
+  return count+' '+best.t.name+' has a '+days+'-day run going.';
+}
+function _dailyDate(d){
+  const wd=d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase().slice(0,3);
+  const mo=d.toLocaleDateString('en-GB',{month:'short'}).toUpperCase().slice(0,3);
+  return wd+' '+String(d.getDate()).padStart(2,'0')+' '+mo;
+}
+// The nearest title still to earn, across the stats that count.
+function _nextTitleGap(data){
+  const tot=getTotalStats(data);let best=null;
+  STATS_DEF.forEach(s=>{
+    if((data.activeStats||{})[s.key]===false)return;
+    const next=(CLASS_MILESTONES[s.key]||[]).find(m=>m.at>tot[s.key]);
+    if(next){const gap=next.at-tot[s.key];if(best===null||gap<best)best=gap;}
+  });
+  return best;
+}
+function renderDailySummary(data){
+  const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+  const tasks=data.customTasks||[];
+  const done=tasks.filter(t=>data.todayChecked[t.id]);
+  const pts=done.reduce((n,t)=>n+(t.points||1),0);
+  set('daily-headline',dailyHeadline(data));
+  set('status-date',_dailyDate(new Date()));
+  set('tasks-readout',_dailyDate(new Date())+' · '+done.length+'/'+tasks.length+' DONE');
+  set('tasks-count',tasks.length+' TASK'+(tasks.length===1?'':'S')+' ON ROTATION');
+  set('tasks-points','+'+pts+' POINT'+(pts===1?'':'S')+' TODAY');
+  set('sprite-badge-count',done.length+' OF '+tasks.length);
+  set('stats-readout','LV '+(data.unlockedTitles||[]).length);
+  const gap=_nextTitleGap(data);
+  set('stats-footer',gap===null?'EVERY TITLE EARNED':'NEXT TITLE IN '+gap+' POINT'+(gap===1?'':'S'));
+  updateDailyClock();
+}
+function updateDailyClock(){
+  const el=document.getElementById('status-time');if(!el)return;
+  const d=new Date();el.textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
 function renderTasks(data){
   const wrap=document.getElementById('tasks-list');wrap.innerHTML='';
-  if(!data.customTasks.length){wrap.innerHTML='<div class="empty-state">No tasks yet.<br>Click MANAGE to add one.</div>';return;}
+  if(!data.customTasks.length){wrap.innerHTML='<div class="empty-state">No tasks yet.<br>Tap + ADD TASK to add one.</div>';renderDailySummary(data);return;}
   data.customTasks.forEach(t=>{
     const done=!!data.todayChecked[t.id];
     // Derive the streak live rather than trusting the stored value, which may be
@@ -2638,28 +2810,27 @@ function renderTasks(data){
     const live=calcStreak(data,t.id);
     const streak={current:live,best:Math.max(stored.best||0,live)};
     const atRisk=streak.current>0&&!done;
-    const flame=streak.current>=7?'🔥':streak.current>=3?'🕯':'·';
     const sd=STATS_DEF.find(s=>s.key===t.stat);
+    const hue=STAT_HUE[t.stat]||'rgba(233,237,242,.5)';
     const div=document.createElement('div');
-    div.className='task-item'+(done?' done':'');div.id='task-'+t.id;div.setAttribute('data-stat',t.stat);
-    let linkBadge='';
+    div.className='task-row'+(done?' done':'');div.id='task-'+t.id;div.setAttribute('data-stat',t.stat);
+    let auto='';
     if(t.linkedActivityId){
       const la=(data.logbookActivities||[]).find(a=>a.id===t.linkedActivityId);
-      if(la){const mm=t.linkedMinMinutes||0;linkBadge=`<span class="task-link-badge" title="Auto-completes from Records: ${la.name}${mm>0?' ≥ '+fmtHM(mm/60):''}">📖 ${la.icon||''} ${mm>0?'≥'+fmtHM(mm/60):'any'}</span>`;}
+      if(la){const mm=t.linkedMinMinutes||0;auto=`<span class="task-auto" title="Auto-completes from Records: ${la.name}${mm>0?' ≥ '+fmtHM(mm/60):''}">AUTO${mm>0?' ≥'+fmtHM(mm/60):''}</span>`;}
     }
-    div.innerHTML=`<div class="task-cb">${done?'✓':''}</div>
-      <div style="flex:1">
-        <div class="task-label" data-tid="${t.id}">${t.icon||'·'} ${t.name}</div>
-        <div class="task-meta">
-          <span class="task-stat-pill" data-stat="${t.stat}">+${t.points} ${sd?sd.label:t.stat}</span>
-          <span class="task-streak${atRisk?' at-risk':''}"${atRisk?' title="Complete today to keep this streak alive"':''}>${flame} <span class="streak-hot">${streak.current}</span> <span class="streak-best">/ best ${streak.best}</span>${atRisk?'<span class="streak-risk">⚠</span>':''}</span>
-          ${linkBadge}
-        </div>
-      </div>`;
+    // A run is typographic: the day count in orange mono. Best-ever lives in the task's history.
+    const run=streak.current>=2?`<span class="task-run" title="${atRisk?'Complete today to keep this run going. ':''}Best: ${streak.best} days">${streak.current}D</span>`:'';
+    const pts=t.points>1?' +'+t.points:'';
+    div.innerHTML=`<button class="task-cb" aria-label="${done?'Untick':'Tick'} ${t.name}" aria-pressed="${done}"></button>
+      <span class="task-name" data-tid="${t.id}">${t.icon?t.icon+' ':''}${t.name}</span>
+      ${auto}${run}
+      <span class="task-tag" style="color:${hue};border-color:color-mix(in oklch, ${hue} 50%, transparent)">${sd?sd.label:t.stat}${pts}</span>`;
     div.querySelector('.task-cb').addEventListener('click',e=>{e.stopPropagation();toggleTask(t.id);});
     div.addEventListener('click',()=>openTaskStats(t.id));
     wrap.appendChild(div);
   });
+  renderDailySummary(data);
 }
 
 // ══════════════════════════════════════════
@@ -2674,31 +2845,20 @@ function renderStats(data){
     const base=data.stats[s.key]||0;
     const bonus=bonuses[s.key]||0;
     const total=base+bonus;
-    const mod=total%10;
-    const pct=total===0?0:mod===0?100:(mod/10)*100;
-    const tiers=Math.floor(total/10);
-    let pips='';for(let i=0;i<Math.min(tiers,10);i++)pips+='<div class="stat-pip"></div>';
-    const bonusLine=bonus>0?`<div class="stat-bonus-line">+${bonus} from items ✦</div>`:'';
-    // Neglect warning
+    // A pixel meter of the value itself, as in the reference, never quite empty.
+    const w=Math.max(4,Math.min(100,total));
+    // Neglect, in the lilac of rest and recovery: typographic, never an emoji.
     const dg=daysBetween(sli[s.key],today);
-    let neglectBadge='';
-    if(dg>=10)neglectBadge=`<span class="neglect-warn crit">❗${dg}d</span>`;
-    else if(dg>=7)neglectBadge=`<span class="neglect-warn bad">⚠ ${dg}d</span>`;
-    else if(dg>=5)neglectBadge=`<span class="neglect-warn mild">${dg}d</span>`;
-    // Phase 5.4: inactive stat indicator
+    const neglect=dg>=5?`<span class="rack-flag" title="Last raised ${dg} days ago">${dg}D</span>`:'<span class="rack-flag"></span>';
     const isActive=(data.activeStats||{})[s.key]!==false;
-    const inactiveBadge=isActive?'':`<span class="inactive-badge" title="This stat is inactive and won't affect mood">🔕 Inactive</span>`;
     const div=document.createElement('div');
-    div.className='stat-item'+(isActive?'':' stat-inactive');div.setAttribute('data-stat',s.key);div.id='statitem-'+s.key;
-    div.innerHTML=`
-      <div class="stat-head">
-        <div class="stat-name-row"><span>${s.emoji}</span><span>${s.label}</span>${neglectBadge}${inactiveBadge}</div>
-        <span class="stat-val" id="statval-${s.key}">${total}</span>
-      </div>
-      <div class="stat-bar-outer"><div class="stat-bar-inner" id="bar-${s.key}" style="width:${pct}%"></div></div>
-      <div class="stat-pips" id="pips-${s.key}">${pips}</div>${bonusLine}`;
+    div.className='rack-row stat-item'+(isActive?'':' off stat-inactive');div.setAttribute('data-stat',s.key);div.id='statitem-'+s.key;
+    div.title=s.fullLabel+(isActive?'':' — inactive, does not affect mood')+(bonus>0?` — includes +${bonus} from items`:'');
+    div.innerHTML=`<div class="rack-head"><span class="rack-name">${s.label}</span>${neglect}<span class="rack-val" id="statval-${s.key}">${total}</span></div>
+      <div class="rack-bar"><div class="rack-fill stat-bar-inner" id="bar-${s.key}" style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>`;
     wrap.appendChild(div);
   });
+  renderDailySummary(data);
 }
 
 // ══════════════════════════════════════════
@@ -4768,8 +4928,6 @@ function saveGoal(){
 
 // Render the character panel on Daily tab
 function renderDailyCharacter(data){
-  const panel=document.getElementById('daily-char-panel');
-  if(!panel)return;
   const stats=getTotalStats(data);
   // Draw the 'd-' canvas layers (full 128×192)
   try{drawSprite(stats,data.characterCustomization,'d');}catch(e){}
@@ -4978,14 +5136,14 @@ function renderDailyGoalsWatch(data){
     return{g,max,cur,pct,score};
   }).sort((a,b)=>a.score-b.score).slice(0,10);
 
-  wrap.innerHTML=`<div class="dgw-title">⚠ GOALS TO WATCH</div>`+
+  wrap.innerHTML=`<div class="dgw-title">GOALS TO WATCH</div>`+
     scored.map(({g,cur,max,pct})=>{
       const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:g.type==='activityTime'?`${fmtHM(cur)}/${fmtHM(max)}`:`+${cur}/+${max}`;
       const bc=g.status==='onTrack'?'gbar-on':g.status==='atRisk'?'gbar-risk':'gbar-fail';
       return `<div class="dgw-row">
         <div style="width:100%">
           <div style="display:flex;justify-content:space-between;align-items:center">
-            <span class="dgw-label">🎯 ${goalDescription(g,data)}</span>
+            <span class="dgw-label">${goalDescription(g,data)}</span>
             <span class="dgw-pct">${progTxt}</span>
           </div>
           <div class="goal-bar-outer" style="margin-top:3.75px"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
@@ -5564,15 +5722,18 @@ function fitSpriteCanvas(){
   if (!w || !h) return;
   const W = FIELD_W;
   const H = Math.max(24, Math.min(140, Math.round(W * h / w)));
-  const scale = Math.max(1, Math.floor(Math.min(w / W, h / H)));
+  // Cover the window rather than fit inside it: take the next whole scale up and
+  // let the window crop the few spare pixels at the edges. Pixels stay exactly
+  // square, and the grid reaches every edge as it does in the reference.
+  const scale = Math.max(1, Math.ceil(Math.max(w / W, h / H)));
   const cw = W * scale, ch = H * scale;
   cv.style.width = cw + 'px';
   cv.style.height = ch + 'px';
   // Centre it by hand rather than with flexbox, which would split any correction
   // between both sides. Layout above can leave the sprite on a half pixel, and
   // then one sprite pixel is sampled as 5 screen pixels and the next as 6.
-  let left = Math.max(0, Math.round((wrap.clientWidth - cw) / 2));
-  let top  = Math.max(0, Math.round((wrap.clientHeight - ch) / 2));
+  let left = Math.round((wrap.clientWidth - cw) / 2);
+  let top  = Math.round((wrap.clientHeight - ch) / 2);
   cv.style.left = left + 'px';
   cv.style.top = top + 'px';
   const r = cv.getBoundingClientRect();
@@ -5587,6 +5748,8 @@ function mountDailySprite(){
   fitSpriteCanvas();
   // Mood is a placeholder in this phase; real evaluation arrives later.
   _sprite = mountSprite(cv, {mood:'steady', shape:'round', bg:'grid'});
+  const badge = document.getElementById('sprite-badge-mood');
+  if (badge) badge.textContent = 'STEADY';
 }
 function unmountDailySprite(){ if (_sprite) { _sprite.destroy(); _sprite = null; } }
 function initDailySprite(){
@@ -5608,6 +5771,7 @@ function init(){
   const data=load();
   applyTheme(data.appTheme||'blue');
   initShell();
+  setInterval(updateDailyClock, 20000);
   initHaptics();
   initDailySprite();
   checkNewDay(data);
