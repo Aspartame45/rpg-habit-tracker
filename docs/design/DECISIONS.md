@@ -85,6 +85,46 @@ themes (decisions 2, 3, 11, 12, 13).
   tapping the sprite, still open it.
 - The mood badge and thought-bubble code is left for the mood swap in Phase 9.
 
+## Phase 6 — the Goals page
+
+Built against turn 4b on desktop and 6b on the phone.
+- **Desktop:** three equal units (Projects, Goals, Awards), each a fixed 548px screen
+  with its own scroll, footer counts and a `SCROLL ▾` hint that shows only while
+  there is more below. Filters and the ADD keys are tactile keys on the shell; every
+  card and button inside the screens is flat. Between 601 and 1099px the units stack.
+- **Phone:** one segment at a time, switched by three flat cells at the top of the
+  screen (GOALS first). Filters sit inside the screen. The shell's header names the
+  page and reads out the segment; the action key takes its verb: `+ ADD GOAL`,
+  `+ ADD PROJECT`, and none on Awards.
+- **Goal state is the existing logic,** unchanged: on track / at risk / failing
+  from `calculateGoalProgress`, streaks counted per period met at each rollover.
+  `STREAK BROKEN` shows when a weekly goal failed last week and has no streak
+  since. Monthly goals keep no record of last month's result, so they can't show
+  "broken", only no streak. New goals (the grace period) read `· NEW` on the type
+  line.
+- **Goal names are generated** from the goal ("Exercise 5 times a week", "7 hours
+  of Reading a week", "Raise INT by 8"), because goals have no name field.
+- **Where the controls went:** a goal card opens its history, which now holds
+  EDIT GOAL and DELETE. A project card has LOG HOURS (a stepper opens in the card),
+  COMPLETE and EDIT; DELETE moved into the project editor. The completed archive
+  keeps REMOVE.
+- **Cosmetic awards.** The big ones now reward a shell material instead of stat
+  points; the rest keep their points. There are five awards for the five
+  unlockable materials:
+
+  | Award | Why it's big | Material |
+  |---|---|---|
+  | First project (new) | first use of Projects | BRUSHED ALUMINIUM |
+  | Consistent | four weeks of goals | CAST CONCRETE |
+  | Renaissance | all nine stats in one day | POLISHED CHROME |
+  | Perfectionist | every task, three days running | BRUSHED GOLD |
+  | Dedication III (new) | a 30-day run | TRANSLUCENT GRAPE |
+
+  Owned materials are **derived** (starters plus completed cosmetic awards), not
+  stored, so they can't drift from the awards. Phase 10 reads `unlockedMaterials()`.
+- **Awards are checked at start-up** as well as on every tick, so an award that is
+  already earned (a new one, or one met on another device) completes straight away.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.

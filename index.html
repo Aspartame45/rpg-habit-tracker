@@ -854,6 +854,151 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   #sprite-window{aspect-ratio:4/3}
   .screen-tasks{min-height:0}
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GOALS PAGE (Phase 6) — values taken from turn 4b, and 6b for the phone
+   ══════════════════════════════════════════════════════════════════════════ */
+.goals-segbar{display:none}
+.goals-units{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;align-items:start;padding:0 22px 34px;
+}
+.unit-projects{border-radius:22px 22px 48px 22px}
+.unit-goals   {border-radius:22px}
+.unit-awards  {border-radius:22px 22px 22px 48px}
+.unit-seg .unit-label{align-items:center;padding:2px 2px 11px;min-height:28px;box-sizing:content-box}
+.unit-add{min-height:32px;padding:10px 13px;border-radius:16px;font-size:9px;letter-spacing:.1em}
+.unit-filters,.unit-sub{position:relative;display:flex;gap:6px;padding:0 2px 11px}
+.unit-filters .pill{min-height:30px;padding:9px 16px;border-radius:14px;font-size:9px;letter-spacing:.1em;position:relative}
+.unit-filters .pill::before{content:'';position:absolute;inset:-7px -3px}      /* a full-size touch target */
+.unit-add,.unit-filters .pill.active{
+  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.72 0.13 200));color:#06131a;
+}
+.unit-sub{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:var(--shell-ink-soft)}
+.unit-sub{align-items:center;min-height:30px}
+.seg-screen{height:548px;display:flex;flex-direction:column}
+.seg-list{
+  flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:11px;
+  display:flex;flex-direction:column;gap:9px;
+  scrollbar-width:thin;scrollbar-color:rgba(63,215,232,.35) transparent;
+}
+.quest-section{display:none;flex-direction:column;gap:9px}
+.quest-section.active{display:flex}
+.seg-footer{
+  display:flex;justify-content:space-between;gap:10px;padding:9px 12px;
+  border-top:1px solid rgba(255,255,255,.06);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);
+}
+.seg-more{visibility:hidden}
+.seg-list .empty-state{font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5);padding:22px 8px;text-align:center}
+
+/* cards: flat, on the screen */
+.pcard,.gcard,.acard{
+  padding:12px;border-radius:7px;flex:none;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+}
+.gcard{cursor:pointer}
+.acard.cosmetic{border-color:oklch(0.74 0.17 55 / .35)}
+.pcard-name{font:600 15px/18px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.gcard-name,.acard-name{font:600 14px/17.5px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere;flex:1;min-width:0}
+.pcard-desc{margin-top:3px;font:12px/1.4 'Space Grotesk',sans-serif;color:rgba(233,237,242,.6)}
+.acard-desc{margin-top:5px;font:12px/1.45 'Space Grotesk',sans-serif;color:rgba(233,237,242,.55)}
+.mono,.pcard-stats,.gcard-type,.gcard-foot,.acard-foot,.pcard-untimed,.pcard-today,.gcard-pace{
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;
+}
+.pcard-stats{display:flex;gap:12px;margin-top:10px;color:rgba(233,237,242,.45)}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;align-items:center}
+.pcard-untimed{color:rgba(233,237,242,.4);padding:2px 0}
+.stag{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;padding:2px 6px;border-radius:2px;border:1px solid}
+.atag{
+  font:700 8.5px 'Chakra Petch',sans-serif;letter-spacing:.12em;padding:2px 6px;border-radius:2px;flex:none;
+  color:oklch(0.80 0.14 200);border:1px solid oklch(0.80 0.14 200 / .5);
+}
+.atag.cosm{color:#1a0e04;background:oklch(0.74 0.17 55);border-color:transparent;padding:3px 6px}
+.pcard-actions,.pcard-log{
+  display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:11px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.pcard-today{color:rgba(233,237,242,.45);margin-right:auto}
+.pcard-actions .push{margin-left:auto}
+.pcard-log{display:none}
+.pcard.logging .pcard-log{display:flex}
+.pcard.logging .pcard-actions{display:none}
+.pcard-log .mono{color:rgba(233,237,242,.45);margin-right:auto}
+.sbtn{
+  font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.08em;padding:8px 12px;min-height:28px;
+  border:0;border-radius:5px;background:rgba(255,255,255,.08);color:#e9edf2;cursor:pointer;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap;
+}
+.sbtn:active{background:rgba(255,255,255,.14)}
+.sbtn.go{background:oklch(0.80 0.14 200);color:#06131a}
+.sbtn.go:active{background:oklch(0.74 0.14 200)}
+.sbtn.ghost{background:none;border:1px solid rgba(255,255,255,.16);color:rgba(233,237,242,.7);padding:8px 10px}
+.stepper{display:inline-flex;align-items:stretch;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.stepper button{width:30px;border:0;background:rgba(255,255,255,.06);color:#e9edf2;font:700 14px 'Chakra Petch',sans-serif;cursor:pointer}
+.stepper button.plus{background:oklch(0.80 0.14 200);color:#06131a}
+.stepper input{
+  width:52px;border:0;background:transparent;color:#e9edf2;text-align:center;
+  font:13px 'Share Tech Mono',monospace;-moz-appearance:textfield;
+}
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.gcard-head,.acard-head{display:flex;align-items:flex-start;gap:9px}
+.gcard-type{margin-top:4px;color:rgba(233,237,242,.45)}
+.gbadge{
+  flex:none;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;padding:3px 7px;border-radius:2px;
+}
+.gbadge.on  {background:oklch(0.86 0.20 130);color:#06131a}
+.gbadge.risk{background:oklch(0.74 0.17 55);color:#1a0e04}
+.gbadge.fail{background:#e0645c;color:#2a0d0d}
+.segbar{position:relative;height:9px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.06);margin-top:11px}
+.segbar>i{position:absolute;left:0;top:0;bottom:0;background:var(--c,oklch(0.80 0.14 200))}
+.segbar::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 4px,#0d1016 4px 5px);
+}
+.acard .segbar{margin-top:10px}
+.gcard-foot,.acard-foot{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:rgba(233,237,242,.5)}
+.gcard-foot .run{color:oklch(0.74 0.17 55)}
+.gcard-pace{margin-top:5px;color:rgba(233,237,242,.4)}
+
+/* between the phone and a desk wide enough for three: one column */
+@media(max-width:1099px) and (min-width:601px){
+  .goals-units{grid-template-columns:minmax(0,560px);justify-content:center;gap:22px}
+  .seg-screen{height:auto;max-height:548px}
+}
+
+/* ── the phone: one segment at a time, switched on the screen (6b) ── */
+@media(max-width:600px){
+  .goals-segbar{
+    display:grid;grid-template-columns:repeat(3,1fr);position:sticky;top:0;z-index:5;
+    background:#0b0f15;border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .seg-cell{
+    padding:14px 0 12px;border:0;background:none;cursor:pointer;min-height:var(--hit);
+    font:700 10px 'Chakra Petch',sans-serif;letter-spacing:.1em;color:rgba(233,237,242,.6);
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  }
+  .seg-cell.lit{background:oklch(0.86 0.14 200);color:#08131a}
+  .goals-units{display:block;padding:0}
+  .unit-seg{display:none}
+  .unit-seg.seg-on{display:contents}
+  .unit-seg .shell-tex,.unit-seg .unit-label,.unit-sub,.seg-footer{display:none}
+  .unit-seg .bezel,.unit-seg .screen{display:contents}
+  .unit-filters{padding:11px 11px 0;gap:7px}
+  .unit-filters .pill,.unit-filters .pill.active{
+    min-height:28px;padding:8px 14px;border-radius:4px;box-shadow:none;transform:none;
+    background:rgba(255,255,255,.05);color:rgba(233,237,242,.6);
+  }
+  .unit-filters .pill.active{background:oklch(0.86 0.14 200);color:#06131a}
+  .seg-list{overflow:visible;padding:11px}
+  .pcard,.gcard,.acard{padding:13px 14px}
+  .pcard-stats .avg,.pcard-today{display:none}
+  .pcard-actions,.pcard-log{gap:7px;margin-top:12px;padding-top:12px}
+  .pcard-actions .sbtn{flex:1;padding:11px 0;min-height:34px}
+  .pcard-actions .sbtn.ghost{flex:none;width:52px}
+  .pcard-actions .push{margin-left:0}
+  .device-header.page-label .led{display:none}
+}
 </style>
 </head>
 <body>
@@ -982,45 +1127,56 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
   <!-- TAB 2: QUESTS -->
   <div id="tab-quests" class="tab-pane">
-    <div class="grid-quest">
+    <!-- On a phone one segment fills the screen; these cells switch between them. -->
+    <div class="goals-segbar" role="tablist">
+      <button class="seg-cell" data-seg="goals" onclick="switchGoalsSeg('goals')">GOALS</button>
+      <button class="seg-cell" data-seg="projects" onclick="switchGoalsSeg('projects')">PROJECTS</button>
+      <button class="seg-cell" data-seg="awards" onclick="switchGoalsSeg('awards')">AWARDS</button>
+    </div>
+    <div class="goals-units">
 
-      <!-- Column 1: Custom Quests -->
-      <section class="panel">
-        <div class="panel-head"><span>⚔</span> PROJECTS
-          <span class="panel-head-right" style="display:flex;gap:5px">
-            <button class="px-btn sm" onclick="openCreateQuest()">+ NEW</button>
-            <button class="px-btn sm" onclick="showTutorial('quests')" title="Help">?</button>
-          </span>
+      <section class="unit unit-seg unit-projects" data-seg="projects">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">PROJECTS</span>
+          <button class="pill unit-add" onclick="openCreateQuest()">+ ADD PROJECT</button></div>
+        <div class="unit-filters">
+          <button class="pill filter active" id="qst-tab-custom" onclick="switchQuestTab('custom')">ACTIVE</button>
+          <button class="pill filter" id="qst-tab-completed" onclick="switchQuestTab('completed')">COMPLETED</button>
         </div>
-        <div class="panel-body">
-          <div class="quest-subtabs">
-            <button class="quest-subtab active" id="qst-tab-custom"    onclick="switchQuestTab('custom')">ACTIVE</button>
-            <button class="quest-subtab"         id="qst-tab-completed" onclick="switchQuestTab('completed')">✓ COMPLETED</button>
+        <div class="bezel"><div class="screen seg-screen">
+          <div class="seg-list">
+            <div id="qst-section-custom" class="quest-section active"></div>
+            <div id="qst-section-completed" class="quest-section"></div>
           </div>
-          <div id="qst-section-custom"    class="quest-section active"></div>
-          <div id="qst-section-completed" class="quest-section"></div>
-        </div>
+          <div class="seg-footer"><span id="qst-count"></span><span class="seg-more">SCROLL ▾</span></div>
+        </div></div>
       </section>
 
-      <!-- Column 2: Personal Goals -->
-      <section class="panel">
-        <div class="panel-head"><span>🎯</span> PERSONAL GOALS
-          <span class="panel-head-right"><button class="px-btn sm" onclick="openAddGoal()">+ ADD GOAL</button></span>
-        </div>
-        <div class="panel-body" id="goals-list-quests"></div>
+      <section class="unit unit-seg unit-goals" data-seg="goals">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">GOALS</span>
+          <button class="pill unit-add" onclick="openAddGoal()">+ ADD GOAL</button></div>
+        <div class="unit-sub">WEEKLY &amp; MONTHLY TARGETS</div>
+        <div class="bezel"><div class="screen seg-screen">
+          <div class="seg-list" id="goals-list-quests"></div>
+          <div class="seg-footer"><span id="goals-count"></span><span id="goals-ontrack"></span></div>
+        </div></div>
       </section>
 
-      <!-- Column 3: Achievements -->
-      <section class="panel">
-        <div class="panel-head"><span>🏆</span> AWARDS</div>
-        <div class="panel-body">
-          <div class="quest-subtabs">
-            <button class="quest-subtab active" id="achv-tab-active" onclick="switchAchvTab('active')">🏆 IN PROGRESS</button>
-            <button class="quest-subtab"         id="achv-tab-done"   onclick="switchAchvTab('done')">✓ COMPLETED</button>
-          </div>
-          <div id="achv-section-active" class="quest-section active"></div>
-          <div id="achv-section-done"   class="quest-section"></div>
+      <section class="unit unit-seg unit-awards" data-seg="awards">
+        <div class="shell-tex"></div>
+        <div class="unit-label"><span class="unit-title">AWARDS</span><span class="unit-readout" id="achv-readout"></span></div>
+        <div class="unit-filters">
+          <button class="pill filter active" id="achv-tab-active" onclick="switchAchvTab('active')">IN PROGRESS</button>
+          <button class="pill filter" id="achv-tab-done" onclick="switchAchvTab('done')">COMPLETED</button>
         </div>
+        <div class="bezel"><div class="screen seg-screen">
+          <div class="seg-list">
+            <div id="achv-section-active" class="quest-section active"></div>
+            <div id="achv-section-done" class="quest-section"></div>
+          </div>
+          <div class="seg-footer"><span id="achv-count"></span><span class="seg-more">SCROLL ▾</span></div>
+        </div></div>
       </section>
 
     </div>
@@ -1375,6 +1531,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <div id="quest-rewards-list"></div>
       <button class="px-btn sm" onclick="addQuestRewardRow()" style="margin-bottom:15px">+ ADD REWARD</button>
       <div class="form-actions">
+        <button class="px-btn" id="quest-delete-btn" onclick="deleteQuestFromEditor()" style="display:none;margin-right:auto">DELETE</button>
         <button class="px-btn" onclick="closeModal('modal-quest')">CANCEL</button>
         <button class="px-btn success" onclick="saveQuest()">SAVE PROJECT</button>
       </div>
@@ -3004,6 +3161,10 @@ function calcAchievementProgress(q,data){
       const best=Math.max(0,...Object.values(statCount));
       return{current:Math.min(best,q.target),target:q.target,pct:Math.min(100,best/q.target*100)};
     }
+    case'projectsCompleted':{
+      const n=(data.completedQuests||[]).length;
+      return{current:Math.min(n,q.target),target:q.target,pct:Math.min(100,n/q.target*100)};
+    }
     case'goalWeekStreak':{
       const n=data.goalWeekStreak||0;
       return{current:Math.min(n,q.target),target:q.target,pct:Math.min(100,n/q.target*100)};
@@ -3025,6 +3186,7 @@ function checkAchievements(data){
     const lines=[];
     Object.entries(q.reward||{}).forEach(([k,v])=>{if(v>0){data.stats[k]=(data.stats[k]||0)+v;const sd=STATS_DEF.find(s=>s.key===k);lines.push(`+${v} ${sd?sd.fullLabel:k}`);}});
     changed=true;
+    if(q.cosmetic)lines.push(_materialName(q.cosmetic)+' shell unlocked');
     setTimeout(()=>{spawnFloatCenter(`🏆 AWARD: ${q.name}!`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`);playLU();},600);
   });
   if(changed){save(data);renderStats(data);renderAchievements(data);}
@@ -3038,12 +3200,49 @@ function renderQuests(data){
   renderCompletedQuests(data);
   renderGoals(data);
 }
+// ── Goals page chrome: counts, footers, the phone's segment and header ──
+let _goalsSeg='goals';
+const _qstFilter=()=>document.getElementById('qst-tab-completed')?.classList.contains('active')?'completed':'custom';
+const _achvFilter=()=>document.getElementById('achv-tab-done')?.classList.contains('active')?'done':'active';
+function _goalsCounts(data){
+  const goals=data.customGoals||[];
+  const done=ACHIEVEMENT_QUESTS.filter(q=>((data.defaultQuests||{})[q.id]||{}).completed).length;
+  return{active:(data.customQuests||[]).length,completed:(data.completedQuests||[]).length,
+    goals:goals.length,onTrack:goals.filter(g=>g.status==='onTrack').length,
+    awardsDone:done,awards:ACHIEVEMENT_QUESTS.length};
+}
+function _goalsChrome(data){
+  const c=_goalsCounts(data);
+  const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+  set('qst-count',_qstFilter()==='completed'?c.completed+' COMPLETED':c.active+' ACTIVE');
+  set('goals-count',c.goals+' GOAL'+(c.goals===1?'':'S'));
+  set('goals-ontrack',c.onTrack+' ON TRACK');
+  set('achv-readout',c.awardsDone+' / '+c.awards);
+  set('achv-count',_achvFilter()==='done'?c.awardsDone+' COMPLETED':(c.awards-c.awardsDone)+' IN PROGRESS');
+  _updateDeviceHeader(data);
+  requestAnimationFrame(_segScrollHints);
+}
+// "SCROLL ▾" shows only while a list has more below.
+function _segScrollHints(){
+  document.querySelectorAll('.seg-screen').forEach(sc=>{
+    const l=sc.querySelector('.seg-list'),m=sc.querySelector('.seg-more');if(!l||!m)return;
+    m.style.visibility=(l.scrollHeight-l.clientHeight-l.scrollTop>4)?'visible':'hidden';
+  });
+}
+function switchGoalsSeg(seg){
+  _goalsSeg=seg;
+  document.querySelectorAll('.seg-cell').forEach(c=>c.classList.toggle('lit',c.dataset.seg===seg));
+  document.querySelectorAll('.unit-seg').forEach(u=>u.classList.toggle('seg-on',u.dataset.seg===seg));
+  if(_isPhone()){const sc=document.getElementById('device-screen');if(sc)sc.scrollTop=0;}
+  _updateDeviceAction();_updateDeviceHeader(load());
+}
 
 function switchQuestTab(section){
   ['custom','completed'].forEach(s=>{
     document.getElementById('qst-tab-'+s)?.classList.toggle('active',s===section);
     document.getElementById('qst-section-'+s)?.classList.toggle('active',s===section);
   });
+  _goalsChrome(load());
 }
 
 function switchAchvTab(section){
@@ -3051,6 +3250,7 @@ function switchAchvTab(section){
     document.getElementById('achv-tab-'+s)?.classList.toggle('active',s===section);
     document.getElementById('achv-section-'+s)?.classList.toggle('active',s===section);
   });
+  _goalsChrome(load());
 }
 
 function renderAchievements(data){
@@ -3058,82 +3258,92 @@ function renderAchievements(data){
   const wrapDone=document.getElementById('achv-section-done');
   if(!wrapActive||!wrapDone)return;
   wrapActive.innerHTML='';wrapDone.innerHTML='';
+  const unit={streak:' DAYS',perfectStreak:' DAYS',goalWeekStreak:' WEEKS'};
   ACHIEVEMENT_QUESTS.forEach(q=>{
     const state=(data.defaultQuests||{})[q.id]||{};
-    const done=state.completed;
-    const prog=done?{current:1,target:1,pct:100}:calcAchievementProgress(q,data);
-    const rewardText=Object.entries(q.reward||{}).map(([k,v])=>`+${v} ${STATS_DEF.find(s=>s.key===k)?.label||k}`).join(', ')||'';
-    const pct=prog.pct.toFixed(0);
-    const div=document.createElement('div');div.className='achv-card'+(done?' completed':'');
-    div.innerHTML=`<div class="achv-header"><span class="achv-icon">${q.icon}</span>
-      <span class="achv-name">${q.name}</span>
-      ${done?`<span class="achv-done-badge">✓ COMPLETED${state.completedDate?' · '+fmtDate(state.completedDate):''}</span>`:''}
-    </div>
-    <div class="achv-desc">${q.desc}</div>
-    ${rewardText?`<div class="achv-reward">Reward: ${rewardText}</div>`:''}
-    ${!done?`<div class="achv-bar-outer"><div class="achv-bar-inner" style="width:${pct}%"></div></div>
-    <div class="achv-prog-txt">${prog.current}/${prog.target}</div>`:''}`;
+    const done=!!state.completed;
+    const prog=done?{current:q.target,target:q.target,pct:100}:calcAchievementProgress(q,data);
+    // The big ones reward a shell material; the rest keep their stat points.
+    const tags=q.cosmetic?'<span class="atag cosm">COSMETIC</span>'
+      :Object.entries(q.reward||{}).map(([k,v])=>`<span class="atag">+${v} ${STATS_DEF.find(s=>s.key===k)?.label||k}</span>`).join('');
+    const desc=q.desc.replace(/\.?$/,'.')+(q.cosmetic?` Rewards ${_materialName(q.cosmetic)} shell.`:'');
+    const div=document.createElement('div');
+    div.className='acard'+(q.cosmetic?' cosmetic':'')+(done?' done':'');div.id='acard-'+q.id;
+    div.innerHTML=`<div class="acard-head"><div class="acard-name">${q.name}</div>${tags}</div>
+      <div class="acard-desc">${desc}</div>`+(done
+      ?`<div class="acard-foot"><span>COMPLETED${state.completedDate?' '+_dailyDate(new Date(state.completedDate)).slice(4)+' '+state.completedDate.slice(0,4):''}</span></div>`
+      :`<div class="segbar" style="--c:${q.cosmetic?'oklch(0.74 0.17 55)':'oklch(0.80 0.14 200)'}"><i style="width:${Math.max(0,Math.min(100,prog.pct)).toFixed(1)}%"></i></div>
+      <div class="acard-foot"><span>${prog.current} OF ${prog.target}${unit[q.type]||''}</span></div>`);
     (done?wrapDone:wrapActive).appendChild(div);
   });
-  if(!wrapActive.children.length)wrapActive.innerHTML='<div class="empty-state">All awards completed! 🎉</div>';
+  if(!wrapActive.children.length)wrapActive.innerHTML='<div class="empty-state">Every award is complete.</div>';
   if(!wrapDone.children.length)wrapDone.innerHTML='<div class="empty-state">No awards completed yet.</div>';
+  _goalsChrome(data);
 }
 
 function renderCustomQuests(data){
   const wrap=document.getElementById('qst-section-custom');if(!wrap)return;
   wrap.innerHTML='';
   const quests=data.customQuests||[];
-  if(!quests.length){wrap.innerHTML='<div class="empty-state">No projects yet.<br>Click + NEW to create one.</div>';return;}
+  if(!quests.length){wrap.innerHTML='<div class="empty-state">No projects yet.<br>Add one with + ADD PROJECT.</div>';_goalsChrome(data);return;}
+  const H=h=>(Math.round(h*10)/10).toFixed(1)+'H';
   quests.forEach(q=>{
     const totalH=calcQuestHours(q);
     const days=daysSince(q.startDate);
     const workDays=Object.keys(q.dailyLogs||{}).length;
-    const avgAll=days>0?(totalH/days).toFixed(1):'0.0';
-    const avgWork=workDays>0?(totalH/workDays).toFixed(1):'0.0';
-    const avg=q.averageMode==='workDays'?avgWork:avgAll;
-    const avgLabel=q.averageMode==='workDays'?'avg/work day':'avg/day';
-    const today=todayStr();const todayH=q.dailyLogs?.[today]||0;
-    const rewardText=Object.entries(q.rewards||{}).filter(([,v])=>v>0).map(([k,v])=>`+${v} ${STATS_DEF.find(s=>s.key===k)?.label||k}`).join(', ')||'';
-    const div=document.createElement('div');div.className='cquest-card';
-    div.innerHTML=`<div class="cquest-name">${q.name}</div>
-      ${q.description?`<div class="achv-desc">${q.description}</div>`:''}
-      <div class="cquest-meta">
-        ${(q.trackTime||totalH>0)?`<span class="cquest-stat">TOTAL <span>${totalH.toFixed(1)}h</span></span>`:''}
-        ${q.trackTime?`<span class="cquest-stat">${avgLabel.toUpperCase()} <span>${avg}h</span></span><span class="cquest-stat">DAYS <span>${days}</span></span>`:''}
+    const avg=q.averageMode==='workDays'?(workDays>0?totalH/workDays:0):(days>0?totalH/days:0);
+    const todayH=Number(q.dailyLogs?.[todayStr()]||0);
+    const tags=Object.entries(q.rewards||{}).filter(([,v])=>v>0).map(([k,v])=>{
+      const hue=STAT_HUE[k]||'rgba(233,237,242,.6)';
+      return `<span class="stag" style="color:${hue};border-color:color-mix(in oklch, ${hue} 50%, transparent)">+${v} ${STATS_DEF.find(s=>s.key===k)?.label||k}</span>`;
+    }).join('');
+    const timed=!!q.trackTime;
+    const div=document.createElement('div');div.className='pcard';div.id='pcard-'+q.id;
+    div.innerHTML=`<div class="pcard-name">${q.name}</div>
+      ${q.description?`<div class="pcard-desc">${q.description}</div>`:''}
+      ${timed?`<div class="pcard-stats"><span>TOTAL ${H(totalH)}</span><span class="avg" title="${q.averageMode==='workDays'?'Average per day with logged work':'Average per day since the start'}">AVG ${H(avg)}</span><span>DAY ${days}</span></div>`:''}
+      ${(tags||!timed)?`<div class="pcard-tags">${tags}${timed?'':'<span class="pcard-untimed">UNTIMED</span>'}</div>`:''}
+      <div class="pcard-actions">
+        ${timed?`<span class="pcard-today">${H(todayH)} TODAY</span><button class="sbtn" onclick="openProjectLog('${q.id}')">LOG HOURS</button>`:''}
+        <button class="sbtn go" onclick="completeQuest('${q.id}')">COMPLETE</button>
+        <button class="sbtn ghost${timed?'':' push'}" onclick="openCreateQuest('${q.id}')">EDIT</button>
       </div>
-      ${rewardText?`<div class="cquest-reward">On completion: ${rewardText}</div>`:''}
-      ${q.trackTime?`<div class="cquest-time-row">
-        <div class="num-input-wrap">
-          <button class="num-btn minus" onclick="numStep('qhours-${q.id}',-1,0,999,0.25)">−</button>
-          <input class="cquest-time-input" type="number" min="0" step="0.25" placeholder="0"
-            value="${todayH||''}" id="qhours-${q.id}"/>
-          <button class="num-btn plus" onclick="numStep('qhours-${q.id}',+1,0,999,0.25)">+</button>
-        </div>
-        <label style="font-size:clamp(5px,.8vw,6.25px);color:var(--dim)">HRS TODAY</label>
-        <button class="px-btn sm success" onclick="logQuestHours('${q.id}',document.getElementById('qhours-${q.id}').value)">LOG HOURS</button>
-      </div>`:''}
-      <div class="cquest-actions">
-        <button class="px-btn sm success" onclick="completeQuest('${q.id}')">✓ COMPLETE</button>
-        <button class="px-btn sm" onclick="openCreateQuest('${q.id}')">EDIT</button>
-        <button class="px-btn sm danger" onclick="deleteQuest('${q.id}')">✕</button>
-      </div>`;
+      ${timed?`<div class="pcard-log">
+        <span class="mono">HOURS TODAY</span>
+        <span class="stepper"><button class="step" onclick="numStep('qhours-${q.id}',-1,0,24,0.25)" aria-label="Less">−</button><input id="qhours-${q.id}" type="number" min="0" max="24" step="0.25" value="${todayH||0}"/><button class="step plus" onclick="numStep('qhours-${q.id}',+1,0,24,0.25)" aria-label="More">+</button></span>
+        <button class="sbtn go" onclick="logQuestHours('${q.id}',document.getElementById('qhours-${q.id}').value)">SAVE</button>
+        <button class="sbtn ghost" onclick="this.closest('.pcard').classList.remove('logging')">CANCEL</button>
+      </div>`:''}`;
     wrap.appendChild(div);
   });
+  _goalsChrome(data);
+}
+function openProjectLog(qid){
+  document.querySelectorAll('.pcard.logging').forEach(c=>c.classList.remove('logging'));
+  const c=document.getElementById('pcard-'+qid);if(!c)return;
+  c.classList.add('logging');
+  const i=c.querySelector('.pcard-log input');if(i){i.focus();i.select();}
 }
 
 function renderCompletedQuests(data){
   const wrap=document.getElementById('qst-section-completed');if(!wrap)return;
   wrap.innerHTML='';
   const quests=[...(data.completedQuests||[])].reverse();
-  if(!quests.length){wrap.innerHTML='<div class="empty-state">No completed projects yet.</div>';return;}
+  if(!quests.length){wrap.innerHTML='<div class="empty-state">No completed projects yet.</div>';_goalsChrome(data);return;}
   quests.forEach(q=>{
-    const div=document.createElement('div');div.className='completed-card';
-    div.innerHTML=`<span style="font-size:20px">🏆</span>
-      <span class="completed-name">${q.name}</span>
-      <div class="completed-meta">${q.totalHours?q.totalHours+'h · ':''}${fmtDate(q.completedDate)}</div>
-      <button class="px-btn sm danger" onclick="deleteCompletedQuest('${q.id}')">✕</button>`;
+    const tags=Object.entries(q.rewards||{}).filter(([,v])=>v>0).map(([k,v])=>{
+      const hue=STAT_HUE[k]||'rgba(233,237,242,.6)';
+      return `<span class="stag" style="color:${hue};border-color:color-mix(in oklch, ${hue} 50%, transparent)">+${v} ${STATS_DEF.find(s=>s.key===k)?.label||k}</span>`;
+    }).join('');
+    const div=document.createElement('div');div.className='pcard done';
+    div.innerHTML=`<div class="pcard-name">${q.name}</div>
+      ${q.description?`<div class="pcard-desc">${q.description}</div>`:''}
+      <div class="pcard-stats"><span>COMPLETED ${q.completedDate?fmtDate(q.completedDate).toUpperCase():'—'}</span>${q.totalHours?`<span>TOTAL ${(+q.totalHours).toFixed(1)}H</span>`:''}</div>
+      ${tags?`<div class="pcard-tags">${tags}</div>`:''}
+      <div class="pcard-actions"><button class="sbtn ghost push" onclick="deleteCompletedQuest('${q.id}')">REMOVE</button></div>`;
     wrap.appendChild(div);
   });
+  _goalsChrome(data);
 }
 
 function calcQuestHours(q){return Object.values(q.dailyLogs||{}).reduce((s,h)=>s+Number(h),0);}
@@ -3169,9 +3379,15 @@ function deleteQuest(qid){
   const data=load();data.customQuests=(data.customQuests||[]).filter(q=>q.id!==qid);save(data);renderQuests(data);
 }
 
+function deleteQuestFromEditor(){
+  const id=document.getElementById('edit-quest-id').value;if(!id)return;
+  if(!confirm('Delete this project? All logged hours will be lost.'))return;
+  const data=load();data.customQuests=(data.customQuests||[]).filter(q=>q.id!==id);save(data);
+  closeModal('modal-quest');renderQuests(data);
+}
 function deleteCompletedQuest(qid){
   if(!confirm('Remove from archive?'))return;
-  const data=load();data.completedQuests=(data.completedQuests||[]).filter(q=>q.id!==qid);save(data);renderCompletedQuests(data);
+  const data=load();data.completedQuests=(data.completedQuests||[]).filter(q=>q.id!==qid);save(data);renderCompletedQuests(data);renderAchievements(data);
 }
 
 // ── Quest create/edit modal ──
@@ -3180,6 +3396,7 @@ function openCreateQuest(qid){
   const data=load();const q=qid?(data.customQuests||[]).find(x=>x.id===qid):null;
   document.getElementById('quest-modal-title').textContent=q?'EDIT PROJECT':'CREATE PROJECT';
   document.getElementById('edit-quest-id').value=q?q.id:'';
+  document.getElementById('quest-delete-btn').style.display=q?'':'none';
   document.getElementById('quest-name').value=q?q.name:'';
   document.getElementById('quest-desc').value=q?q.description||'':'';
   document.getElementById('quest-track-time').checked=q?!!q.trackTime:false;
@@ -3721,14 +3938,26 @@ const MOOD_EMOJIS={happy:'😊',neutral:'😐',concerned:'😟',sad:'😢',criti
 const ACHIEVEMENT_QUESTS=[
   {id:'dedication-1',  name:'Dedication I',      icon:'🏆', desc:'Complete any task 3 days in a row',          type:'streak',         target:3,  reward:{discipline:1}},
   {id:'dedication-2',  name:'Dedication II',     icon:'🏆', desc:'Complete any task 7 days in a row',          type:'streak',         target:7,  reward:{discipline:2}},
-  {id:'perfectionist', name:'Perfectionist',     icon:'⭐', desc:'Complete ALL daily tasks for 3 days in a row',type:'perfectStreak',  target:3,  reward:{discipline:3}},
-  {id:'renaissance',   name:'Renaissance',       icon:'🌟', desc:'Increase every stat in one day',             type:'allStatsInDay',  target:9,  reward:{strength:1,focus:1,intelligence:1,charisma:1,creativity:1,initiative:1,discipline:1,agility:1,vitality:1}},
+  {id:'dedication-3',  name:'Dedication III',    icon:'🏆', desc:'Complete any task 30 days in a row',         type:'streak',         target:30, cosmetic:'grape'},
+  {id:'perfectionist', name:'Perfectionist',     icon:'⭐', desc:'Complete ALL daily tasks for 3 days in a row',type:'perfectStreak',  target:3,  cosmetic:'gold'},
+  {id:'renaissance',   name:'Renaissance',       icon:'🌟', desc:'Increase every stat in one day',             type:'allStatsInDay',  target:9,  cosmetic:'chrome'},
   {id:'specialist-1',  name:'Specialist I',      icon:'⚡', desc:'Increase one stat 10 times in a week',       type:'statWeekCount',  target:10, reward:{discipline:2}},
   {id:'balanced',      name:'Balanced Growth',   icon:'⚖️', desc:'Have no stat below 10',                      type:'allStatsMin',    target:10, reward:{discipline:4}},
   {id:'achiever-1',    name:'Achiever I',        icon:'🎯', desc:'Complete 1 weekly goal on time',             type:'goalsCompleted', target:1,  reward:{initiative:2}},
   {id:'achiever-2',    name:'Achiever II',       icon:'🎯', desc:'Complete 5 weekly goals on time',            type:'goalsCompleted', target:5,  reward:{initiative:5}},
-  {id:'consistent',    name:'Consistent',        icon:'📅', desc:'Hit a weekly goal 4 weeks in a row',         type:'goalWeekStreak', target:4,  reward:{discipline:6}},
+  {id:'consistent',    name:'Consistent',        icon:'📅', desc:'Hit a weekly goal 4 weeks in a row',         type:'goalWeekStreak', target:4,  cosmetic:'concrete'},
+  {id:'first-project', name:'First project',     icon:'🏁', desc:'Complete your first project',                type:'projectsCompleted',target:1, cosmetic:'aluminium'},
 ];
+
+// Shell materials owned: the starters, plus one for each award that rewards one.
+// Derived rather than stored, so it can never drift from the awards themselves.
+function unlockedMaterials(data){
+  const done=data.defaultQuests||{};
+  const ids=MATERIALS.filter(m=>m.tier==='starter').map(m=>m.id);
+  ACHIEVEMENT_QUESTS.forEach(q=>{if(q.cosmetic&&(done[q.id]||{}).completed&&!ids.includes(q.cosmetic))ids.push(q.cosmetic);});
+  return ids;
+}
+function _materialName(id){const m=MATERIALS.find(x=>x.id===id);return m?m.name:String(id).toUpperCase();}
 
 // ── Per-tab tutorial content ──
 const TUTORIALS={
@@ -3965,7 +4194,71 @@ function renderGoals(data){
   renderGoalsInto('goals-list',data);
   renderGoalsInto('goals-list-quests',data);
 }
+// A plain-language name for a goal, and the words for its numbers.
+function goalTitle(g,data){
+  const times=n=>n===1?'once':n===2?'twice':n+' times';
+  const per=g.period==='month'?'a month':'a week';
+  if(g.type==='taskFrequency'){
+    const nm=g.taskName||((data.customTasks||[]).find(t=>t.id===g.taskId)||{name:g.taskId}).name;
+    return nm+' '+times(g.frequency)+' '+per;
+  }
+  if(g.type==='activityTime'){
+    const h=g.targetHours||0;
+    const amt=Number.isInteger(h)?h+' hour'+(h===1?'':'s'):fmtHM(h);
+    return amt+' of '+_goalTimeName(g,data)+' '+per;
+  }
+  const sd=STATS_DEF.find(x=>x.key===g.stat);
+  return 'Raise '+(sd?sd.label:g.stat)+' by '+g.targetIncrease;
+}
+const _hrs=h=>{const r=Math.round(h*10)/10;return (Number.isInteger(r)?r:r.toFixed(1))+'H';};
+function renderGoalCards(wrap,data){
+  wrap.innerHTML='';
+  const goals=data.customGoals||[];
+  if(!goals.length){wrap.innerHTML='<div class="empty-state">No goals yet.<br>Add one with + ADD GOAL.</div>';return;}
+  const TYPE={taskFrequency:'TASK FREQUENCY',statIncrease:'STAT INCREASE',activityTime:'ACTIVITY TIME'};
+  const STATE={onTrack:['on','ON TRACK','oklch(0.86 0.20 130)'],atRisk:['risk','AT RISK','oklch(0.74 0.17 55)'],failing:['fail','FAILING','#e0645c']};
+  goals.forEach(g=>{
+    calculateGoalProgress(g,data);
+    const max=g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;
+    const cur=g.currentProgress||0;
+    const pct=max>0?Math.min(100,(cur/max)*100):0;
+    const prog=g.type==='taskFrequency'?`${cur} OF ${max}`:g.type==='activityTime'?`${_hrs(cur)} OF ${_hrs(max)}`:`+${cur} OF +${max}`;
+    const [cls,label,col]=STATE[g.status]||STATE.onTrack;
+    const grace=isGoalInGracePeriod(g);
+    // Streaks count whole periods met; a failed last period with no streak since is a broken one.
+    const unit=g.period==='month'?'MONTH':'WEEK';
+    const streak=g.streak||0;
+    const left=getDaysLeftInPeriod(g.period);
+    const right=streak>0?`<span class="run">STREAK ${streak} ${unit}${streak===1?'':'S'}</span>`
+      :(g.previousWeekStatus==='failing'&&g.period==='week')?'<span>STREAK BROKEN</span>'
+      :g.status!=='onTrack'?`<span>${left} DAY${left===1?'':'S'} LEFT</span>`:'';
+    let pace='';
+    if(g.type==='activityTime'&&cur<max){
+      const loggedToday=Number(_goalTimeLogs(g,data)[todayStr()])||0;
+      const daysLeft=_daysLeftInclusive(g.period)-(loggedToday>0?1:0);
+      pace=daysLeft<=0?`${fmtHMCeil(max-cur).toUpperCase()} STILL NEEDED TODAY`
+        :`NEED ${fmtHMCeil((max-cur)/daysLeft).toUpperCase()} A DAY FOR ${daysLeft} DAY${daysLeft===1?'':'S'}`;
+    }
+    const div=document.createElement('div');div.className='gcard';div.id='gcard-'+g.id;
+    div.setAttribute('role','button');div.tabIndex=0;
+    div.onclick=()=>openGoalStats(g.id);
+    div.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGoalStats(g.id);}};
+    div.innerHTML=`<div class="gcard-head"><div style="flex:1;min-width:0"><div class="gcard-name">${goalTitle(g,data)}</div>
+        <div class="gcard-type">${TYPE[g.type]||''} · ${g.period==='month'?'MONTHLY':'WEEKLY'}${grace?' · NEW':''}</div></div>
+        <span class="gbadge ${cls}">${label}</span></div>
+      <div class="segbar" style="--c:${col}"><i style="width:${pct.toFixed(1)}%"></i></div>
+      <div class="gcard-foot"><span>${prog}</span>${right}</div>
+      ${pace?`<div class="gcard-pace">${pace}</div>`:''}`;
+    div.title=grace?"New: won't affect mood for its first "+(g.period==='week'?'week':'month'):'';
+    wrap.appendChild(div);
+  });
+}
 function renderGoalsInto(containerId,data){
+  if(containerId==='goals-list-quests'){
+    const w=document.getElementById(containerId);
+    if(w){renderGoalCards(w,data);save(data);_goalsChrome(data);}
+    return;
+  }
   const wrap=document.getElementById(containerId);if(!wrap)return;
   wrap.innerHTML='';
   const goals=data.customGoals||[];
@@ -4024,7 +4317,7 @@ function deleteGoal(gid){
   if(!confirm('Delete this goal?'))return;
   const data=load();
   data.customGoals=(data.customGoals||[]).filter(g=>g.id!==gid);
-  save(data);renderGoals(data);updateMoodDisplay(data);
+  save(data);closeModal('modal-goal-stats');renderGoals(data);updateMoodDisplay(data);
 }
 
 function onGoalTypeChange(){
@@ -4305,7 +4598,11 @@ function openGoalStats(gid){
     <div class="tsk-stat-row"><span class="tsk-stat-lbl">PERIODS COMPLETED</span><span class="tsk-stat-val">${completedPeriods} / ${totalPeriods}</span></div>
     <div class="tsk-stat-row"><span class="tsk-stat-lbl">TARGET / ${period.toUpperCase()}</span><span class="tsk-stat-val">${isAct?fmtHM(target):target+'×'}</span></div>
     <div class="tsk-section-hd">${isAct?'HOURS':'COMPLETIONS'} PER ${period.toUpperCase()} <span style="color:var(--gold);font-size:clamp(3.75px,.6vw,5px)">(gold dashed = target)</span></div>
-    <div class="tsk-chart-wrap">${chartHtml}</div>`;
+    <div class="tsk-chart-wrap">${chartHtml}</div>
+    <div class="form-actions" style="margin-top:17.5px">
+      <button class="px-btn" style="margin-right:auto" onclick="deleteGoal('${gid}')">DELETE</button>
+      <button class="px-btn success" onclick="closeModal('modal-goal-stats');openAddGoal('${gid}')">EDIT GOAL</button>
+    </div>`;
 }
 
 function renderDailyGoalsWatch(data){
@@ -4326,14 +4623,14 @@ function renderDailyGoalsWatch(data){
   wrap.innerHTML=`<div class="dgw-title">GOALS TO WATCH</div>`+
     scored.map(({g,cur,max,pct})=>{
       const progTxt=g.type==='taskFrequency'?`${cur}/${max}`:g.type==='activityTime'?`${fmtHM(cur)}/${fmtHM(max)}`:`+${cur}/+${max}`;
-      const bc=g.status==='onTrack'?'gbar-on':g.status==='atRisk'?'gbar-risk':'gbar-fail';
+      const col=g.status==='onTrack'?'oklch(0.86 0.20 130)':g.status==='atRisk'?'oklch(0.74 0.17 55)':'#e0645c';
       return `<div class="dgw-row">
         <div style="width:100%">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <span class="dgw-label">${goalDescription(g,data)}</span>
             <span class="dgw-pct">${progTxt}</span>
           </div>
-          <div class="goal-bar-outer" style="margin-top:3.75px"><div class="goal-bar-inner ${bc}" style="width:${pct}%"></div></div>
+          <div class="segbar" style="--c:${col};margin-top:6px"><i style="width:${pct}%"></i></div>
         </div>
       </div>`;
     }).join('');
@@ -4790,14 +5087,29 @@ function _dockUpdate(){
   if (side) { side.style.left = (10 + w + 10) + 'px'; side.style.pointerEvents = p > 0.5 ? 'auto' : 'none'; }
   win.classList.toggle('collapsed', p > 0.5);
 }
-function _devicePageChanged(name){
+// The action key takes the verb of what is on screen. Awards has none; Tools gets
+// its own keys with the stopwatch.
+function _updateDeviceAction(){
   const key = document.getElementById('device-action');
-  if (key) {
-    // The action key follows the page. Tools gets its own keys with the stopwatch.
-    const label = { daily: '+ ADD TASK', quests: '+ ADD GOAL' }[name];
-    key.style.display = label ? '' : 'none';
-    if (label) { key.textContent = label; key.dataset.page = name; }
-  }
+  if (!key) return;
+  const verb = _lastPage === 'daily' ? ['+ ADD TASK', 'task']
+    : _lastPage === 'quests' ? ({ goals: ['+ ADD GOAL', 'goal'], projects: ['+ ADD PROJECT', 'project'] })[_goalsSeg] : null;
+  key.style.display = verb ? '' : 'none';
+  if (verb) { key.textContent = verb[0]; key.dataset.action = verb[1]; }
+}
+// On Goals the shell's header names the page and reads out the segment, as the
+// panel label row does on desktop. Daily keeps the wordmark and material.
+function _updateDeviceHeader(data){
+  const head = document.querySelector('.device-header'); if (!head) return;
+  const mark = head.querySelector('.app-wordmark'), meta = document.getElementById('device-meta');
+  const onGoals = _lastPage === 'quests';
+  head.classList.toggle('page-label', onGoals);
+  if (!onGoals) { mark.textContent = APP_NAME; const m = MATERIALS.find(x => x.id === SHELL_MATERIAL); if (meta && m) meta.textContent = m.name; return; }
+  const c = _goalsCounts(data || load());
+  mark.textContent = 'GOALS';
+  if (meta) meta.textContent = _goalsSeg === 'goals' ? c.onTrack + ' ON TRACK' : _goalsSeg === 'projects' ? c.active + ' ACTIVE' : c.awardsDone + ' / ' + c.awards;
+}
+function _devicePageChanged(name){
   if (_isPhone() && name !== _lastPage) {
     const sc = document.getElementById('device-screen');
     if (sc) sc.scrollTop = 0;
@@ -4805,13 +5117,18 @@ function _devicePageChanged(name){
     pane.classList.remove('slide-in'); void pane.offsetWidth; pane.classList.add('slide-in');
   }
   _lastPage = name;
+  _updateDeviceAction();
+  _updateDeviceHeader();
   _dockSchedule();
 }
 function deviceAction(){
-  const page = (document.getElementById('device-action') || {}).dataset.page;
-  if (page === 'quests') openAddGoal(); else openAddTask();
+  const a = (document.getElementById('device-action') || {}).dataset.action;
+  if (a === 'goal') openAddGoal(); else if (a === 'project') openCreateQuest(); else openAddTask();
 }
 function initDevice(){
+  switchGoalsSeg(_goalsSeg);
+  document.querySelectorAll('.seg-list').forEach(l => l.addEventListener('scroll', _segScrollHints, { passive: true }));
+  window.addEventListener('resize', _segScrollHints);
   const sc = document.getElementById('device-screen');
   if (sc) sc.addEventListener('scroll', _dockSchedule, { passive: true });
   window.addEventListener('resize', _dockSchedule);
@@ -4856,6 +5173,9 @@ function init(){
   updateYesterdayReminder(data);
   updateMoodDisplay(data); // also renders the goals to watch
   renderGoals(data);
+  // An award whose condition is already met (a new award, or one met by a backdate
+  // on another device) completes now rather than waiting for the next tick.
+  checkAchievements(data);
 
   // Daily snapshot. When signed in, it is taken after the first sync instead,
   // so an out-of-date device never snapshots its stale copy as today's.
