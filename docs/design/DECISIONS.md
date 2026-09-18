@@ -16,6 +16,7 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory a
 | 10 | Should stats keep a bar that can always be filled further? | **Yes, the tier pips are back.** Each stat's bar shows progress through its current tier of ten points (never full, at least 4%), and below it one pip per completed tier, up to ten, then "+N". `LV` is the sum of completed tiers, and the rack footer reads `NEXT TIER IN N POINTS`. Supersedes the Phase 5 note on stat bars |
 | 11 | The old pixel character | **Removed completely.** The sprite replaces it |
 | 12 | The old title system | **Removed.** It may be replaced by something else later, but not in its current form |
+| 13 | The old cosmetics (hats, weapons, capes), unlocked by titles and worn by the pixel character | **Removed with them.** New sprite and shell cosmetics arrive with Customise (9b) and the award rewards (Phase 6, Phase 10) |
 
 ## Phase 5 — how the Daily page was reconciled
 
@@ -64,6 +65,25 @@ units stand as before.
   and MANAGE STATS as flat buttons; the stat rack at the end of Daily until the
   Wellness rebuild takes it (9b); then account, data tools, name and sound.
 - **Rows are larger for thumbs:** 14/13 padding, 20px checkbox, 16px headline.
+
+## Clean-up phase — before Phase 6
+
+Removed from the app: the pixel character and its colour controls, class titles,
+cosmetics and their unlock popup, the item and equipment system, and the six colour
+themes (decisions 2, 3, 11, 12, 13).
+- **Saved data is left alone.** The fields `unlockedTitles`, `equippedTitle`,
+  `unlockedCosmetics`, `equippedCosmetics`, `inventory`, `characterCustomization` and
+  `appTheme` stay in storage and in sync exactly as they are. The app no longer reads
+  or creates them. Deleting them now would sync the deletion to devices still on the
+  live version and break them there. They can be dropped once the redesign ships.
+- **Stat totals are the stat values.** Item bonuses no longer count (decision 2).
+- **Two awards went with the cosmetics:** Fashion Icon (unlock 10 cosmetics) and
+  Completionist (unlock all). Stat points already earned from them are kept.
+- **Level-up popup** now only marks a stat reaching a multiple of ten, the same moment
+  a tier pip fills. "New Title" lines are gone.
+- **Customise** is a placeholder until it is rebuilt in 9b. The CUSTOMISE keys, and
+  tapping the sprite, still open it.
+- The mood badge and thought-bubble code is left for the mood swap in Phase 9.
 
 ## Working arrangement
 

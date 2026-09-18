@@ -8,6 +8,12 @@ Baseline: `main` at `6c8c209`, **v1.9.0**, single file `index.html`, 5,570 lines
 Line numbers are from that commit and will drift as work proceeds; names are the
 reliable reference.
 
+> **Retired in the clean-up phase (before Phase 6):** the pixel-art avatar and its
+> colours, class titles and total level, cosmetics and their unlock popup, the item and
+> equipment system (including its attribute bonuses), and the six colour themes. They are
+> gone from the app, so skip them when walking this list. Their saved data fields are
+> left untouched in storage. See decisions 2, 3, 11, 12 and 13 in DECISIONS.md.
+
 Names below are the app's **current** ones. The rename to Daily / Goals / Tools,
 Reserve, Marks, Records, Awards and Tasks happens in Phase 4, and this file is
 not rewritten when it does.
@@ -212,7 +218,7 @@ disturbed by the redesign, and worth re-testing every time:
 4. Logging hours manually, and a linked task auto-completing
 5. Goal status and streaks after a week rolls over
 6. Month close moving the balance into gold
-7. Achievements and titles unlocking, cosmetics following
+7. Awards unlocking and paying out their stat rewards
 8. Sync between two devices, and snapshot restore
 9. Import and export round-tripping
 10. Everything reachable on both phone and desktop

@@ -137,272 +137,9 @@ body::before{
 @media(max-width:1125px){.grid-daily{grid-template-columns:1fr 1fr}}
 @media(max-width:750px){.grid-daily{grid-template-columns:1fr}}
 /* Daily sprite column – larger, centered */
-#daily-sprite-col-large{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0;flex:1;min-width:0;overflow:hidden}
-@media(max-width:750px){#daily-sprite-col-large{margin:0 auto;width:fit-content}}
-#daily-sprite-preview-wrap-large{width:160px;height:240px;overflow:hidden;position:relative;
-  filter:drop-shadow(0 0 12.5px rgba(88,101,242,.5));margin:0 auto}
-#daily-sprite-preview-large{width:160px;height:240px;position:absolute;top:0;left:0}
-#daily-sprite-preview-large canvas{position:absolute;top:0;left:0}
-/* Phase 5.8 — pixel-art cosmetic layer containers */
-.cosm-layer{position:absolute;top:0;left:0;width:160px;height:240px;pointer-events:none}
-.cosm-layer-hw{z-index:10}
-.cosm-layer-wp{z-index:6}
-.cosm-layer-ac{z-index:1}
-.cosm-layer img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
-/* emoji fallback positions within .cosm-layer container */
-.cosm-emoji{position:absolute;font-size:50px;filter:drop-shadow(2.5px 2.5px 5px rgba(0,0,0,.3));line-height:1}
-.cosm-emoji-hw{top:-15%;left:50%;transform:translateX(-50%)}
-.cosm-emoji-wp{top:40%;right:-22%}
-.cosm-emoji-ac{top:60%;left:50%;transform:translateX(-50%)}
-#daily-sprite-preview-wrap-large canvas{z-index:5}
-/* mood / class info below sprite */
-#daily-class-title-lg{font-size:clamp(6.25px,1.2vw,8.75px);color:var(--teal);letter-spacing:2.5px;text-shadow:0 0 10px var(--teal);text-align:center;margin-top:5px;line-height:1.8}
-#daily-level-lg{font-size:clamp(6.25px,1vw,7.5px);color:var(--gold);letter-spacing:1.25px;text-align:center}
-/* mood css filters on large sprite */
-.mood-neutral   #daily-sprite-preview-large canvas{filter:brightness(.93)}
-.mood-concerned #daily-sprite-preview-large canvas{filter:saturate(.75) brightness(.88)}
-.mood-sad       #daily-sprite-preview-large canvas{filter:saturate(.45) brightness(.8)}
-.mood-critical  #daily-sprite-preview-large canvas{filter:saturate(.25) brightness(.7) sepia(.15)}
-/* Phase 5.3: Custom number inputs */
-.num-input-wrap{display:flex;align-items:center;gap:0;border:2.5px solid var(--b1);background:#0a0a1a;overflow:hidden}
-.num-input-wrap input[type=number]{
-  font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1.1vw,8.75px);
-  background:transparent;border:none;color:var(--white);padding:7.5px 5px;
-  text-align:center;width:65px;outline:none;
-  -moz-appearance:textfield;
-}
-.num-input-wrap input[type=number]::-webkit-outer-spin-button,
-.num-input-wrap input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.num-btn{
-  font-family:'Press Start 2P',monospace;font-size:17.5px;
-  background:var(--b1);border:none;color:var(--white);
-  width:35px;height:100%;min-height:40px;cursor:pointer;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;line-height:1;
-  transition:background .12s;user-select:none;
-}
-.num-btn:hover{background:var(--b2)}.num-btn:active{background:var(--b3);color:#000}
-.num-btn.minus{border-right:2.5px solid rgba(255,255,255,.12)}
-.num-btn.plus {border-left:2.5px solid rgba(255,255,255,.12)}
-
-/* ── EMOJI PICKER ── */
-#emoji-picker{position:fixed;z-index:100000;background:#0a0a1a;border:3.75px solid var(--b1);
-  padding:7.5px;display:none;width:337.5px;box-shadow:0 10px 30px rgba(0,0,0,.75)}
-#emoji-picker.open{display:block}
-.emoji-cats{display:flex;gap:2.5px;margin-bottom:6.25px;border-bottom:2.5px solid var(--panel-hi);padding-bottom:5px}
-.emoji-cat-btn{cursor:pointer;font-size:18.75px;padding:2.5px 6.25px;background:transparent;border:1.25px solid transparent;line-height:1}
-.emoji-cat-btn.active{border-color:var(--b2);background:var(--panel-hi)}
-.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:1.25px;max-height:187.5px;overflow-y:auto}
-.emoji-cell{cursor:pointer;font-size:22.5px;text-align:center;padding:3.75px 0;line-height:1}
-.emoji-cell:hover{background:var(--panel-hi)}
-
-/* ── LOGBOOK ── */
-#logbook{position:relative;background:linear-gradient(90deg,#2a1d10,#4a3620 6%,#5a4228 50%,#4a3620 94%,#2a1d10);
-  border:5px solid #241810;border-radius:7.5px;padding:15px;min-height:425px;box-shadow:inset 0 0 32.5px rgba(0,0,0,.55)}
-#logbook-page{background:#f0e6d2;background-image:repeating-linear-gradient(0deg,transparent,transparent 25px,rgba(120,90,50,.14) 26.25px);
-  border:1.25px solid #c9b892;padding:17.5px 15px;min-height:375px;color:#3a2a18;
-  box-shadow:2.5px 2.5px 0 rgba(0,0,0,.25);transform-origin:left center;backface-visibility:hidden}
-#logbook-page.flipping{animation:pageflip .45s ease}
-@keyframes pageflip{0%{transform:perspective(1125px) rotateY(0);opacity:1}
-  50%{transform:perspective(1125px) rotateY(-82deg);opacity:.25}
-  100%{transform:perspective(1125px) rotateY(0);opacity:1}}
-#logbook-manage-btn{position:absolute;bottom:12.5px;right:12.5px;width:40px;height:40px;border-radius:50%;
-  background:var(--b1);border:2.5px solid var(--b2);color:#fff;font-size:18.75px;cursor:pointer;
-  box-shadow:0 3.75px 0 rgba(0,0,0,.5);z-index:3;display:flex;align-items:center;justify-content:center}
-#logbook-manage-btn:hover{background:var(--b2)}
-.lb-title{font-size:clamp(11.25px,2.1vw,16.25px);color:#3a2a18;text-align:center;letter-spacing:2.5px;margin-bottom:6.25px;text-shadow:1.25px 1.25px 0 rgba(255,255,255,.35)}
-.lb-sub{font-size:clamp(6.25px,1.1vw,8.75px);color:#6b543a;text-align:center;margin-bottom:17.5px;letter-spacing:1.25px}
-.lb-activity{display:flex;align-items:center;gap:11.25px;padding:12.5px 7.5px;border-bottom:1.25px dashed rgba(120,90,50,.45);cursor:pointer}
-.lb-activity:hover{background:rgba(120,90,50,.14)}
-.lb-act-icon{font-size:28.75px;flex-shrink:0;line-height:1}
-.lb-act-name{flex:1;font-size:clamp(8.75px,1.4vw,11.25px);color:#3a2a18;letter-spacing:1.25px}
-.lb-act-avg{font-size:clamp(7.5px,1.2vw,10px);color:#7a5c30;white-space:nowrap;font-weight:bold}
-.lb-back{cursor:pointer;font-size:clamp(7.5px,1.2vw,10px);color:#7a5c30;letter-spacing:1.25px;margin-bottom:7.5px;display:inline-block}
-.lb-back:hover{color:#3a2a18;text-decoration:underline}
-.lb-daterange{display:flex;gap:6.25px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:11.25px}
-.lb-daterange input{font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1vw,7.5px);background:#f5eeda;border:1.25px solid #7a5c30;color:#3a2a18;padding:5px 6.25px;outline:none}
-.lb-daterange label{font-size:clamp(6.25px,1vw,7.5px);color:#6b543a;letter-spacing:1.25px}
-.lb-toggle{display:flex;gap:6.25px;margin:8.75px 0;justify-content:center}
-.lb-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(7.5px,1.1vw,8.75px);padding:5px 11.25px;background:#c9b892;border:1.25px solid #7a5c30;color:#3a2a18;cursor:pointer}
-.lb-toggle button.active{background:#7a5c30;color:#f0e6d2}
-.lb-chart{display:flex;align-items:flex-end;gap:5px;height:162.5px;padding:0 2.5px;overflow-x:auto}
-.lb-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:37.5px;height:100%}
-.lb-bar-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;width:100%}
-.lb-bar{width:21.25px;background:#7a5c30;min-height:2.5px;border-radius:1.25px 1.25px 0 0}
-.lb-bar-num{font-size:clamp(6.25px,.95vw,7.5px);color:#3a2a18;margin-bottom:2.5px;white-space:nowrap}
-.lb-bar-lbl{font-size:clamp(6.25px,.9vw,7.5px);color:#6b543a;margin-top:3.75px;white-space:nowrap}
-.lb-total-line{text-align:center;font-size:clamp(7.5px,1.2vw,10px);color:#3a2a18;margin-bottom:6.25px}
-.lb-input-row{display:flex;gap:11.25px;align-items:flex-end;justify-content:center;margin-top:16.25px;flex-wrap:wrap;border-top:1.25px dashed rgba(120,90,50,.45);padding-top:13.75px}
-.lb-input-row input{width:65px;font-family:'Press Start 2P',monospace;font-size:clamp(8.75px,1.3vw,11.25px);background:#f5eeda;border:1.25px solid #7a5c30;color:#3a2a18;padding:7.5px 5px;text-align:center;outline:none}
-.lb-input-lbl{font-size:clamp(6.25px,1vw,7.5px);color:#6b543a;margin-bottom:5px;text-align:center}
-.lb-submit{font-family:'Press Start 2P',monospace;font-size:clamp(7.5px,1.1vw,8.75px);background:#2f7a30;border:1.25px solid #1a5c1a;color:#fff;padding:8.75px 13.75px;cursor:pointer}
-.lb-submit:hover{background:#39913a}
-.lb-logged-today{text-align:center;font-size:clamp(6.25px,1vw,7.5px);color:#6b543a;margin-top:7.5px}
-.lb-empty{text-align:center;color:#6b543a;font-size:clamp(7.5px,1.2vw,10px);padding:20px 0}
-
-/* ── TASKS ── */
-.task-item{display:flex;align-items:flex-start;gap:12.5px;padding:10px 7.5px;
-  border-bottom:2.5px solid rgba(88,101,242,.2);cursor:pointer;transition:background .15s;position:relative;overflow:hidden;}
-.task-item:last-child{border-bottom:none}
-.task-item:hover{background:rgba(88,101,242,.1)}
-.task-item.done{opacity:.5}.task-item.done .task-label{text-decoration:line-through;color:var(--dim)}
-.task-cb{width:25px;height:25px;min-width:25px;border:3.75px solid var(--b2);background:#0a0a1a;
-  display:flex;align-items:center;justify-content:center;font-size:13.75px;flex-shrink:0;margin-top:1.25px;transition:all .15s;cursor:pointer;}
-.task-cb:hover{border-color:var(--green2);box-shadow:0 0 7.5px var(--green)}
-.task-item.done .task-cb{background:var(--green);border-color:var(--green2);color:#000;box-shadow:0 0 10px var(--green)}
-.task-label{font-size:clamp(6.25px,1.2vw,8.75px);line-height:1.8;color:var(--white)}
-.task-meta{display:flex;gap:7.5px;align-items:center;margin-top:5px;flex-wrap:wrap}
-.task-stat-pill{font-size:clamp(5px,.9vw,6.25px);padding:2.5px 6.25px;border:2.5px solid;letter-spacing:1.25px}
-.task-streak{font-size:clamp(5px,.9vw,6.25px);color:var(--dim);display:flex;align-items:center;gap:2.5px}
-.task-link-badge{font-size:clamp(5px,.85vw,6.25px);color:var(--teal);border:1.25px solid rgba(29,233,182,.4);padding:1.25px 6.25px;letter-spacing:1.25px;white-space:nowrap}
-.task-streak.at-risk .streak-hot{color:var(--gold)}
-.streak-risk{color:var(--orange2);margin-left:3.75px}
-.streak-hot{color:var(--orange2)}.streak-best{color:rgba(120,120,180,.6)}
-@keyframes taskFlash{0%{background:rgba(88,101,242,0)}30%{background:rgba(88,101,242,.3)}100%{background:rgba(88,101,242,0)}}
-.task-item.flash{animation:taskFlash .6s ease-out}
-[data-stat=strength]    .task-stat-pill{color:#ff8a80;border-color:#b71c1c;background:rgba(183,28,28,.2)}
-[data-stat=focus]       .task-stat-pill{color:#80d8ff;border-color:#006064;background:rgba(0,96,100,.2)}
-[data-stat=intelligence].task-stat-pill{color:#ea80fc;border-color:#4a148c;background:rgba(74,20,140,.2)}
-[data-stat=charisma]    .task-stat-pill{color:#ff80ab;border-color:#880e4f;background:rgba(136,14,79,.2)}
-[data-stat=creativity]  .task-stat-pill{color:#ffab40;border-color:#e65100;background:rgba(230,81,0,.2)}
-[data-stat=initiative]  .task-stat-pill{color:#69f0ae;border-color:#1b5e20;background:rgba(27,94,32,.2)}
-[data-stat=discipline]  .task-stat-pill{color:#ffff8d;border-color:#f57f17;background:rgba(245,127,23,.2)}
-
-/* ── STAT BARS ── */
-.stat-item{margin-bottom:13.75px}
-.stat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:3.75px}
-.stat-name-row{display:flex;align-items:center;gap:6.25px;font-size:clamp(6.25px,1.1vw,8.75px);letter-spacing:1.25px}
-.stat-val{font-size:clamp(7.5px,1.3vw,10px);color:var(--gold);text-shadow:0 0 10px var(--gold),1.25px 1.25px 0 #000;min-width:30px;text-align:right}
-.stat-bar-outer{height:12.5px;background:#0a0a1a;border:2.5px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
-.stat-bar-inner{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1);position:relative}
-.stat-bar-inner::after{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.22)}
-.stat-bar-outer::before{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
-  background-image:repeating-linear-gradient(90deg,transparent,transparent calc(10% - 1.25px),rgba(0,0,0,.5) calc(10% - 1.25px),rgba(0,0,0,.5) 10%);}
-.stat-pips{display:flex;gap:2.5px;margin-top:2.5px;flex-wrap:wrap}
-.stat-pip{width:6.25px;height:6.25px;background:var(--gold);box-shadow:0 0 5px var(--gold)}
-.stat-bonus-line{font-size:clamp(5px,.8vw,6.25px);color:var(--gold);margin-top:2.5px;letter-spacing:1.25px}
-@keyframes barPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(2) saturate(1.5)}}
-.stat-bar-inner.pulse{animation:barPulse .7s ease-out}
-[data-stat=strength]    .stat-bar-inner{background:linear-gradient(90deg,#b71c1c,#ff5252)}
-[data-stat=focus]       .stat-bar-inner{background:linear-gradient(90deg,#006064,#40c4ff)}
-[data-stat=intelligence].stat-bar-inner{background:linear-gradient(90deg,#4a148c,#e040fb)}
-[data-stat=charisma]    .stat-bar-inner{background:linear-gradient(90deg,#880e4f,#ff4081)}
-[data-stat=creativity]  .stat-bar-inner{background:linear-gradient(90deg,#e65100,#ff6d00)}
-[data-stat=initiative]  .stat-bar-inner{background:linear-gradient(90deg,#1b5e20,#00e676)}
-[data-stat=discipline]  .stat-bar-inner{background:linear-gradient(90deg,#f57f17,#ffea00)}
-[data-stat=strength]    .stat-name-row{color:#ff8a80}
-[data-stat=focus]       .stat-name-row{color:#80d8ff}
-[data-stat=intelligence].stat-name-row{color:#ea80fc}
-[data-stat=charisma]    .stat-name-row{color:#ff80ab}
-[data-stat=creativity]  .stat-name-row{color:#ffab40}
-[data-stat=initiative]  .stat-name-row{color:#69f0ae}
-[data-stat=discipline]  .stat-name-row{color:#ffff8d}
-[data-stat=agility]     .stat-bar-inner{background:linear-gradient(90deg,#00695c,#64ffda)}
-[data-stat=agility]     .stat-name-row{color:#64ffda}
-[data-stat=agility]     .task-stat-pill{color:#a7ffeb;border-color:#00695c;background:rgba(0,105,92,.2)}
-[data-stat=vitality]    .stat-bar-inner{background:linear-gradient(90deg,#ad1457,#ff80ab)}
-[data-stat=vitality]    .stat-name-row{color:#ff80ab}
-[data-stat=vitality]    .task-stat-pill{color:#ffb3c6;border-color:#ad1457;background:rgba(173,20,87,.2)}
-/* Phase 5.4: Manage Stats modal */
-.mstat-row{display:flex;align-items:center;gap:12.5px;padding:10px 7.5px;border-bottom:1.25px solid rgba(88,101,242,.15);cursor:pointer;transition:background .12s}
-.mstat-row:last-child{border-bottom:none}
-.mstat-row:hover{background:rgba(88,101,242,.08)}
-.mstat-cb{width:25px;height:25px;min-width:25px;border:3.75px solid var(--b2);background:#0a0a1a;
-  display:flex;align-items:center;justify-content:center;font-size:13.75px;flex-shrink:0;transition:all .15s}
-.mstat-cb.checked{background:var(--green);border-color:var(--green2);color:#000;box-shadow:0 0 10px var(--green)}
-.mstat-label{font-size:clamp(6.25px,1.1vw,8.75px);color:var(--white);letter-spacing:1.25px;display:flex;align-items:center;gap:10px}
-/* Phase 5.4: inactive stat styling */
-.stat-item.stat-inactive{opacity:.5}
-.inactive-badge{font-size:clamp(3.75px,.7vw,5px);color:var(--dim);letter-spacing:1.25px;border:1.25px solid var(--dim);padding:1.25px 5px;white-space:nowrap}
-
-/* ── PROJECTS ── */
-.project-card{border:3.75px solid var(--b1);background:rgba(10,10,30,.6);padding:12.5px 15px;margin-bottom:12.5px;}
-.project-card:last-child{margin-bottom:0}
-.project-name{font-size:clamp(7.5px,1.4vw,10px);color:var(--teal);margin-bottom:7.5px;word-break:break-word}
-.project-stats{display:flex;gap:15px;flex-wrap:wrap;margin-bottom:10px}
-.project-stat{font-size:clamp(5px,.9vw,7.5px);color:var(--dim)}.project-stat span{color:var(--white)}
-.project-bar-outer{height:7.5px;background:#0a0a1a;border:1.25px solid rgba(255,255,255,.1);margin-bottom:10px;overflow:hidden}
-.project-bar-inner{height:100%;background:linear-gradient(90deg,#006064,var(--teal));transition:width .5s}
-.project-actions{display:flex;gap:7.5px;align-items:center;flex-wrap:wrap}
-.hours-input{font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1vw,7.5px);
-  background:#0a0a1a;border:2.5px solid var(--b1);color:var(--white);padding:5px 7.5px;width:87.5px;outline:none;}
-.hours-input:focus{border-color:var(--teal)}
-.completed-card{border:2.5px solid rgba(88,101,242,.3);padding:10px 12.5px;margin-bottom:7.5px;
-  display:flex;align-items:center;gap:12.5px;flex-wrap:wrap;background:rgba(0,0,0,.3);}
-.completed-card:last-child{margin-bottom:0}
-.completed-name{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--dim);flex:1;word-break:break-word}
-.completed-meta{font-size:clamp(5px,.8vw,6.25px);color:rgba(120,120,180,.6)}
-.empty-state{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--dim);text-align:center;padding:25px;line-height:2.5}
-
-/* ── QUESTS ── */
-.quest-subtabs{display:flex;gap:7.5px;margin-bottom:15px;flex-wrap:wrap}
-/* Sub-tabs are chiclets too — same part, smaller. */
-.quest-subtab{
-  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:9px;letter-spacing:.1em;
-  background:var(--key-face);color:var(--key-ink);
-  border:0;border-radius:6px;padding:11px 16px;min-height:var(--hit);
-  display:inline-flex;align-items:center;justify-content:center;
-  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-  box-shadow:var(--key-bevel);
-  transition:transform 80ms,box-shadow 80ms,background 120ms,color 120ms;
-}
-.quest-subtab.active{
-  background:linear-gradient(180deg, oklch(0.88 0.13 200), oklch(0.72 0.13 200));
-  color:#08131a;
-}
-.quest-subtab:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
-.quest-section{display:none}.quest-section.active{display:block}
-.achv-card{border:2.5px solid var(--b1);background:rgba(10,10,30,.6);padding:12.5px 15px;margin-bottom:10px}
-.achv-card.completed{border-color:var(--gold);background:rgba(255,215,0,.06)}
-.achv-card:last-child{margin-bottom:0}
-.achv-header{display:flex;align-items:center;gap:10px;margin-bottom:6.25px}
-.achv-icon{font-size:17.5px;line-height:1}
-.achv-name{font-size:clamp(6.25px,1.1vw,8.75px);color:var(--teal)}
-.achv-card.completed .achv-name{color:var(--gold)}
-.achv-done-badge{font-size:clamp(5px,.8vw,6.25px);color:var(--gold);margin-left:auto}
-.achv-desc{font-size:clamp(5px,.85vw,6.25px);color:var(--dim);margin-bottom:7.5px;line-height:1.7}
-.achv-reward{font-size:clamp(5px,.8vw,6.25px);color:var(--green);margin-bottom:7.5px}
-.achv-bar-outer{height:7.5px;background:#0a0a1a;border:1.25px solid rgba(255,255,255,.1);margin-bottom:5px;overflow:hidden}
-.achv-bar-inner{height:100%;background:linear-gradient(90deg,var(--indigo),var(--teal));transition:width .5s}
-.achv-prog-txt{font-size:clamp(5px,.75vw,5.625px);color:var(--dim)}
-.cquest-card{border:3.75px solid var(--b1);background:rgba(10,10,30,.6);padding:12.5px 15px;margin-bottom:12.5px}
-.cquest-card:last-child{margin-bottom:0}
-.cquest-name{font-size:clamp(7.5px,1.4vw,10px);color:var(--teal);margin-bottom:6.25px;word-break:break-word}
-.cquest-meta{display:flex;gap:12.5px;flex-wrap:wrap;margin-bottom:7.5px}
-.cquest-stat{font-size:clamp(5px,.9vw,6.875px);color:var(--dim)}.cquest-stat span{color:var(--white)}
-.cquest-reward{font-size:clamp(5px,.85vw,6.25px);color:var(--green);margin-bottom:7.5px}
-.cquest-actions{display:flex;gap:7.5px;align-items:center;flex-wrap:wrap}
-.cquest-time-row{display:flex;align-items:center;gap:7.5px;margin-bottom:7.5px}
-.cquest-time-input{font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1vw,7.5px);
-  background:#0a0a1a;border:2.5px solid var(--b1);color:var(--white);padding:5px 7.5px;width:75px;outline:none}
-.cquest-time-input:focus{border-color:var(--teal)}
-.tut-modal-body{padding:20px;line-height:1.9}
-.tut-modal-body p{font-size:clamp(6.25px,1.1vw,8.125px);color:var(--dim);margin-bottom:12.5px}
-.tut-item{display:flex;align-items:flex-start;gap:12.5px;margin-bottom:11.25px}
-.tut-emoji{font-size:17.5px;flex-shrink:0;line-height:1.4}
-.tut-text{font-size:clamp(6.25px,1.05vw,7.5px);color:var(--dim);line-height:1.9}
 .tut-text strong{color:var(--white)}
 
-/* ── CHARACTER SHEET ── */
-#sprite-section{display:flex;flex-direction:column;align-items:center;gap:10px;padding:17.5px 12.5px}
-#sprite-frame{width:175px;height:240px;position:relative}
-#sprite-frame canvas{position:absolute;top:0;left:0;z-index:5}
-@keyframes spriteCheer{0%,100%{transform:translateY(0)}20%{transform:translateY(-7.5px) rotate(-3deg)}50%{transform:translateY(-12.5px) rotate(3deg)}80%{transform:translateY(-2.5px)}}
-#sprite-frame.cheer{animation:spriteCheer .7s ease-in-out}
-#class-title-display{font-size:clamp(7.5px,1.5vw,10px);color:var(--teal);letter-spacing:2.5px;text-shadow:0 0 10px var(--teal);text-align:center}
-#total-level-display{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--gold);letter-spacing:1.25px}
-.title-card{display:flex;align-items:center;gap:10px;padding:8.75px 12.5px;border-bottom:1.25px solid rgba(88,101,242,.2);}
-.title-card:last-child{border-bottom:none}
-.title-card.new-unlock{animation:titleGlow 2s ease-out}
-@keyframes titleGlow{0%,100%{background:transparent}30%{background:rgba(255,215,0,.15)}}
-.title-badge{font-size:clamp(6.25px,1.1vw,7.5px);padding:3.75px 10px;border:2.5px solid var(--gold);color:var(--gold);text-shadow:0 0 7.5px var(--gold);white-space:nowrap;}
-.title-stat{font-size:clamp(5px,.9vw,6.25px);color:var(--dim);margin-left:auto;white-space:nowrap}
-.milestone-row{display:flex;align-items:center;gap:7.5px;padding:8.75px 7.5px;border-bottom:1.25px solid rgba(88,101,242,.15);font-size:clamp(7.5px,1.2vw,10px);overflow:hidden}
-.milestone-row:last-child{border-bottom:none}
-.milestone-stat-name{color:var(--dim);width:75px;flex-shrink:0;font-size:clamp(7.5px,1.2vw,10px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.milestone-next{color:var(--white);flex:1;font-size:clamp(7.5px,1.2vw,10px);line-height:1.5;min-width:0;word-break:break-word}
-.milestone-pts{color:var(--gold);white-space:nowrap;font-size:clamp(7.5px,1.2vw,10px);flex-shrink:0}
-
-/* ── INVENTORY TAB ── */
+/* ── RESERVE ── */
 .gold-card{
   background:linear-gradient(135deg,#1a1200 0%,#2a1e00 100%);
   border:3.75px solid var(--gold2);
@@ -415,98 +152,8 @@ body::before{
 .budget-history-item:last-child{border-bottom:none}
 .bhi-month{color:var(--dim)}.bhi-surplus{color:var(--green)}
 
-/* WoW-style inventory grid */
-.inv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:5px;}
-@media(max-width:600px){.inv-grid{grid-template-columns:repeat(4,1fr)}}
-.inv-slot{
-  aspect-ratio:1;background:#0a0a14;border:2.5px solid #2a2a4a;
-  display:flex;align-items:center;justify-content:center;
-  font-size:clamp(25px,4vw,35px);cursor:pointer;position:relative;
-  transition:all .15s;
-}
-.inv-slot.empty{border-style:dashed;border-color:#1e1e3a;opacity:.5}
-.inv-slot.empty:hover{opacity:.8;border-color:var(--b1)}
-.inv-slot.filled{border-color:#4a4a7a;background:#0f0f2a}
-.inv-slot.filled:hover{border-color:var(--gold);box-shadow:0 0 12.5px rgba(255,215,0,.4);transform:scale(1.05)}
-@keyframes slotGlow{0%,100%{box-shadow:none}50%{box-shadow:0 0 22.5px var(--teal),inset 0 0 10px rgba(29,233,182,.3)}}
-.inv-slot.new-item{animation:slotGlow 1s ease-out}
-.inv-slot-qty{position:absolute;bottom:2.5px;right:3.75px;font-size:clamp(5px,.8vw,7.5px);color:var(--gold);text-shadow:1.25px 1.25px 0 #000}
-
-/* Item tooltip popup */
-#item-tooltip{
-  position:fixed;z-index:3000;
-  background:var(--panel-face);border:3.75px solid var(--gold);
-  box-shadow:0 0 0 1.25px #b8860b,0 0 25px rgba(255,215,0,.4),5px 5px 0 rgba(0,0,0,.6);
-  padding:15px 17.5px;min-width:200px;max-width:275px;
-  display:none;
-}
-#item-tooltip.show{display:block}
-#tt-icon{font-size:35px;text-align:center;margin-bottom:7.5px}
-#tt-name{font-size:clamp(7.5px,1.4vw,8.75px);color:var(--gold);text-align:center;margin-bottom:5px;word-break:break-word}
-#tt-bonus{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--teal);text-align:center;margin-bottom:12.5px;min-height:17.5px}
-#tt-actions{display:flex;gap:7.5px;justify-content:center}
-
-/* ── BUDGET MODAL ── */
-.budget-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:17.5px}
-.bsum-card{padding:10px;border:2.5px solid;text-align:center}
-.bsum-card.income{border-color:#1b5e20;background:rgba(27,94,32,.2)}
-.bsum-card.expense{border-color:#b71c1c;background:rgba(183,28,28,.2)}
-.bsum-card.balance{border-color:var(--gold2);background:rgba(255,170,0,.1)}
-.bsum-label{font-size:clamp(5px,.8vw,6.25px);color:var(--dim);margin-bottom:5px;letter-spacing:1.25px}
-.bsum-val{font-size:clamp(8.75px,1.6vw,11.25px)}
-.bsum-card.income .bsum-val{color:var(--green)}
-.bsum-card.expense .bsum-val{color:var(--red)}
-.bsum-card.balance .bsum-val{color:var(--gold)}
-.txn-list{max-height:275px;overflow-y:auto;margin-bottom:15px;border:1.25px solid rgba(88,101,242,.2)}
-.txn-row{display:flex;align-items:center;gap:7.5px;padding:6.25px 10px;border-bottom:1.25px solid rgba(88,101,242,.15);flex-wrap:wrap}
-.txn-row:last-child{border-bottom:none}
-.txn-row:hover{background:rgba(88,101,242,.08)}
-.txn-date{font-size:clamp(5px,.75vw,6.25px);color:var(--dim);white-space:nowrap;min-width:67.5px}
-.txn-desc{font-size:clamp(5px,.8vw,6.25px);color:var(--white);flex:1;word-break:break-word}
-.txn-amt{font-size:clamp(6.25px,.9vw,7.5px);white-space:nowrap;text-align:right;min-width:75px}
-.txn-amt.inc{color:var(--green)}.txn-amt.exp{color:var(--red)}
-.txn-acts{display:flex;gap:3.75px;flex-shrink:0}
-.type-toggle{display:flex;gap:0;margin-bottom:15px}
-.type-btn{font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1vw,7.5px);letter-spacing:1.25px;
-  flex:1;padding:7.5px;cursor:pointer;border:2.5px solid var(--b1);background:transparent;color:var(--dim);transition:all .15s;}
-.type-btn.active-income{color:var(--green);border-color:var(--green);background:rgba(0,230,118,.1)}
-.type-btn.active-expense{color:var(--red);border-color:var(--red);background:rgba(255,82,82,.1)}
-.close-month-btn{
-  width:100%;margin-top:12.5px;font-family:'Press Start 2P',monospace;
-  font-size:clamp(6.25px,1vw,7.5px);letter-spacing:1.25px;padding:10px;cursor:pointer;
-  border:3.75px solid var(--gold2);background:rgba(255,170,0,.1);color:var(--gold);transition:all .2s;
-}
-.close-month-btn:hover{background:rgba(255,215,0,.2);box-shadow:0 0 15px var(--gold)}
-
-/* ── PHASE 4: CUSTOMIZATION ── */
-.swatch-section{margin-bottom:12.5px}
-.swatch-label{font-size:clamp(5px,.9vw,6.25px);color:var(--dim);letter-spacing:1.25px;margin-bottom:6.25px}
-.swatch-row{display:flex;gap:6.25px;flex-wrap:wrap;margin-bottom:10px}
-.swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3.75px solid transparent;
-  transition:all .15s;flex-shrink:0;image-rendering:pixelated;}
-.swatch:hover{transform:scale(1.25)}
-.swatch.active{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.7)}
-.preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12.5px}
-.preset-btn{font-family:'Press Start 2P',monospace;font-size:clamp(5px,.75vw,6.25px);letter-spacing:1.25px;
-  color:var(--dim);background:transparent;border:2.5px solid rgba(88,101,242,.4);
-  padding:5px 7.5px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-.preset-btn:hover{color:var(--white);border-color:var(--b2)}
-.preset-btn.active-preset{color:var(--gold);border-color:var(--gold)}
-/* ── THEME SWITCHER ── */
-.theme-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.theme-btn{width:35px;height:35px;border-radius:50%;border:3.75px solid transparent;cursor:pointer;transition:transform .12s,border-color .12s;flex-shrink:0}
-.theme-btn:hover{transform:scale(1.15)}
-.theme-btn.active{border-color:var(--white)}
-/* ── CUSTOMIZE MODAL REDESIGN ── */
-#modal-customize .modal-box{max-height:72vh;overflow-y:hidden;display:flex;flex-direction:column}
-#modal-customize .modal-body{flex:1;overflow-y:auto;padding-right:12.5px}
-.cust-grid{display:grid;grid-template-columns:auto 1fr;gap:25px;align-items:start}
-@media(max-width:750px){.cust-grid{grid-template-columns:1fr}}
-#customize-preview-wrap{width:160px;height:240px;position:relative;flex-shrink:0;margin:0 auto}
-#customize-preview{width:160px;height:240px;position:relative}
-#customize-preview canvas{position:absolute;top:0;left:0;}
-.cust-sprite-col{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px}
-.cust-cosmetics-full{margin-top:17.5px}
+/* ── CUSTOMISE (placeholder until the Phase 9b rebuild) ── */
+.cust-note{font:13px/1.6 var(--font-body);color:rgba(233,237,242,.75);margin:4px 0 18px}
 
 /* ── PHASE 4: BACKDATE ── */
 #yesterday-reminder{
@@ -555,11 +202,6 @@ body::before{
 .tb-sad::after{border-top-color:var(--red)!important}
 .tb-critical{border-color:var(--pink)!important;color:var(--pink)!important;animation:bubbleIn .35s cubic-bezier(.34,1.56,.64,1),critPulse 1.5s ease-in-out infinite .35s}
 .tb-critical::after{border-top-color:var(--pink)!important}
-/* sprite mood tint */
-#sprite-section.mood-neutral   #sprite-frame canvas{filter:brightness(.93)}
-#sprite-section.mood-concerned #sprite-frame canvas{filter:saturate(.75) brightness(.88)}
-#sprite-section.mood-sad       #sprite-frame canvas{filter:saturate(.45) brightness(.8)}
-#sprite-section.mood-critical  #sprite-frame canvas{filter:saturate(.25) brightness(.7) sepia(.15)}
 /* mood badge */
 #mood-badge{font-size:clamp(5px,.9vw,6.25px);letter-spacing:1.25px;padding:3.75px 11.25px;border:2.5px solid;margin-top:2.5px;text-align:center;display:inline-block}
 .mbadge-happy   {color:var(--green);border-color:var(--green)}
@@ -664,77 +306,6 @@ body::before{
 .wsr-status{font-size:16.25px;margin-left:5px;flex-shrink:0}
 .wellness-section-hd{font-size:clamp(5px,.85vw,6.25px);color:var(--dim);letter-spacing:1.25px;margin:12.5px 0 6.25px;border-top:1.25px solid rgba(88,101,242,.2);padding-top:10px}
 
-/* ── PHASE 5.2: DAILY CHARACTER PANEL ── */
-#daily-char-inner{display:flex;justify-content:center;align-items:flex-start;gap:17.5px;flex-wrap:wrap;width:100%}
-#daily-sprite-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
-#daily-sprite-outer{position:relative;padding-top:47.5px}
-#daily-sprite-preview-wrap{width:80px;height:120px;overflow:hidden;position:relative}
-#daily-sprite-preview{width:160px;height:240px;position:absolute;top:0;left:0;transform:scale(.5);transform-origin:top left}
-#daily-sprite-preview canvas{position:absolute;top:0;left:0}
-#daily-thought-bubble{
-  position:absolute;top:0;left:50%;transform:translateX(-50%);
-  background:rgba(10,10,25,.96);border:2.5px solid var(--b2);
-  padding:3.75px 8.75px;white-space:nowrap;cursor:pointer;
-  font-size:clamp(5px,.78vw,6.25px);color:var(--white);letter-spacing:1.25px;
-  display:none;z-index:20;box-shadow:0 0 0 1.25px var(--b1),2.5px 2.5px 0 rgba(0,0,0,.7);
-}
-#daily-thought-bubble::after{content:'';position:absolute;bottom:-7.5px;left:50%;transform:translateX(-50%);border:3.75px solid transparent;border-top-color:var(--b2);}
-#daily-thought-bubble.tb-concerned{border-color:var(--orange2)!important;color:var(--orange2)!important}
-#daily-thought-bubble.tb-concerned::after{border-top-color:var(--orange2)!important}
-#daily-thought-bubble.tb-sad{border-color:var(--red)!important;color:var(--red)!important}
-#daily-thought-bubble.tb-sad::after{border-top-color:var(--red)!important}
-#daily-thought-bubble.tb-critical{border-color:var(--pink)!important;color:var(--pink)!important}
-#daily-thought-bubble.tb-critical::after{border-top-color:var(--pink)!important}
-.mood-neutral   #daily-sprite-preview-wrap-large canvas{filter:brightness(.93)}
-.mood-concerned #daily-sprite-preview-wrap-large canvas{filter:saturate(.75) brightness(.88)}
-.mood-sad       #daily-sprite-preview-wrap-large canvas{filter:saturate(.45) brightness(.8)}
-.mood-critical  #daily-sprite-preview-wrap-large canvas{filter:saturate(.25) brightness(.7) sepia(.15)}
-#daily-char-info{flex:1;min-width:150px;display:flex;flex-direction:column;gap:6.25px;padding-top:7.5px}
-#daily-class-title{font-size:clamp(6.25px,1.15vw,8.75px);color:var(--teal);letter-spacing:2.5px;text-shadow:0 0 7.5px var(--teal);word-break:break-word;line-height:1.8}
-#daily-cosmetics-display{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
-.daily-cosm-badge{display:flex;flex-direction:column;align-items:center;gap:2.5px;min-width:30px}
-.daily-cosm-badge .dc-icon{font-size:18.75px;line-height:1}
-.daily-cosm-badge .dc-name{font-size:clamp(3.75px,.6vw,5px);color:var(--dim);text-align:center;white-space:nowrap}
-
-/* ── PHASE 5.2: COSMETICS SYSTEM ── */
-.cosm-section-hd{font-size:clamp(7.5px,1.25vw,9.375px);color:var(--gold);letter-spacing:2.5px;
-  padding:12.5px 0 7.5px;border-top:2.5px solid rgba(255,215,0,.2);margin-top:12.5px;text-shadow:0 0 10px rgba(255,215,0,.4)}
-.cosm-progress{font-size:clamp(6.25px,1vw,7.813px);color:var(--dim);margin-bottom:10px;letter-spacing:1.25px;line-height:1.5}
-.cosm-cat-hd{font-size:clamp(6.25px,1vw,7.813px);color:var(--dim);letter-spacing:1.25px;margin:10px 0 5px}
-.cosm-grid{display:flex;gap:7.5px;flex-wrap:wrap;margin-bottom:5px}
-.cosm-card{
-  width:82.5px;min-height:97.5px;background:#0a0a14;border:2.5px solid #2a2a4a;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  gap:5px;cursor:pointer;position:relative;transition:all .15s;flex-shrink:0;padding:10px 5px 7.5px;text-align:center;
-}
-.cosm-card .cc-icon{font-size:31.25px;line-height:1}
-.cosm-card .cc-name{font-size:clamp(5px,.73vw,6.25px);color:var(--dim);line-height:1.5;word-break:break-word}
-.cosm-card .cc-lock{font-size:clamp(5px,.7vw,6.25px);color:#404060;line-height:1.5;margin-top:2.5px}
-.cosm-card .cc-lock-detail{font-size:clamp(4.375px,.65vw,5.625px);color:#404060;line-height:1.5;margin-top:1.25px}
-.cosm-card.equipped{border-color:var(--gold);background:rgba(255,215,0,.07)}
-.cosm-card.equipped::after{content:'✓';position:absolute;top:2.5px;right:3.75px;font-size:10px;color:var(--gold)}
-.cosm-card:not(.locked):not(.equipped):hover{border-color:var(--b2);background:rgba(88,101,242,.08);transform:scale(1.07)}
-.cosm-card.locked{opacity:.35;cursor:default;border-style:dashed;border-color:#1e1e3a}
-.cosm-card.locked:hover{transform:none}
-.cosm-card.rarity-rare      {border-color:#1565c0}.cosm-card.rarity-rare .cc-name{color:#4fc3f7}
-.cosm-card.rarity-epic      {border-color:#7c4dff}.cosm-card.rarity-epic .cc-name{color:#ce93d8}
-.cosm-card.rarity-legendary {border-color:#b8860b}.cosm-card.rarity-legendary .cc-name{color:var(--gold)}
-.cosm-card.equipped.rarity-legendary{box-shadow:0 0 12.5px rgba(255,215,0,.3)}
-/* Cosmetic unlock notification */
-#cosm-unlock-overlay{position:fixed;inset:0;z-index:2100;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.82);opacity:0;pointer-events:none;transition:opacity .3s;}
-#cosm-unlock-overlay.show{opacity:1;pointer-events:auto}
-#cosm-unlock-box{background:var(--panel-face);border:5px solid var(--teal);
-  box-shadow:0 0 0 2.5px #0a9c8a,0 0 0 5px #000,0 0 0 7.5px #0a9c8a,0 0 62.5px var(--teal);
-  padding:30px 40px;text-align:center;transform:scale(.8);transition:transform .35s cubic-bezier(.34,1.56,.64,1);min-width:300px;}
-#cosm-unlock-overlay.show #cosm-unlock-box{transform:scale(1)}
-#cosm-unlock-title{font-size:clamp(8.75px,1.8vw,12.5px);color:var(--teal);text-shadow:0 0 17.5px var(--teal),2.5px 2.5px 0 #000;letter-spacing:2.5px;margin-bottom:15px}
-#cosm-unlock-icon{font-size:50px;margin:7.5px 0}
-#cosm-unlock-name{font-size:clamp(7.5px,1.3vw,10px);color:var(--white);margin-bottom:7.5px}
-#cosm-unlock-hint{font-size:clamp(5px,.85vw,6.25px);color:var(--dim);margin-bottom:17.5px;letter-spacing:1.25px;line-height:2}
-/* styling comes from the action key class */
-#cosm-unlock-close:hover{background:rgba(29,233,182,.1)}
-
 /* ── SHARED BUTTONS + MODALS ── */
 /* Membrane pill: the app's general-purpose button. */
 .px-btn{
@@ -780,7 +351,6 @@ body::before{
 .modal-overlay.open .modal-box{transform:scale(1)}
 .modal-head{background:var(--b1);padding:10px 15px;display:flex;align-items:center;justify-content:space-between;
   border-bottom:3.75px solid var(--b2);font-size:clamp(7.5px,1.3vw,10px);letter-spacing:1.25px;}
-#modal-customize .modal-head{font-size:clamp(6.25px,1vw,7.5px);}
 /* The close key: a small round key on the window's label row. */
 .modal-close{
   width:22px;height:22px;border-radius:50%;flex:none;
@@ -1597,17 +1167,6 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 <!-- EMOJI PICKER -->
 <div id="emoji-picker"></div>
 
-<!-- ITEM TOOLTIP -->
-<div id="item-tooltip">
-  <div id="tt-icon">📱</div>
-  <div id="tt-name">Item</div>
-  <div id="tt-bonus"></div>
-  <div id="tt-actions">
-    <button class="px-btn sm" onclick="editItemFromTooltip()">EDIT</button>
-    <button class="px-btn sm danger" onclick="deleteItemFromTooltip()">DEL</button>
-  </div>
-</div>
-
 <!-- MODAL: BUDGET TRACKER -->
 <div class="modal-overlay" id="modal-budget">
   <div class="modal-box wide">
@@ -1655,56 +1214,6 @@ body{background:#0b0d12;background-image:none}          /* the desk */
       <div class="form-actions">
         <button class="px-btn" onclick="closeModal('modal-txn')">CANCEL</button>
         <button class="px-btn success" onclick="saveTxn()">SAVE</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: ADD/EDIT ITEM -->
-<div class="modal-overlay" id="modal-item">
-  <div class="modal-box">
-    <div class="modal-head">
-      <span id="item-modal-title">ADD ITEM</span>
-      <span class="modal-close" onclick="closeModal('modal-item')">✕</span>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="edit-item-id"/>
-      <div class="form-row">
-        <label class="form-label">ITEM NAME</label>
-        <input class="form-input" id="edit-item-name" type="text" maxlength="40" placeholder="e.g. iPad Pro"/>
-      </div>
-      <div class="form-row">
-        <label class="form-label">ICON / EMOJI</label>
-        <input class="form-input" id="edit-item-icon" type="text" maxlength="4" placeholder="📱"/>
-      </div>
-      <div class="form-row-inline">
-        <div class="form-row" style="margin-bottom:0">
-          <label class="form-label">STAT BONUS</label>
-          <select class="form-select" id="edit-item-stat">
-            <option value="none">None</option>
-            <option value="strength">Strength</option>
-            <option value="focus">Focus</option>
-            <option value="intelligence">Intelligence</option>
-            <option value="charisma">Charisma</option>
-            <option value="creativity">Creativity</option>
-            <option value="initiative">Initiative</option>
-            <option value="discipline">Discipline</option>
-            <option value="agility">Agility</option>
-            <option value="vitality">Vitality</option>
-          </select>
-        </div>
-        <div class="form-row" style="margin-bottom:0">
-          <label class="form-label">AMOUNT</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-item-bonus',-1,0,99)">−</button>
-            <input id="edit-item-bonus" type="number" min="0" max="99" value="1"/>
-            <button class="num-btn plus"  onclick="numStep('edit-item-bonus',+1,0,99)">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="closeModal('modal-item')">CANCEL</button>
-        <button class="px-btn success" onclick="saveItem()">SAVE ITEM</button>
       </div>
     </div>
   </div>
@@ -1800,57 +1309,14 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   </div>
 </div>
 
-<!-- MODAL: CUSTOMIZE CHARACTER -->
+<!-- MODAL: CUSTOMISE — a placeholder until the Phase 9b rebuild -->
 <div class="modal-overlay" id="modal-customize">
-  <div class="modal-box wide">
-    <div class="modal-head">✦ CUSTOMIZE CHARACTER<span class="modal-close" onclick="cancelCustomize()">✕</span></div>
+  <div class="modal-box">
+    <div class="modal-head">CUSTOMISE<span class="modal-close" onclick="cancelCustomize()">✕</span></div>
     <div class="modal-body">
-      <div class="cust-grid">
-        <!-- left: sprite preview -->
-        <div class="cust-sprite-col">
-          <div id="customize-preview-wrap">
-            <div id="customize-preview">
-              <canvas id="prev-base" width="128" height="192"></canvas>
-              <canvas id="prev-acc1" width="128" height="192"></canvas>
-              <canvas id="prev-acc2" width="128" height="192"></canvas>
-              <canvas id="prev-aura" width="128" height="192"></canvas>
-              <div id="prev-cosm-ac" class="cosm-layer cosm-layer-ac"></div>
-              <div id="prev-cosm-wp" class="cosm-layer cosm-layer-wp"></div>
-              <div id="prev-cosm-hw" class="cosm-layer cosm-layer-hw"></div>
-            </div>
-          </div>
-        </div>
-        <!-- right: color controls -->
-        <div>
-          <!-- theme -->
-          <div class="swatch-label" style="margin-bottom:10px">APP THEME</div>
-          <div class="theme-row" id="theme-row"></div>
-          <!-- presets -->
-          <div class="swatch-label">PRESETS</div>
-          <div class="preset-row" id="preset-row"></div>
-          <!-- hair -->
-          <div class="swatch-section">
-            <div class="swatch-label">HAIR COLOR</div>
-            <div class="swatch-row" id="swatches-hair"></div>
-          </div>
-          <!-- skin -->
-          <div class="swatch-section">
-            <div class="swatch-label">SKIN COLOR</div>
-            <div class="swatch-row" id="swatches-skin"></div>
-          </div>
-          <!-- clothing -->
-          <div class="swatch-section">
-            <div class="swatch-label">CLOTHING COLOR</div>
-            <div class="swatch-row" id="swatches-clothing"></div>
-          </div>
-        </div>
-      </div>
-      <!-- titles + cosmetics full-width below -->
-      <div id="titles-equip-section" class="cust-cosmetics-full"></div>
-      <div id="cosmetics-section" class="cust-cosmetics-full"></div>
+      <p class="cust-note">Customisation is being rebuilt. The sprite's shape, colours and backgrounds, and the shell's material, will be chosen here.</p>
       <div class="form-actions">
-        <button class="px-btn" onclick="cancelCustomize()">CANCEL</button>
-        <button class="px-btn success" onclick="saveCustomize()">APPLY & SAVE</button>
+        <button class="px-btn" onclick="cancelCustomize()">CLOSE</button>
       </div>
     </div>
   </div>
@@ -1968,14 +1434,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <input type="text" id="welcome-name-input" class="form-input" maxlength="24" placeholder="Your name..." style="width:100%;font-size:clamp(8.75px,1.4vw,11.25px);text-align:center;padding:10px"/>
       </div>
       <div class="form-hint" style="margin-bottom:15px;line-height:1.8">
-        <p style="margin-bottom:12.5px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 stats (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), level up, unlock class titles, and earn cosmetics for your pixel-art character.</p>
+        <p style="margin-bottom:12.5px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 stats (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), and keep your sprite in good spirits.</p>
         <p style="margin-bottom:12.5px"><strong>Getting started:</strong></p>
         <ul style="margin:0 0 12.5px 22.5px;padding:0">
           <li>Check off tasks on the DAILY tab to earn stat points and build streaks.</li>
           <li>Add your own custom tasks from PROJECTS / task management.</li>
-          <li>Visit the CHARACTER tab to see your sprite, class title, and total level.</li>
           <li>Your mood reflects how recently you've worked on each active stat — keep them all warm!</li>
-          <li>Unlock and equip cosmetics (hats, weapons, capes) as you level up your stats.</li>
         </ul>
         <p style="margin-bottom:0"><strong>⚠ Your data is stored only in this browser (localStorage).</strong> It is not synced or backed up anywhere. Use the EXPORT button regularly to save a backup file, and IMPORT to restore it.</p>
       </div>
@@ -2115,17 +1579,6 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   </div>
 </div>
 
-<!-- Phase 5.2: Cosmetic unlock notification overlay -->
-<div id="cosm-unlock-overlay">
-  <div id="cosm-unlock-box">
-    <div id="cosm-unlock-title">ITEM UNLOCKED!</div>
-    <div id="cosm-unlock-icon">🗡️</div>
-    <div id="cosm-unlock-name">Basic Sword</div>
-    <div id="cosm-unlock-hint">Go to CUSTOMIZE → COSMETICS to equip it!</div>
-    <div id="cosm-unlock-close" class="px-btn success" onclick="document.getElementById('cosm-unlock-overlay').classList.remove('show')">✓ AWESOME</div>
-  </div>
-</div>
-
 <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)"/>
 
 <script>
@@ -2147,33 +1600,6 @@ const STATS_DEF=[
   {key:'agility',     label:'AGI',fullLabel:'Agility',     emoji:'🤸'},
   {key:'vitality',    label:'VIT',fullLabel:'Vitality',    emoji:'❤️'},
 ];
-const CLASS_MILESTONES={
-  strength:    [{at:10,cls:'Warrior',lvl:1},{at:25,cls:'Warrior',lvl:2},{at:50,cls:'Champion',lvl:1},{at:100,cls:'Titan',lvl:1}],
-  focus:       [{at:10,cls:'Acolyte',lvl:1},{at:25,cls:'Sage',lvl:1},{at:50,cls:'Sage',lvl:2},{at:100,cls:'Master',lvl:1}],
-  intelligence:[{at:10,cls:'Scholar',lvl:1},{at:25,cls:'Sage',lvl:1},{at:50,cls:'Sage',lvl:2},{at:100,cls:'Archmage',lvl:1}],
-  charisma:    [{at:10,cls:'Bard',lvl:1},{at:25,cls:'Bard',lvl:2},{at:50,cls:'Diplomat',lvl:1},{at:100,cls:'Legend',lvl:1}],
-  creativity:  [{at:10,cls:'Artisan',lvl:1},{at:25,cls:'Artist',lvl:1},{at:50,cls:'Artist',lvl:2},{at:100,cls:'Visionary',lvl:1}],
-  initiative:  [{at:10,cls:'Leader',lvl:1},{at:25,cls:'Captain',lvl:1},{at:50,cls:'Captain',lvl:2},{at:100,cls:'Commander',lvl:1}],
-  discipline:  [{at:10,cls:'Monk',lvl:1},{at:25,cls:'Monk',lvl:2},{at:50,cls:'Ascetic',lvl:1},{at:100,cls:'Grandmaster',lvl:1}],
-  agility:     [{at:10,cls:'Rogue',lvl:1},{at:25,cls:'Rogue',lvl:2},{at:50,cls:'Scout',lvl:1},{at:100,cls:'Shadow',lvl:1}],
-  vitality:    [{at:10,cls:'Novice',lvl:1},{at:25,cls:'Cleric',lvl:1},{at:50,cls:'Cleric',lvl:2},{at:100,cls:'Saint',lvl:1}],
-};
-const COLOR_THEMES={
-  blue:  {b1:'#5865f2',b2:'#8892f8',b3:'#c0c8ff',bg:'#0d0d2e',mid:'#1a1a4e',dark:'#0f1a2e',hi1:'#2d1b69',hi2:'#1a3a6e'},
-  green: {b1:'#2ecc71',b2:'#55e890',b3:'#a8f5c8',bg:'#0a1f14',mid:'#0f2d1c',dark:'#071510',hi1:'#0d3320',hi2:'#0a2e1a'},
-  red:   {b1:'#e74c3c',b2:'#f07468',b3:'#f5aaaa',bg:'#1f0a0a',mid:'#2d0f0f',dark:'#150707',hi1:'#3d1010',hi2:'#2a0c0c'},
-  grey:  {b1:'#7f8c8d',b2:'#a5b2b3',b3:'#d0d8da',bg:'#0f0f0f',mid:'#1a1a1a',dark:'#0a0a0a',hi1:'#1f1f1f',hi2:'#181818'},
-  orange:{b1:'#e67e22',b2:'#f0a352',b3:'#f5c88a',bg:'#1a0f00',mid:'#271600',dark:'#110a00',hi1:'#331a00',hi2:'#281400'},
-  purple:{b1:'#9b59b6',b2:'#be82d5',b3:'#ddb8ee',bg:'#120a1f',mid:'#1b0f2e',dark:'#0d0615',hi1:'#28104a',hi2:'#1a0a3d'},
-};
-function applyTheme(name){
-  const t=COLOR_THEMES[name]||COLOR_THEMES.blue;
-  const r=document.documentElement.style;
-  r.setProperty('--b1',t.b1);r.setProperty('--b2',t.b2);r.setProperty('--b3',t.b3);
-  r.setProperty('--body-bg',t.bg);r.setProperty('--body-mid',t.mid);r.setProperty('--body-dark',t.dark);
-  r.setProperty('--body-hi1',t.hi1);r.setProperty('--body-hi2',t.hi2);
-  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===name));
-}
 const DEFAULT_TASKS=[
   {id:'exercise',     name:'Exercise',                                          stat:'strength',    points:1,icon:'⚔'},
   {id:'study',        name:'Study',                                             stat:'intelligence',points:1,icon:'✦'},
@@ -2183,56 +1609,6 @@ const DEFAULT_TASKS=[
   {id:'meditate',     name:'Meditate',                                         stat:'focus',       points:1,icon:'◎'},
   {id:'creative-work',name:'Creative Work (Music, Drawing etc.)',              stat:'creativity',  points:1,icon:'✿'},
   {id:'mobility',     name:'Mobility (Stretching, Yoga etc.)',                 stat:'agility',     points:1,icon:'🤸'},
-];
-const GRID_SLOTS=20;
-
-// ── Phase 5.2: Cosmetics Definitions ──
-const COSMETICS_DEF=[
-  // STRENGTH
-  {id:'basic-sword',    name:'Basic Sword',       icon:'🗡️', cat:'weapon',   stat:'strength',   cls:'Warrior',    lvl:1, rarity:'common',    requiredStat:'strength',   requiredPoints:10,  imagePath:'images/cosmetics/weapon/basic-sword.png'},
-  {id:'iron-helmet',    name:'Iron Helmet',        icon:'⛑️',  cat:'headwear', stat:'strength',   cls:'Warrior',    lvl:2, rarity:'rare',      requiredStat:'strength',   requiredPoints:25,  imagePath:'images/cosmetics/headwear/iron-helmet.png'},
-  {id:'red-cape',       name:'Red Cape',           icon:'🦸',  cat:'accessory',stat:'strength',   cls:'Champion',   lvl:1, rarity:'epic',      requiredStat:'strength',   requiredPoints:50,  imagePath:'images/cosmetics/accessory/red-cape.png'},
-  {id:'golden-armor',   name:'Golden Armor',       icon:'🥇',  cat:'outfit',   stat:'strength',   cls:'Titan',      lvl:1, rarity:'legendary', requiredStat:'strength',   requiredPoints:100, imagePath:'images/cosmetics/outfit/golden-armor.png'},
-  // FOCUS
-  {id:'focus-ring',     name:'Focus Ring',         icon:'💍',  cat:'accessory',stat:'focus',      cls:'Acolyte',    lvl:1, rarity:'common',    requiredStat:'focus',      requiredPoints:10,  imagePath:'images/cosmetics/accessory/focus-ring.png'},
-  {id:'sage-pendant',   name:'Sage Pendant',       icon:'🔮',  cat:'accessory',stat:'focus',      cls:'Sage',       lvl:1, rarity:'rare',      requiredStat:'focus',      requiredPoints:25,  imagePath:'images/cosmetics/accessory/sage-pendant.png'},
-  {id:'sage-robe',      name:'Sage Robe',          icon:'👘',  cat:'outfit',   stat:'focus',      cls:'Sage',       lvl:2, rarity:'epic',      requiredStat:'focus',      requiredPoints:50,  imagePath:'images/cosmetics/outfit/sage-robe.png'},
-  {id:'master-crown',   name:'Master Crown',       icon:'🌀',  cat:'headwear', stat:'focus',      cls:'Master',     lvl:1, rarity:'legendary', requiredStat:'focus',      requiredPoints:100, imagePath:'images/cosmetics/headwear/master-crown.png'},
-  // INTELLIGENCE
-  {id:'glasses',        name:'Glasses',            icon:'👓',  cat:'headwear', stat:'intelligence',cls:'Scholar',   lvl:1, rarity:'common',    requiredStat:'intelligence',requiredPoints:10,  imagePath:'images/cosmetics/headwear/glasses.png'},
-  {id:'wizard-hat',     name:'Wizard Hat',         icon:'🎩',  cat:'headwear', stat:'intelligence',cls:'Sage',      lvl:1, rarity:'rare',      requiredStat:'intelligence',requiredPoints:25,  imagePath:'images/cosmetics/headwear/wizard-hat.png'},
-  {id:'magic-staff',    name:'Magical Staff',      icon:'🪄',  cat:'weapon',   stat:'intelligence',cls:'Sage',      lvl:2, rarity:'epic',      requiredStat:'intelligence',requiredPoints:50,  imagePath:'images/cosmetics/weapon/magic-staff.png'},
-  {id:'glowing-robe',   name:'Glowing Robe',       icon:'✨',  cat:'outfit',   stat:'intelligence',cls:'Archmage', lvl:1, rarity:'legendary', requiredStat:'intelligence',requiredPoints:100, imagePath:'images/cosmetics/outfit/glowing-robe.png'},
-  // CHARISMA
-  {id:'feathered-cap',  name:'Feathered Cap',      icon:'🎭',  cat:'headwear', stat:'charisma',   cls:'Bard',       lvl:1, rarity:'common',    requiredStat:'charisma',   requiredPoints:10,  imagePath:'images/cosmetics/headwear/feathered-cap.png'},
-  {id:'elegant-scarf',  name:'Elegant Scarf',      icon:'🎀',  cat:'accessory',stat:'charisma',   cls:'Bard',       lvl:2, rarity:'rare',      requiredStat:'charisma',   requiredPoints:25,  imagePath:'images/cosmetics/accessory/elegant-scarf.png'},
-  {id:'formal-suit',    name:'Formal Suit',        icon:'🤵',  cat:'outfit',   stat:'charisma',   cls:'Diplomat',   lvl:1, rarity:'epic',      requiredStat:'charisma',   requiredPoints:50,  imagePath:'images/cosmetics/outfit/formal-suit.png'},
-  {id:'crown',          name:'Crown',              icon:'👑',  cat:'headwear', stat:'charisma',   cls:'Legend',     lvl:1, rarity:'legendary', requiredStat:'charisma',   requiredPoints:100, imagePath:'images/cosmetics/headwear/crown.png'},
-  // CREATIVITY
-  {id:'paintbrush',     name:'Paintbrush',         icon:'🖌️', cat:'weapon',   stat:'creativity', cls:'Artisan',    lvl:1, rarity:'common',    requiredStat:'creativity', requiredPoints:10,  imagePath:'images/cosmetics/weapon/paintbrush.png'},
-  {id:'beret',          name:'Beret',              icon:'🎨',  cat:'headwear', stat:'creativity', cls:'Artist',     lvl:1, rarity:'rare',      requiredStat:'creativity', requiredPoints:25,  imagePath:'images/cosmetics/headwear/beret.png'},
-  {id:'rainbow-scarf',  name:'Rainbow Scarf',      icon:'🌈',  cat:'accessory',stat:'creativity', cls:'Artist',     lvl:2, rarity:'epic',      requiredStat:'creativity', requiredPoints:50,  imagePath:'images/cosmetics/accessory/rainbow-scarf.png'},
-  {id:'glowing-palette',name:'Glowing Palette',    icon:'🎆',  cat:'weapon',   stat:'creativity', cls:'Visionary',  lvl:1, rarity:'legendary', requiredStat:'creativity', requiredPoints:100, imagePath:'images/cosmetics/weapon/glowing-palette.png'},
-  // INITIATIVE
-  {id:'badge',          name:'Badge',              icon:'📛',  cat:'accessory',stat:'initiative', cls:'Leader',     lvl:1, rarity:'common',    requiredStat:'initiative', requiredPoints:10,  imagePath:'images/cosmetics/accessory/badge.png'},
-  {id:'officers-hat',   name:"Officer's Hat",      icon:'🪖',  cat:'headwear', stat:'initiative', cls:'Captain',    lvl:1, rarity:'rare',      requiredStat:'initiative', requiredPoints:25,  imagePath:'images/cosmetics/headwear/officers-hat.png'},
-  {id:'commanders-cape',name:"Commander's Cape",   icon:'⚔️',  cat:'accessory',stat:'initiative', cls:'Captain',    lvl:2, rarity:'epic',      requiredStat:'initiative', requiredPoints:50,  imagePath:'images/cosmetics/accessory/commanders-cape.png'},
-  {id:'battle-standard',name:'Battle Standard',    icon:'🚩',  cat:'weapon',   stat:'initiative', cls:'Commander',  lvl:1, rarity:'legendary', requiredStat:'initiative', requiredPoints:100, imagePath:'images/cosmetics/weapon/battle-standard.png'},
-  // DISCIPLINE
-  {id:'prayer-beads',   name:'Prayer Beads',       icon:'📿',  cat:'accessory',stat:'discipline', cls:'Monk',       lvl:1, rarity:'common',    requiredStat:'discipline', requiredPoints:10,  imagePath:'images/cosmetics/accessory/prayer-beads.png'},
-  {id:'simple-robe',    name:'Simple Robe',        icon:'🥻',  cat:'outfit',   stat:'discipline', cls:'Monk',       lvl:2, rarity:'rare',      requiredStat:'discipline', requiredPoints:25,  imagePath:'images/cosmetics/outfit/simple-robe.png'},
-  {id:'med-aura',       name:'Meditation Aura',    icon:'🌟',  cat:'accessory',stat:'discipline', cls:'Ascetic',    lvl:1, rarity:'epic',      requiredStat:'discipline', requiredPoints:50,  imagePath:'images/cosmetics/accessory/med-aura.png'},
-  {id:'zen-outfit',     name:'Zen Master Outfit',  icon:'🧘',  cat:'outfit',   stat:'discipline', cls:'Grandmaster',lvl:1, rarity:'legendary', requiredStat:'discipline', requiredPoints:100, imagePath:'images/cosmetics/outfit/zen-outfit.png'},
-  // AGILITY
-  {id:'leather-vest',   name:'Leather Vest',       icon:'🥋',  cat:'outfit',   stat:'agility',    cls:'Rogue',      lvl:1, rarity:'common',    requiredStat:'agility',    requiredPoints:10,  imagePath:'images/cosmetics/outfit/leather-vest.png'},
-  {id:'daggers',        name:'Daggers',            icon:'🔪',  cat:'weapon',   stat:'agility',    cls:'Rogue',      lvl:2, rarity:'rare',      requiredStat:'agility',    requiredPoints:25,  imagePath:'images/cosmetics/weapon/daggers.png'},
-  {id:'green-hood',     name:'Green Hood',         icon:'🧢',  cat:'headwear', stat:'agility',    cls:'Scout',      lvl:1, rarity:'epic',      requiredStat:'agility',    requiredPoints:50,  imagePath:'images/cosmetics/headwear/green-hood.png'},
-  {id:'cloak-shadows',  name:'Cloak of Shadows',   icon:'🌑',  cat:'outfit',   stat:'agility',    cls:'Shadow',     lvl:1, rarity:'legendary', requiredStat:'agility',    requiredPoints:100, imagePath:'images/cosmetics/outfit/cloak-shadows.png'},
-  // VITALITY
-  {id:'white-robe',     name:'White Robe',         icon:'🥼',  cat:'outfit',   stat:'vitality',   cls:'Novice',     lvl:1, rarity:'common',    requiredStat:'vitality',   requiredPoints:10,  imagePath:'images/cosmetics/outfit/white-robe.png'},
-  {id:'holy-symbol',    name:'Holy Symbol',        icon:'☦️',  cat:'accessory',stat:'vitality',   cls:'Cleric',     lvl:1, rarity:'rare',      requiredStat:'vitality',   requiredPoints:25,  imagePath:'images/cosmetics/accessory/holy-symbol.png'},
-  {id:'staff-healing',  name:'Staff of Healing',   icon:'⚕️',  cat:'weapon',   stat:'vitality',   cls:'Cleric',     lvl:2, rarity:'epic',      requiredStat:'vitality',   requiredPoints:50,  imagePath:'images/cosmetics/weapon/staff-healing.png'},
-  {id:'divine-halo',    name:'Divine Halo',        icon:'😇',  cat:'headwear', stat:'vitality',   cls:'Saint',      lvl:1, rarity:'legendary', requiredStat:'vitality',   requiredPoints:100, imagePath:'images/cosmetics/headwear/divine-halo.png'},
 ];
 
 // ══════════════════════════════════════════
@@ -2262,16 +1638,13 @@ function load(){
     if(!d.customTasks||!d.customTasks.length)d.customTasks=JSON.parse(JSON.stringify(DEFAULT_TASKS));
     if(!d.projects)d.projects=[];
     if(!d.completedProjects)d.completedProjects=[];
-    if(!d.unlockedTitles)d.unlockedTitles=[];
     // Phase 3 fields
     if(d.gold===undefined)d.gold=0;
     if(!d.currentMonth)d.currentMonth=monthStr();
     if(!d.budgetTransactions)d.budgetTransactions=[];
     if(!d.budgetHistory)d.budgetHistory=[];
-    if(!d.inventory)d.inventory=[];
     if(!d.logbookActivities)d.logbookActivities=[];
     // Phase 4 fields
-    if(!d.characterCustomization)d.characterCustomization={hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'};
     if(!d.taskHistory)d.taskHistory={};
     // Phase 5 fields
     if(!d.statLastIncreased)d.statLastIncreased={};
@@ -2281,17 +1654,6 @@ function load(){
     initStatLastIncreased(d);
     // Phase 5.1: add createdDate to any goal that lacks it
     d.customGoals.forEach(g=>{if(!g.createdDate)g.createdDate=g.startDate||todayStr();});
-    // Phase 5.2: cosmetic fields
-    if(!d.unlockedCosmetics)d.unlockedCosmetics=[];
-    if(!d.equippedCosmetics)d.equippedCosmetics={headwear:null,accessory:null,weapon:null,outfit:null};
-    else{['headwear','accessory','weapon','outfit'].forEach(c=>{if(d.equippedCosmetics[c]===undefined)d.equippedCosmetics[c]=null;});}
-    // Retroactive: unlock cosmetics for already-unlocked titles
-    (d.unlockedTitles||[]).forEach(title=>{
-      const clsName=(title&&typeof title==='object')?title.cls:title;
-      COSMETICS_DEF.forEach(cosm=>{
-        if(cosm.cls===clsName&&!d.unlockedCosmetics.includes(cosm.id))d.unlockedCosmetics.push(cosm.id);
-      });
-    });
     // Phase 5.4: new attributes — Agility & Vitality (added without resetting existing stats)
     if(d.stats.agility===undefined){d.stats.agility=0;d.statLastIncreased.agility=todayStr();}
     if(d.stats.vitality===undefined){d.stats.vitality=0;d.statLastIncreased.vitality=todayStr();}
@@ -2305,9 +1667,6 @@ function load(){
     // Phase 5.4: active stats toggle — default all stats to active (preserves existing behavior)
     if(!d.activeStats)d.activeStats={};
     STATS_DEF.forEach(s=>{if(d.activeStats[s.key]===undefined)d.activeStats[s.key]=true;});
-    // Phase 6.2: app theme
-    if(!d.appTheme)d.appTheme='blue';
-    if(d.equippedTitle===undefined)d.equippedTitle=null;
     // Phase 5.6: Quests — migrate existing projects to customQuests
     const calcQH=logs=>Object.values(logs||{}).reduce((s,h)=>s+Number(h),0);
     if(!d.customQuests){
@@ -2354,12 +1713,11 @@ function freshData(){
   STATS_DEF.forEach(s=>stats[s.key]=0);
   DEFAULT_TASKS.forEach(t=>{streaks[t.id]={current:0,best:0};lastCompleted[t.id]=null;});
   return{characterName:'Adventurer',stats,streaks,lastCompleted,todayChecked:{},lastActiveDate:null,
-    customTasks:JSON.parse(JSON.stringify(DEFAULT_TASKS)),projects:[],completedProjects:[],unlockedTitles:[],
-    gold:0,currentMonth:monthStr(),budgetTransactions:[],budgetHistory:[],inventory:[],
-    characterCustomization:{hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'},
+    customTasks:JSON.parse(JSON.stringify(DEFAULT_TASKS)),projects:[],completedProjects:[],
+    gold:0,currentMonth:monthStr(),budgetTransactions:[],budgetHistory:[],
     taskHistory:{},statLastIncreased:{},customGoals:[],characterMood:'happy',
-    unlockedCosmetics:[],equippedCosmetics:{headwear:null,accessory:null,weapon:null,outfit:null},logbookActivities:[],
-    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),appTheme:'blue',equippedTitle:null,
+    logbookActivities:[],
+    activeStats:Object.fromEntries(STATS_DEF.map(s=>[s.key,true])),
     customQuests:[],completedQuests:[],defaultQuests:{},tutorialsViewed:{},
     lastWeekStart:getStartOfWeek(),completedGoalCount:0,statsIncreasedToday:{},
     perfectStreak:0,goalWeekStreak:0};
@@ -2874,7 +2232,7 @@ function switchTab(name){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   _devicePageChanged(name);
-  if(name==='daily'){const d=load();renderDailyCharacter(d);}
+  if(name==='daily'){const d=load();renderDailyGoalsWatch(d);}
   if(name==='inventory'){renderInventoryTab(load());}
   if(name==='quests'){const d=load();renderQuests(d);}
   // Tutorial system: show tutorial modal on first visit to each tab
@@ -2885,20 +2243,9 @@ function switchTab(name){
   }
 }
 
-// ══════════════════════════════════════════
-//  ITEM BONUSES
-// ══════════════════════════════════════════
-function getItemBonuses(data){
-  const b={};STATS_DEF.forEach(s=>b[s.key]=0);
-  (data.inventory||[]).forEach(item=>{
-    if(item.statBonus&&item.statBonus.stat!=='none'&&item.statBonus.amount>0)
-      b[item.statBonus.stat]=(b[item.statBonus.stat]||0)+Number(item.statBonus.amount);
-  });
-  return b;
-}
 function getTotalStats(data){
-  const bonus=getItemBonuses(data),total={};
-  STATS_DEF.forEach(s=>total[s.key]=(data.stats[s.key]||0)+(bonus[s.key]||0));
+  const total={};
+  STATS_DEF.forEach(s=>total[s.key]=data.stats[s.key]||0);
   return total;
 }
 
@@ -2931,8 +2278,7 @@ function _dailyDate(d){
   const mo=d.toLocaleDateString('en-GB',{month:'short'}).toUpperCase().slice(0,3);
   return wd+' '+String(d.getDate()).padStart(2,'0')+' '+mo;
 }
-// Level is the number of tiers of ten filled across every stat. The title system
-// is being retired, so nothing here depends on it.
+// Level is the number of tiers of ten filled across every stat.
 function _tierLevel(data){const tot=getTotalStats(data);return STATS_DEF.reduce((n,s)=>n+Math.floor((tot[s.key]||0)/10),0);}
 // The nearest tier still to fill, across the stats that count.
 function _nextTierGap(data){
@@ -3014,17 +2360,14 @@ function _taskRow(data,t){
 }
 
 // ══════════════════════════════════════════
-//  RENDER: STATS  (base + item bonus)
+//  RENDER: STATS
 // ══════════════════════════════════════════
 function renderStats(data){
   const wrap=document.getElementById('stats-list');wrap.innerHTML='';
-  const bonuses=getItemBonuses(data);
   const sli=data.statLastIncreased||{};
   const today=todayStr();
   STATS_DEF.forEach(s=>{
-    const base=data.stats[s.key]||0;
-    const bonus=bonuses[s.key]||0;
-    const total=base+bonus;
+    const total=data.stats[s.key]||0;
     // The bar is progress through the current tier of ten, so there is always room
     // to fill it further. Each completed tier is a pip beneath it.
     const tiers=Math.floor(total/10);
@@ -3036,7 +2379,7 @@ function renderStats(data){
     const isActive=(data.activeStats||{})[s.key]!==false;
     const div=document.createElement('div');
     div.className='rack-row stat-item'+(isActive?'':' off stat-inactive');div.setAttribute('data-stat',s.key);div.id='statitem-'+s.key;
-    div.title=s.fullLabel+(isActive?'':' — inactive, does not affect mood')+(bonus>0?` — includes +${bonus} from items`:'');
+    div.title=s.fullLabel+(isActive?'':' — inactive, does not affect mood');
     div.innerHTML=`<div class="rack-head"><span class="rack-name">${s.label}</span>${neglect}<span class="rack-val" id="statval-${s.key}">${total}</span></div>
       <div class="rack-bar"><div class="rack-fill stat-bar-inner" id="bar-${s.key}" style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>
       <div class="rack-pips" id="pips-${s.key}" style="--hue:${STAT_HUE[s.key]}" title="${tiers} tier${tiers===1?'':'s'} of ten">${pips}</div>`;
@@ -3090,38 +2433,6 @@ function buildProjectCard(proj){
   return div;
 }
 
-// ══════════════════════════════════════════
-//  RENDER: CHARACTER SHEET
-// ══════════════════════════════════════════
-function renderCharSheet(data){
-  document.getElementById('total-level-display').textContent=`TOTAL LEVEL: ${data.unlockedTitles.length}`;
-  const tlWrap=document.getElementById('titles-list');tlWrap.innerHTML='';
-  if(!data.unlockedTitles.length){tlWrap.innerHTML='<div class="empty-state">No titles yet.<br>Complete daily tasks<br>to unlock your first title!</div>';}
-  else{
-    const byKey={};
-    data.unlockedTitles.forEach(t=>{if(!byKey[t.stat])byKey[t.stat]=[];byKey[t.stat].push(t);});
-    Object.entries(byKey).forEach(([stat,titles])=>{
-      const sd=STATS_DEF.find(s=>s.key===stat);
-      titles.forEach(t=>{
-        const div=document.createElement('div');div.className='title-card'+(t.isNew?' new-unlock':'');
-        div.innerHTML=`<span style="font-size:16.25px">${sd?sd.emoji:''}</span>
-          <span class="title-badge">${t.cls} LVL ${t.lvl}</span>
-          <span class="title-stat">${sd?sd.fullLabel:stat}</span>`;
-        tlWrap.appendChild(div);
-        if(t.isNew)setTimeout(()=>{t.isNew=false;save(data);},3000);
-      });
-    });
-  }
-  const mlWrap=document.getElementById('milestones-list');mlWrap.innerHTML='';
-  STATS_DEF.forEach(s=>{
-    const val=data.stats[s.key]||0;
-    const next=(CLASS_MILESTONES[s.key]||[]).find(m=>val<m.at);
-    const div=document.createElement('div');div.className='milestone-row';
-    if(next)div.innerHTML=`<span class="milestone-stat-name">${s.emoji} ${s.label}</span><span class="milestone-next">${next.cls} Lvl ${next.lvl}</span><span class="milestone-pts">${next.at-val} pts</span>`;
-    else div.innerHTML=`<span class="milestone-stat-name">${s.emoji} ${s.label}</span><span class="milestone-next" style="color:var(--gold)">MAX CLASS</span><span class="milestone-pts">✦</span>`;
-    mlWrap.appendChild(div);
-  });
-}
 // ══════════════════════════════════════════
 //  RENDER: INVENTORY TAB
 // ══════════════════════════════════════════
@@ -3320,24 +2631,6 @@ function deleteActivity(id){
   renderLogbook();
 }
 
-function renderInventoryGrid(data){
-  const grid=document.getElementById('inv-grid');grid.innerHTML='';
-  const items=data.inventory||[];
-  for(let i=0;i<GRID_SLOTS;i++){
-    const slot=document.createElement('div');
-    if(i<items.length){
-      const item=items[i];
-      slot.className='inv-slot filled';
-      slot.textContent=item.icon||'📦';
-      slot.title=item.name;
-      slot.addEventListener('click',e=>{e.stopPropagation();showItemTooltip(item,slot);});
-    } else {
-      slot.className='inv-slot empty';
-      slot.title='Empty — click ADD ITEM';
-    }
-    grid.appendChild(slot);
-  }
-}
 
 // ══════════════════════════════════════════
 //  BUDGET MODAL
@@ -3599,73 +2892,6 @@ function swReset(){
   const st=document.getElementById('sw-status');if(st)st.textContent='';
 }
 
-//  INVENTORY ITEMS
-// ══════════════════════════════════════════
-let tooltipItemId=null;
-
-function showItemTooltip(item,slotEl){
-  tooltipItemId=item.id;
-  const tt=document.getElementById('item-tooltip');
-  document.getElementById('tt-icon').textContent=item.icon||'📦';
-  document.getElementById('tt-name').textContent=item.name;
-  const sd=item.statBonus&&item.statBonus.stat!=='none'?STATS_DEF.find(s=>s.key===item.statBonus.stat):null;
-  document.getElementById('tt-bonus').textContent=sd&&item.statBonus.amount>0?`+${item.statBonus.amount} ${sd.fullLabel}`:'';
-  const rect=slotEl.getBoundingClientRect();
-  let left=rect.right+8,top=rect.top;
-  if(left+230>window.innerWidth)left=rect.left-238;
-  if(top+160>window.innerHeight)top=window.innerHeight-170;
-  tt.style.left=Math.max(4,left)+'px';tt.style.top=Math.max(4,top)+'px';
-  tt.classList.add('show');
-}
-function hideItemTooltip(){document.getElementById('item-tooltip').classList.remove('show');tooltipItemId=null;}
-document.addEventListener('click',e=>{
-  if(!document.getElementById('item-tooltip').contains(e.target))hideItemTooltip();
-});
-
-function editItemFromTooltip(){if(tooltipItemId){openAddItem(tooltipItemId);hideItemTooltip();}}
-function deleteItemFromTooltip(){
-  if(!tooltipItemId)return;
-  if(!confirm('Delete this item? Stat bonus will be removed.'))return;
-  const data=load();
-  data.inventory=(data.inventory||[]).filter(i=>i.id!==tooltipItemId);
-  save(data);hideItemTooltip();
-  renderInventoryGrid(data);renderStats(data);
-}
-
-function openAddItem(iid){
-  const data=load();
-  const item=iid?(data.inventory||[]).find(i=>i.id===iid):null;
-  document.getElementById('item-modal-title').textContent=item?'EDIT ITEM':'ADD ITEM';
-  document.getElementById('edit-item-id').value=item?item.id:'';
-  document.getElementById('edit-item-name').value=item?item.name:'';
-  document.getElementById('edit-item-icon').value=item?item.icon:'';
-  document.getElementById('edit-item-stat').value=item&&item.statBonus?item.statBonus.stat:'none';
-  document.getElementById('edit-item-bonus').value=item&&item.statBonus?item.statBonus.amount:1;
-  openModal('modal-item');
-}
-function saveItem(){
-  const name=document.getElementById('edit-item-name').value.trim();
-  if(!name){alert('Item name required.');return;}
-  const data=load();if(!data.inventory)data.inventory=[];
-  const id=document.getElementById('edit-item-id').value;
-  const icon=document.getElementById('edit-item-icon').value.trim()||'📦';
-  const stat=document.getElementById('edit-item-stat').value;
-  const amount=parseInt(document.getElementById('edit-item-bonus').value)||0;
-  const statBonus=stat==='none'?{stat:'none',amount:0}:{stat,amount};
-  const obj={id:id||'item-'+Date.now(),name,icon,statBonus};
-  const isNew=!id;
-  if(id){const idx=data.inventory.findIndex(i=>i.id===id);if(idx!==-1)data.inventory[idx]=obj;}
-  else{if(data.inventory.length>=GRID_SLOTS){alert('Inventory full (20 items max)!');return;}data.inventory.push(obj);}
-  save(data);closeModal('modal-item');
-  renderInventoryGrid(data);renderStats(data);
-  if(isNew){
-    // animate the new slot
-    const slots=document.getElementById('inv-grid').children;
-    const idx=data.inventory.length-1;
-    if(slots[idx]){slots[idx].classList.add('new-item');setTimeout(()=>slots[idx].classList.remove('new-item'),1100);}
-  }
-}
-
 // ══════════════════════════════════════════
 //  AUTO MONTH DETECTION
 // ══════════════════════════════════════════
@@ -3683,22 +2909,6 @@ function checkMonthRollover(data){
         closeMonth();
     },800);
   }
-}
-
-// ══════════════════════════════════════════
-//  CLASS TITLE UNLOCKS
-// ══════════════════════════════════════════
-function checkTitleUnlocks(data,statKey,newVal){
-  const newTitles=[];
-  (CLASS_MILESTONES[statKey]||[]).forEach(m=>{
-    if(newVal>=m.at&&!data.unlockedTitles.find(t=>t.stat===statKey&&t.cls===m.cls&&t.lvl===m.lvl)){
-      const entry={stat:statKey,cls:m.cls,lvl:m.lvl,unlockedAt:todayStr(),isNew:true};
-      data.unlockedTitles.push(entry);newTitles.push(entry);
-      // Phase 5.2: unlock matching cosmetics
-      checkCosmeticUnlock(data,m.cls);
-    }
-  });
-  return newTitles;
 }
 
 // ══════════════════════════════════════════
@@ -3731,19 +2941,16 @@ function toggleTask(tid){
     if(data.streaks[tid].current>data.streaks[tid].best)data.streaks[tid].best=data.streaks[tid].current;
     save(data);
     spawnFloat('task-'+tid,`+${task.points} ${STATS_DEF.find(s=>s.key===task.stat).label}`);
-    flashTask(tid);playCheck();spriteCheer();
+    flashTask(tid);playCheck();
     const newVal=data.stats[task.stat];
-    const newTitles=checkTitleUnlocks(data,task.stat,newVal);
-    save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);drawSprite(getTotalStats(data),data.characterCustomization,'layer');updateMoodDisplay(data);checkAchievements(data);
-    if(newVal%10===0||newTitles.length){
-      const lines=[];
-      if(newVal%10===0)lines.push(`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}!`);
-      newTitles.forEach(t=>lines.push(`New Title: ${t.cls}`));
-      setTimeout(()=>{showLU(lines.join('\n'));playLU();},800);
+    save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);updateMoodDisplay(data);checkAchievements(data);
+    if(newVal%10===0){
+      const line=`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}!`;
+      setTimeout(()=>{showLU(line);playLU();},800);
     }
     return;
   }
-  save(data);renderStats(data);renderTasks(data);drawSprite(getTotalStats(data),data.characterCustomization,'layer');updateMoodDisplay(data);
+  save(data);renderStats(data);renderTasks(data);updateMoodDisplay(data);
 }
 
 // ══════════════════════════════════════════
@@ -3753,7 +2960,7 @@ function toggleTask(tid){
 // ── Achievement progress calculation ──
 function calcAchievementProgress(q,data){
   const state=(data.defaultQuests||{})[q.id]||{};
-  if(state.completed)return{current:q.target||COSMETICS_DEF.length,target:q.target||COSMETICS_DEF.length,pct:100};
+  if(state.completed)return{current:q.target,target:q.target,pct:100};
   const stats=getTotalStats(data);
   switch(q.type){
     case'streak':{
@@ -3785,14 +2992,6 @@ function calcAchievementProgress(q,data){
     case'allStatsMin':{
       const n=STATS_DEF.filter(s=>(stats[s.key]||0)>=q.target).length;
       return{current:n,target:STATS_DEF.length,pct:Math.min(100,n/STATS_DEF.length*100)};
-    }
-    case'cosmeticsCount':{
-      const n=(data.unlockedCosmetics||[]).length;
-      return{current:Math.min(n,q.target),target:q.target,pct:Math.min(100,n/q.target*100)};
-    }
-    case'cosmeticsAll':{
-      const n=(data.unlockedCosmetics||[]).length,t=COSMETICS_DEF.length;
-      return{current:n,target:t,pct:Math.min(100,n/t*100)};
     }
     case'goalsCompleted':{
       const n=data.completedGoalCount||0;
@@ -4227,7 +3426,6 @@ function hideLU(){document.getElementById('lu-overlay').classList.remove('show')
 // ══════════════════════════════════════════
 function flashTask(tid){const el=document.getElementById('task-'+tid);if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),700);}
 function pulseBar(key){const b=document.getElementById('bar-'+key);if(!b)return;b.classList.remove('pulse');void b.offsetWidth;b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),800);}
-function spriteCheer(){const f=document.getElementById('sprite-frame');if(!f)return;f.classList.remove('cheer');void f.offsetWidth;f.classList.add('cheer');setTimeout(()=>f.classList.remove('cheer'),750);}
 function spawnFloat(pid,txt){const el=document.getElementById(pid);if(!el)return;const r=el.getBoundingClientRect();const d=document.createElement('div');d.className='float-txt';d.textContent=txt;d.style.left=r.left+r.width*.3+'px';d.style.top=r.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1300);}
 function spawnFloatCenter(txt){const d=document.createElement('div');d.className='float-txt';d.textContent=txt;d.style.left='50%';d.style.top='40%';d.style.transform='translateX(-50%)';d.style.fontSize='16.25px';document.body.appendChild(d);setTimeout(()=>d.remove(),1500);}
 
@@ -4273,50 +3471,6 @@ window._lastFooterSync=null;
 function _updateFooterSyncTime(){window._lastFooterSync=new Date();updateFooter();}
 
 // ══════════════════════════════════════════
-//  PIXEL SPRITE  (4-layer canvas, S=4)
-// ══════════════════════════════════════════
-const S=4;
-function px(ctx,x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(x*S,y*S,w*S,h*S);}
-
-// Colour utilities
-function hexToRgb(h){return{r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)};}
-function shiftHex(h,amt){const{r,g,b}=hexToRgb(h);const c=v=>Math.max(0,Math.min(255,v+amt));return`rgb(${c(r)},${c(g)},${c(b)})`;}
-
-function drawBase(ctx,str,dis,colors){
-  const skin=(colors&&colors.skinColor)||'#f5c99a';
-  const hair=(colors&&colors.hairColor)||'#3a2a1a';
-  const cloth=(colors&&colors.clothingColor)||'#5865f2';
-  const legCol=shiftHex(cloth,-50);
-  const bootCol=shiftHex(cloth,-20);
-  const torsoHi=shiftHex(cloth,60);
-  const bodyW=str>=26?10:str>=11?9:8,bx=Math.floor((32-bodyW)/2);
-  px(ctx,11,42,4,4,bootCol);px(ctx,17,42,4,4,bootCol);
-  px(ctx,10,45,5,3,'#1a1a3a');px(ctx,16,45,5,3,'#1a1a3a');
-  px(ctx,11,36,4,7,legCol);px(ctx,17,36,4,7,legCol);
-  px(ctx,12,37,1,5,'rgba(255,255,255,.18)');px(ctx,18,37,1,5,'rgba(255,255,255,.18)');
-  px(ctx,bx,22,bodyW,14,cloth);px(ctx,bx+1,23,2,12,torsoHi);px(ctx,bx,33,bodyW,2,'#1a1a2a');
-  const armW=str>=26?3:2;
-  px(ctx,bx-armW,23,armW,11,cloth);px(ctx,bx+bodyW,23,armW,11,cloth);
-  px(ctx,bx-armW,24,1,9,'rgba(255,255,255,.15)');
-  px(ctx,bx-armW,33,armW+1,3,skin);px(ctx,bx+bodyW-1,33,armW+1,3,skin);
-  px(ctx,14,18,4,4,skin);px(ctx,11,8,10,11,skin);
-  px(ctx,13,12,2,2,'#1a1a3a');px(ctx,17,12,2,2,'#1a1a3a');
-  px(ctx,14,12,1,1,'#fff');px(ctx,18,12,1,1,'#fff');px(ctx,14,17,4,1,shiftHex(skin,-50));
-  px(ctx,10,6,12,5,hair);px(ctx,10,8,2,5,hair);px(ctx,20,8,2,5,hair);
-  px(ctx,11,11,1,2,'rgba(255,255,255,.2)');
-}
-// prefix: 'layer' for main sprite, 'prev' for customize preview
-function drawSprite(stats,colors,prefix){
-  const pfx=prefix||'layer';
-  const str=stats.strength||0,dis=stats.discipline||0;
-  [`${pfx}-base`,`${pfx}-acc1`,`${pfx}-acc2`,`${pfx}-aura`].forEach(id=>{
-    const c=document.getElementById(id);if(c)c.getContext('2d').clearRect(0,0,128,192);
-  });
-  const base=document.getElementById(`${pfx}-base`);if(!base)return;
-  drawBase(base.getContext('2d'),str,dis,colors);
-}
-
-// ══════════════════════════════════════════
 //  PHASE 4 — STREAK CALC FROM HISTORY
 // ══════════════════════════════════════════
 function isTaskDoneOn(data,tid,ds){
@@ -4344,114 +3498,10 @@ function isStreakAtRisk(data,tid){
 }
 
 // ══════════════════════════════════════════
-//  PHASE 4 — CHARACTER CUSTOMIZATION
+//  CUSTOMISE  (a placeholder until the Phase 9b rebuild)
 // ══════════════════════════════════════════
-const HAIR_COLORS=[
-  {name:'Brown', hex:'#6B4423'},{name:'Blonde',hex:'#F4D03F'},{name:'Black',hex:'#1C1C1C'},
-  {name:'Red',   hex:'#C0392B'},{name:'Grey',  hex:'#95A5A6'},{name:'Blue', hex:'#3498DB'},
-  {name:'Purple',hex:'#9B59B6'},
-];
-const SKIN_COLORS=[
-  {name:'Pale',  hex:'#FADADD'},{name:'Tan',  hex:'#D4A76A'},{name:'Brown',hex:'#8B5A2B'},
-  {name:'Dark',  hex:'#4E3620'},{name:'Green',hex:'#2ECC71'},{name:'Blue', hex:'#AED6F1'},
-];
-const CLOTH_COLORS=[
-  {name:'Blue',  hex:'#2980B9'},{name:'Red',   hex:'#E74C3C'},{name:'Green', hex:'#27AE60'},
-  {name:'Purple',hex:'#8E44AD'},{name:'Black', hex:'#2C3E50'},{name:'White', hex:'#ECF0F1'},
-  {name:'Amber', hex:'#F39C12'},
-];
-const PRESETS=[
-  {name:'CLASSIC',   hair:'#6B4423',skin:'#D4A76A',clothing:'#2980B9'},
-  {name:'DARK KNIGHT',hair:'#1C1C1C',skin:'#FADADD',clothing:'#2C3E50'},
-  {name:'RANGER',    hair:'#C0392B',skin:'#D4A76A',clothing:'#27AE60'},
-  {name:'ARCANE MAGE',hair:'#ECF0F1',skin:'#FADADD',clothing:'#8E44AD'},
-  {name:'FANTASY',   hair:'#9B59B6',skin:'#AED6F1',clothing:'#F39C12'},
-];
-
-let tempColors={hairColor:'#3a2a1a',skinColor:'#f5c99a',clothingColor:'#5865f2'};
-let origColors={};
-
-function openCustomize(){
-  const data=load();
-  origColors={...data.characterCustomization};
-  tempColors={...data.characterCustomization};
-  buildCustomizeModal();
-  refreshCustomPreview(data);
-  renderTitlesSection(data);
-  renderCosmeticsSection(data);
-  openModal('modal-customize');
-}
-
-function buildThemeButtons(){
-  const row=document.getElementById('theme-row');if(!row)return;
-  row.innerHTML='';
-  const data=load();const cur=data.appTheme||'blue';
-  Object.entries(COLOR_THEMES).forEach(([name,t])=>{
-    const b=document.createElement('button');
-    b.className='theme-btn'+(cur===name?' active':'');
-    b.title=name.charAt(0).toUpperCase()+name.slice(1);
-    b.dataset.theme=name;
-    b.style.background=t.b1;
-    b.onclick=()=>{
-      applyTheme(name);
-      const d=load();d.appTheme=name;save(d);
-    };
-    row.appendChild(b);
-  });
-}
-function buildCustomizeModal(){
-  buildThemeButtons();
-  // Presets
-  const pr=document.getElementById('preset-row');pr.innerHTML='';
-  PRESETS.forEach(pre=>{
-    const b=document.createElement('button');b.className='preset-btn';b.textContent=pre.name;
-    b.onclick=()=>{
-      tempColors={hairColor:pre.hair,skinColor:pre.skin,clothingColor:pre.clothing};
-      refreshSwatchSelections();refreshCustomPreview(load());
-    };
-    pr.appendChild(b);
-  });
-  buildSwatches('hair',  'swatches-hair',   HAIR_COLORS, 'hairColor');
-  buildSwatches('skin',  'swatches-skin',   SKIN_COLORS, 'skinColor');
-  buildSwatches('cloth', 'swatches-clothing',CLOTH_COLORS,'clothingColor');
-}
-
-function buildSwatches(type,containerId,colors,key){
-  const wrap=document.getElementById(containerId);wrap.innerHTML='';
-  colors.forEach(c=>{
-    const s=document.createElement('div');
-    s.className='swatch'+(tempColors[key]===c.hex?' active':'');
-    s.style.background=c.hex;s.title=c.name;
-    s.dataset.key=key;s.dataset.hex=c.hex;
-    s.onclick=()=>{tempColors[key]=c.hex;refreshSwatchSelections();refreshCustomPreview(load());};
-    wrap.appendChild(s);
-  });
-}
-
-function refreshSwatchSelections(){
-  document.querySelectorAll('.swatch').forEach(s=>{
-    s.classList.toggle('active',tempColors[s.dataset.key]===s.dataset.hex);
-  });
-}
-
-function refreshCustomPreview(data){
-  drawSprite(getTotalStats(data),tempColors,'prev');
-}
-
-function saveCustomize(){
-  const data=load();
-  data.characterCustomization={...tempColors};
-  save(data);
-  drawSprite(getTotalStats(data),data.characterCustomization,'layer');
-  renderDailyCharacter(data);
-  closeModal('modal-customize');
-}
-
-function cancelCustomize(){
-  const data=load();
-  drawSprite(getTotalStats(data),data.characterCustomization,'layer');
-  closeModal('modal-customize');
-}
+function openCustomize(){openModal('modal-customize');}
+function cancelCustomize(){closeModal('modal-customize');}
 
 // ══════════════════════════════════════════
 //  PHASE 5.4 — MANAGE ACTIVE STATS
@@ -4600,14 +3650,6 @@ function saveBackdate(){
     if(data.taskHistory[date]&&data.taskHistory[date][t.id]&&(!lc||date>lc))data.lastCompleted[t.id]=date;
   });
 
-  // Title unlocks for positive stat changes
-  Object.entries(statChanges).forEach(([statKey,pts])=>{
-    if(pts>0){
-      const titles=checkTitleUnlocks(data,statKey,data.stats[statKey]);
-      titles.forEach(tt=>luLines.push(`New Title: ${tt.cls}`));
-    }
-  });
-
   save(data);
   closeModal('modal-backdate');
   renderStats(data);renderTasks(data);
@@ -4686,8 +3728,6 @@ const ACHIEVEMENT_QUESTS=[
   {id:'achiever-1',    name:'Achiever I',        icon:'🎯', desc:'Complete 1 weekly goal on time',             type:'goalsCompleted', target:1,  reward:{initiative:2}},
   {id:'achiever-2',    name:'Achiever II',       icon:'🎯', desc:'Complete 5 weekly goals on time',            type:'goalsCompleted', target:5,  reward:{initiative:5}},
   {id:'consistent',    name:'Consistent',        icon:'📅', desc:'Hit a weekly goal 4 weeks in a row',         type:'goalWeekStreak', target:4,  reward:{discipline:6}},
-  {id:'fashion-icon',  name:'Fashion Icon',      icon:'👑', desc:'Unlock 10 cosmetics',                       type:'cosmeticsCount', target:10, reward:{creativity:2}},
-  {id:'completionist', name:'Completionist',     icon:'🌈', desc:'Unlock all cosmetics',                      type:'cosmeticsAll',   target:null,reward:{discipline:10}},
 ];
 
 // ── Per-tab tutorial content ──
@@ -4706,13 +3746,6 @@ const TUTORIALS={
     {e:'⏱️',t:'<strong>Log hours</strong> on projects each day and see your average work rate.'},
     {e:'✅',t:'<strong>Mark projects complete</strong> to earn stat rewards and archive them.'},
     {e:'📋',t:'<strong>Personal Goals</strong> on the right track recurring habits — they reset each week or month.'},
-  ]},
-  charsheet:{title:'🦸 CHARACTER TAB',items:[
-    {e:'🎨',t:'<strong>Customize</strong> your character\'s hair, skin, and clothing colors.'},
-    {e:'✨',t:'<strong>Unlocked Titles</strong> show class levels earned from leveling your stats.'},
-    {e:'👔',t:'<strong>Cosmetics</strong> — equip helmets, capes, and weapons unlocked via stats.'},
-    {e:'💓',t:'<strong>Wellness Report</strong> shows mood reasons and which stats need attention.'},
-    {e:'⚙',t:'<strong>Manage Stats</strong> — toggle which stats affect your character\'s mood.'},
   ]},
   inventory:{title:'🎒 TOOLS PAGE',items:[
     {e:'💰',t:'<strong>Marks</strong> are earned from monthly budget surplus when you close a budget month.'},
@@ -4850,9 +3883,6 @@ function updateMoodDisplay(data){
   const mood=calculateMood(data);
   const prevMood=data.characterMood||'happy';
   data.characterMood=mood;
-  // sprite-section class
-  const ss=document.getElementById('sprite-section');
-  if(ss){['happy','neutral','concerned','sad','critical'].forEach(m=>ss.classList.remove('mood-'+m));ss.classList.add('mood-'+mood);}
   // badge
   const badge=document.getElementById('mood-badge');
   if(badge){badge.textContent=MOOD_EMOJIS[mood]+' '+MOOD_LABELS[mood];
@@ -4883,7 +3913,7 @@ function updateMoodDisplay(data){
     if(ws)setTimeout(()=>spawnFloatCenter(`⚠ ${ws.fullLabel} neglected ${wd} days!`),200);
   }
   // update daily character panel
-  renderDailyCharacter(data);
+  renderDailyGoalsWatch(data);
 }
 
 function openWellnessReport(){
@@ -5110,39 +4140,9 @@ function saveGoal(){
 }
 
 // ══════════════════════════════════════════
-//  PHASE 5.2 — DAILY CHARACTER + COSMETICS
+//  TASK AND GOAL STATS
 // ══════════════════════════════════════════
 
-// Render the character panel on Daily tab
-function renderDailyCharacter(data){
-  const stats=getTotalStats(data);
-  // Draw the 'd-' canvas layers (full 128×192)
-  try{drawSprite(stats,data.characterCustomization,'d');}catch(e){}
-  // Class title & level
-  const titleEl=document.getElementById('daily-class-title-lg');
-  if(titleEl)titleEl.textContent=data.equippedTitle||'ADVENTURER';
-  const lvlEl=document.getElementById('daily-level-lg');
-  if(lvlEl)lvlEl.textContent='TOTAL LEVEL: '+(data.unlockedTitles||[]).length;
-  // Mood class on wrapper (for CSS filter)
-  const inner=document.getElementById('daily-char-inner');
-  if(inner){
-    ['happy','neutral','concerned','sad','critical'].forEach(m=>inner.classList.remove('mood-'+m));
-    inner.classList.add('mood-'+(data.characterMood||'happy'));
-  }
-  // Daily mood badge
-  const dmb=document.getElementById('daily-mood-badge');
-  if(dmb){
-    const mood=data.characterMood||'happy';
-    dmb.textContent=(MOOD_EMOJIS[mood]||'😊')+' '+(MOOD_LABELS[mood]||'HAPPY');
-    dmb.className='mood-badge mbadge-'+mood;
-  }
-  // Thought bubble on daily panel
-  updateDailyThoughtBubble(data);
-  // Cosmetic emoji overlays on the sprite
-  updateDailyCosmeticsDisplay(data);
-  // Goals needing attention
-  renderDailyGoalsWatch(data);
-}
 
 // ── Task Stats Modal ──
 function openTaskStats(tid){
@@ -5339,200 +4339,6 @@ function renderDailyGoalsWatch(data){
     }).join('');
 }
 
-function updateDailyThoughtBubble(data){
-  const tb=document.getElementById('daily-thought-bubble');
-  if(!tb)return;
-  const mood=data.characterMood||'happy';
-  if(mood==='happy'){tb.style.display='none';return;}
-  tb.style.display='block';
-  ['tb-neutral','tb-concerned','tb-sad','tb-critical'].forEach(c=>tb.classList.remove(c));
-  if(mood!=='neutral')tb.classList.add('tb-'+mood);
-  const sli=data.statLastIncreased||{};const today=todayStr();
-  const active=data.activeStats||{};
-  let worstStat=null,worstDays=0;
-  STATS_DEF.forEach(s=>{if(active[s.key]===false)return;const d=daysBetween(sli[s.key],today);if(d>=7&&d>worstDays){worstDays=d;worstStat=s;}});
-  const failGoal=(data.customGoals||[]).find(g=>g.status==='failing'&&!isGoalInGracePeriod(g));
-  const riskGoal=!failGoal&&(data.customGoals||[]).find(g=>g.status==='atRisk'&&!isGoalInGracePeriod(g));
-  if(worstStat)tb.textContent=`${STAT_EMOJI_MAP[worstStat.key]||worstStat.emoji} ${worstStat.fullLabel}: ${worstDays}d ago`;
-  else if(failGoal)tb.textContent=`🎯 ${goalDescription(failGoal,data)} — FAILING`;
-  else if(riskGoal)tb.textContent=`🎯 ${goalDescription(riskGoal,data)} — AT RISK`;
-}
-
-// Update the headwear/weapon/accessory overlay spans for a given sprite prefix ('d' or 'layer')
-function renderCosmeticOverlays(data,prefix){
-  const eq=data.equippedCosmetics||{};
-  [{cat:'headwear',slot:'hw'},{cat:'weapon',slot:'wp'},{cat:'accessory',slot:'ac'}]
-  .forEach(({cat,slot})=>{
-    const el=document.getElementById(prefix+'-cosm-'+slot);if(!el)return;
-    const id=eq[cat];
-    if(!id){el.style.display='none';el.innerHTML='';return;}
-    const cosm=COSMETICS_DEF.find(c=>c.id===id);
-    if(!cosm){el.style.display='none';return;}
-    el.innerHTML='';el.style.display='block';
-    if(cosm.imagePath){
-      const img=document.createElement('img');
-      img.src=cosm.imagePath;img.alt=cosm.name;
-      img.onerror=()=>{img.remove();_cosmeticEmojiSpan(el,cosm,slot);};
-      el.appendChild(img);
-    } else {
-      _cosmeticEmojiSpan(el,cosm,slot);
-    }
-  });
-}
-function _cosmeticEmojiSpan(el,cosm,slot){
-  const s=document.createElement('span');
-  s.textContent=cosm.icon;s.className='cosm-emoji cosm-emoji-'+slot;
-  el.appendChild(s);
-}
-
-// Render the character sprite (with cosmetic overlays) for both Daily and Character tabs
-function renderCharacterWithCosmetics(data){
-  const stats=getTotalStats(data);
-  try{drawSprite(stats,data.characterCustomization,'d');}catch(e){}
-  try{drawSprite(stats,data.characterCustomization,'layer');}catch(e){}
-  renderCosmeticOverlays(data,'d');
-  renderCosmeticOverlays(data,'layer');
-}
-
-function updateDailyCosmeticsDisplay(data){
-  renderCosmeticOverlays(data,'d');
-  renderCosmeticOverlays(data,'layer');
-  // Cosmetics display bar
-  const disp=document.getElementById('daily-cosmetics-display');
-  if(!disp)return;
-  const eq=data.equippedCosmetics||{};
-  const equipped=COSMETICS_DEF.filter(c=>eq[c.cat]===c.id);
-  if(!equipped.length){disp.innerHTML='<span style="font-size:clamp(3.75px,.65vw,5px);color:#404060;letter-spacing:1.25px">NO COSMETICS EQUIPPED</span>';return;}
-  disp.innerHTML=equipped.map(c=>`<div class="daily-cosm-badge"><span class="dc-icon">${c.icon}</span><span class="dc-name">${c.name}</span></div>`).join('');
-}
-
-// Check if a class title just earned unlocks new cosmetics; show notification for each
-function checkCosmeticUnlock(data,clsName){
-  if(!data.unlockedCosmetics)data.unlockedCosmetics=[];
-  const toShow=[];
-  COSMETICS_DEF.forEach(cosm=>{
-    if(cosm.cls===clsName&&!data.unlockedCosmetics.includes(cosm.id)){
-      data.unlockedCosmetics.push(cosm.id);
-      toShow.push(cosm);
-    }
-  });
-  if(toShow.length){
-    // Show notifications sequentially
-    let delay=800;
-    toShow.forEach(cosm=>{
-      setTimeout(()=>showCosmeticUnlock(cosm),delay);
-      delay+=3200;
-    });
-  }
-}
-
-function showCosmeticUnlock(cosm){
-  const ov=document.getElementById('cosm-unlock-overlay');
-  const icon=document.getElementById('cosm-unlock-icon');
-  const name=document.getElementById('cosm-unlock-name');
-  const hint=document.getElementById('cosm-unlock-hint');
-  if(!ov)return;
-  if(icon)icon.textContent=cosm.icon;
-  if(name)name.textContent=cosm.name;
-  if(hint)hint.textContent=`${cosm.rarity.toUpperCase()} ${cosm.cat.toUpperCase()} · Go to CUSTOMIZE → COSMETICS to equip!`;
-  ov.classList.add('show');
-  // Auto-dismiss after 6s
-  setTimeout(()=>ov.classList.remove('show'),6000);
-}
-
-// Equip or unequip a cosmetic item
-function equipCosmetic(id){
-  const data=load();
-  if(!data.equippedCosmetics)data.equippedCosmetics={headwear:null,accessory:null,weapon:null,outfit:null};
-  const cosm=COSMETICS_DEF.find(c=>c.id===id);
-  if(!cosm)return;
-  if(data.equippedCosmetics[cosm.cat]===id){
-    data.equippedCosmetics[cosm.cat]=null; // unequip
-  }else{
-    data.equippedCosmetics[cosm.cat]=id;   // equip (replaces any in that slot)
-  }
-  save(data);
-  renderCosmeticsSection(data);
-  renderDailyCharacter(data);
-  try{drawSprite(getTotalStats(data),data.characterCustomization,'layer');}catch(e){}
-  renderCosmeticOverlays(data,'layer');
-}
-
-// Render the cosmetics section inside the customize modal
-// Phase 5.4: clearer unlock requirement text — shows attribute name + points needed
-function getCosmeticUnlockText(cosmetic,data){
-  const statDef=STATS_DEF.find(s=>s.key===cosmetic.requiredStat);
-  const statName=statDef?statDef.fullLabel:(cosmetic.requiredStat||'');
-  const stats=getTotalStats(data);
-  const current=stats[cosmetic.requiredStat]||0;
-  const required=cosmetic.requiredPoints||0;
-  if(current>=required)return'✅ Unlocked!';
-  const needed=required-current;
-  return`🔒 Unlock: ${statName} → ${required} pts (${needed} more)`;
-}
-function renderCosmeticsSection(data){
-  const container=document.getElementById('cosmetics-section');
-  if(!container)return;
-  const unlocked=data.unlockedCosmetics||[];
-  const equipped=data.equippedCosmetics||{};
-  const total=COSMETICS_DEF.length;
-  container.innerHTML='';
-  const hd=document.createElement('div');hd.className='cosm-section-hd';hd.textContent='✦ COSMETICS';container.appendChild(hd);
-  const prog=document.createElement('div');prog.className='cosm-progress';
-  prog.textContent=`${unlocked.length} / ${total} UNLOCKED · Earn class titles to unlock more!`;container.appendChild(prog);
-  const cats=['headwear','accessory','weapon','outfit'];
-  const catLabels={headwear:'🪖 HEADWEAR',accessory:'💍 ACCESSORY',weapon:'⚔️ WEAPON',outfit:'👘 OUTFIT'};
-  cats.forEach(cat=>{
-    const catItems=COSMETICS_DEF.filter(c=>c.cat===cat);
-    const catHd=document.createElement('div');catHd.className='cosm-cat-hd';catHd.textContent=catLabels[cat];container.appendChild(catHd);
-    const grid=document.createElement('div');grid.className='cosm-grid';
-    catItems.forEach(cosm=>{
-      const isUnlocked=unlocked.includes(cosm.id);
-      const isEquipped=equipped[cosm.cat]===cosm.id;
-      const card=document.createElement('div');
-      card.className=['cosm-card','rarity-'+cosm.rarity,isEquipped?'equipped':'',isUnlocked?'':'locked'].filter(Boolean).join(' ');
-      const unlockText=getCosmeticUnlockText(cosm,data);
-      const statDef=STATS_DEF.find(s=>s.key===cosm.requiredStat);
-      const lockDetail=isUnlocked?'':`<span class="cc-lock">🔒 Locked</span><span class="cc-lock-detail">${(statDef?statDef.fullLabel:'')} → ${cosm.requiredPoints} pts<br>(${Math.max(0,(cosm.requiredPoints||0)-(getTotalStats(data)[cosm.requiredStat]||0))} more)</span>`;
-      card.innerHTML=`<span class="cc-icon">${cosm.icon}</span><span class="cc-name">${cosm.name}</span>`+lockDetail;
-      card.title=isUnlocked?`${cosm.name} · ${cosm.rarity} ${cosm.cat}\nClick to ${isEquipped?'unequip':'equip'}`:unlockText;
-      if(isUnlocked)card.onclick=()=>equipCosmetic(cosm.id);
-      grid.appendChild(card);
-    });
-    container.appendChild(grid);
-  });
-}
-
-function equipTitle(cls){
-  const data=load();
-  data.equippedTitle=(data.equippedTitle===cls)?null:cls;
-  save(data);
-  renderTitlesSection(data);
-  renderDailyCharacter(data);
-}
-
-function renderTitlesSection(data){
-  const container=document.getElementById('titles-equip-section');
-  if(!container)return;
-  const unlocked=data.unlockedTitles||[];
-  const equipped=data.equippedTitle;
-  // deduplicate by cls name
-  const seen=new Set();const unique=[];
-  unlocked.forEach(t=>{if(!seen.has(t.cls)){seen.add(t.cls);unique.push(t);}});
-  container.innerHTML='';
-  const hd=document.createElement('div');hd.className='cosm-section-hd';hd.textContent='✦ TITLES';container.appendChild(hd);
-  if(!unique.length){
-    const em=document.createElement('div');em.className='empty-state';em.style.padding='10px 0';
-    em.textContent='No titles unlocked yet. Complete tasks to earn titles!';
-    container.appendChild(em);return;
-  }
-  unique.forEach(t=>{
-    const row=document.createElement('div');row.className='cosm-row'+(equipped===t.cls?' equipped':'');
-    const isEq=equipped===t.cls;
-    row.innerHTML=`<span class="cosm-icon">★</span><span class="cosm-name">${t.cls}</span><button class="px-btn sm${isEq?' success':''}" onclick="equipTitle('${t.cls}')">${isEq?'EQUIPPED':'EQUIP'}</button>`;
-    container.appendChild(row);
-  });
-}
 
 // ══════════════════════════════════════════
 //  INIT
@@ -6030,7 +4836,6 @@ function init(){
   if(sp==='0'){soundOn=false;const b=document.getElementById('sound-btn');b.textContent='✕';b.classList.add('muted');}
 
   const data=load();
-  applyTheme(data.appTheme||'blue');
   initShell();
   initDevice();
   setInterval(updateDailyClock, 20000);
@@ -6049,7 +4854,7 @@ function init(){
   renderQuests(data);
   updateFooter();
   updateYesterdayReminder(data);
-  updateMoodDisplay(data); // also calls renderDailyCharacter
+  updateMoodDisplay(data); // also renders the goals to watch
   renderGoals(data);
 
   // Daily snapshot. When signed in, it is taken after the first sync instead,
@@ -6492,7 +5297,7 @@ function _syncStop(){
 function _syncRerender(){
   try{
     const d=load();checkNewDay(d);
-    renderTasks(d);renderStats(d);renderDailyCharacter(d);updateFooter();renderGoals(d);
+    renderTasks(d);renderStats(d);renderDailyGoalsWatch(d);updateFooter();renderGoals(d);
     if(document.getElementById('tab-quests').classList.contains('active'))renderQuests(d);
     if(document.getElementById('tab-inventory').classList.contains('active'))renderInventoryTab(d);
     const ni=document.getElementById('char-name');
