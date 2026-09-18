@@ -26,9 +26,9 @@ phase is accepted against it:
 - **The sprite covers its window.** It takes the next whole pixel scale up and the
   window crops the few spare pixels at its edges, so pixels stay exactly square and
   the grid still reaches every edge. The reference stretched its canvas instead.
-- **Points, not XP.** The reference says  and .
-  The app has no XP, so these read  and ,
-  and  is the existing total level, the number of titles earned.
+- **Points, not XP.** The reference says `+120 XP TODAY` and `NEXT LEVEL IN 380 XP`.
+  The app has no XP, so these read `+N POINTS TODAY` and `NEXT TITLE IN N POINTS`,
+  and `LV` is the existing total level, the number of titles earned.
 - **Stat bars show the value**, clamped to 4–100%, as in the reference. The old
   tier pips are gone; a stat over 100 shows a full bar.
 - **Homes for controls the reference does not draw:** LOG PAST, MANAGE TASKS and
