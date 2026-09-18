@@ -221,6 +221,44 @@ recorded.
   moods are only ever computed. Wellness now names the sprite's mood and its reason.
   The old badge and thought-bubble code, which had nothing left to draw on, is gone.
 
+## Phase 9b — the Wellness and Customise windows
+
+Built against turns 6e and 6f. On desktop both are popup shell units; on a phone
+they are full-screen takeovers inside the same shell (✕ in the label row, plus
+BACK TO DAILY or DONE on the shell below).
+- **Wellness answers "why is the sprite like this?"** It opens with the sprite
+  itself, its mood badge (coloured by mood here), and one sentence ("Six things
+  are slipping. None is lost."). Then **WHAT IS PULLING IT DOWN**, one card per
+  real cause, with colour-keyed bars:
+  - goals at risk (orange) or failing (red);
+  - task runs of 3+ days broken yesterday (red);
+  - nothing logged for 3+ days (lilac);
+  - the longest-neglected stat, at a week or more (lilac).
+
+  Goal and task cards carry OPEN (on the phone the card itself is the link),
+  which jumps to that goal or task and briefly rings it. **WHAT WOULD HELP TODAY**
+  names up to three of the smallest actions that would move the mood, never
+  scolding. When nothing is pulling it down, the same space lists **WHAT IS
+  HOLDING IT UP** instead.
+- **The stat rack lives in Wellness** (6d): the right-hand column on desktop, the
+  tail of the scroll on a phone, with MANAGE beneath it. On a phone Daily no longer
+  shows the rack, so it stays sprite, mood and tasks. Desktop Daily keeps its
+  third-column copy.
+- **Customise:** a live preview (4:3 on desktop, 16:9 on a phone) and four trays.
+  - **CENTRE:** silhouette as three live tiles, four iris colours, and five WORN
+    ITEMS slots marked NEEDS REAL ART.
+  - **BACKGROUND:** the four screens the renderer already draws (Cyber grid, Void,
+    Night sky, Dusk stripe), plus scene slots that need art.
+  - **FOREGROUND:** glass and scanlines, or clear, plus effect slots that need art.
+  - **SHELL:** every material. The ones not yet earned are shown locked, and
+    tapping one names the award that unlocks it.
+
+  Every choice applies at once, to the preview and to the real sprite and shell.
+  **Choices last until the page is reloaded**; Phase 10 saves them.
+- Fixed on the way: the collapsed strip's side badge, waiting off to the right,
+  could make the phone's screen a little wider than itself once mood names grew
+  longer. The dock now clips it.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.

@@ -153,7 +153,7 @@ body::before{
 .bhi-month{color:var(--dim)}.bhi-surplus{color:var(--green)}
 
 /* ── CUSTOMISE (placeholder until the Phase 9b rebuild) ── */
-.cust-note{font:13px/1.6 var(--font-body);color:rgba(233,237,242,.75);margin:4px 0 18px}
+
 
 /* ── PHASE 4: BACKDATE ── */
 #yesterday-reminder{
@@ -789,6 +789,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   /* the sprite dock: sticky, darkening into a strip as it collapses */
   .sprite-dock{
     position:sticky;top:0;z-index:5;padding:0 10px 10px;
+    overflow:hidden;   /* the strip's side badge waits off to the right until it's needed */
     background:rgba(11,15,21,var(--p,0));
     box-shadow:inset 0 -1px 0 rgba(255,255,255,calc(.1 * var(--p,0))), 0 4px 10px rgba(0,0,0,calc(.45 * var(--p,0)));
   }
@@ -1311,6 +1312,106 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   .rec-stats{text-align:left}
   .rec-chart{height:170px;gap:5px}
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   WELLNESS AND CUSTOMISE (Phase 9b) — turns 6e and 6f
+   ══════════════════════════════════════════════════════════════════════════ */
+.takeover-keys{display:none}
+/* Wellness */
+.wl-screen{display:grid;grid-template-columns:minmax(0,1fr) 224px;gap:22px;padding:16px;align-items:start}
+.wl-main{min-width:0}
+.wl-verdict{display:flex;gap:13px;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.wl-tile{position:relative;flex:none;width:120px;height:66px;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#0a1016}
+.wl-tile canvas{position:absolute;display:block;image-rendering:pixelated}
+.wl-badge{display:inline-block;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.12em;padding:3px 7px;border-radius:2px;color:#08131a;background:var(--mc,oklch(0.86 0.14 200))}
+.wl-sentence{margin-top:8px;font:600 16px/1.35 'Space Grotesk',sans-serif;color:#e9edf2}
+.wl-h{margin:14px 0 9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.wl-cards{display:flex;flex-direction:column;gap:8px}
+.wl-card{
+  position:relative;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-radius:7px;text-align:left;width:100%;box-sizing:border-box;
+  background:rgba(255,255,255,.05);border:1px solid color-mix(in oklch, var(--sev) 30%, transparent);color:inherit;
+}
+.wl-card::before{content:'';position:absolute;left:8px;top:11px;bottom:11px;width:3px;border-radius:2px;background:var(--sev)}
+.wl-card.go{cursor:pointer}
+.wl-card>div{flex:1;min-width:0;padding-left:4px}
+.wl-title{font:500 13px/1.35 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.wl-detail{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.wl-open{flex:none;padding:8px 11px;min-height:30px;border-radius:5px;border:1px solid rgba(255,255,255,.16);background:none;color:rgba(233,237,242,.75);font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.08em;cursor:pointer}
+.wl-help{margin-top:16px;padding:13px;border-radius:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.wl-help .wl-h{margin:0 0 7px}
+.wl-help p{margin:0;font:13px/1.55 'Space Grotesk',sans-serif;color:rgba(233,237,242,.8)}
+.wl-rack .wl-h{margin:0 0 10px}
+.wl-rack .rack-row{margin-bottom:9px}
+.wl-rack-foot{margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;gap:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4)}
+.wl-rack-foot .sbtn{padding:7px 10px;min-height:26px}
+.gcard.jump,.task-row.jump{animation:jumpRing 1.6s ease-out}
+@keyframes jumpRing{0%,40%{box-shadow:0 0 0 2px oklch(0.86 0.14 200)}100%{box-shadow:0 0 0 2px transparent}}
+
+/* Customise */
+.cu-screen{display:grid;grid-template-columns:212px minmax(0,1fr);gap:18px;padding:16px;align-items:start}
+.cu-preview{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:#0a1016}
+.cu-preview canvas,.cu-win canvas{position:absolute;display:block;image-rendering:pixelated}
+.cu-preview.clear .sprite-glass,.cu-win.clear .sprite-glass,#sprite-window.clear .sprite-glass{display:none}
+.cu-cap{display:none;margin-top:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.cu-rows{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.cu-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:11px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.cu-row.on{border-color:oklch(0.80 0.14 200 / .5)}
+.cu-row span{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.45)}
+.cu-row b{font:500 13px 'Space Grotesk',sans-serif;color:#e9edf2;text-align:right}
+.cu-trays{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cu-trays .short{display:none}
+.cu-tray{display:none}
+.cu-tray.on{display:block}
+.cu-tray .fld-label{margin:16px 0 9px}
+.cu-tray .fld-label:first-child{margin-top:0}
+.cu-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.cu-tiles.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.cu-tile{padding:0;border-radius:6px;overflow:hidden;cursor:pointer;background:#0a1016;border:1px solid rgba(255,255,255,.1);color:inherit}
+.cu-tile.on{border:2px solid oklch(0.86 0.14 200)}
+.cu-win{position:relative;aspect-ratio:4/3;overflow:hidden}
+.cu-tile .cap{display:block;padding:8px 0;text-align:center;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.12em;color:rgba(233,237,242,.6);background:#12161d}
+.cu-tile.on .cap{background:oklch(0.86 0.14 200);color:#06131a}
+.cu-swatches{display:flex;gap:10px;flex-wrap:wrap}
+.cu-sw{position:relative;width:34px;height:34px;border-radius:8px;border:0;cursor:pointer;padding:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.cu-sw.on{box-shadow:0 0 0 2px #0d1016,0 0 0 4px #f2f6fa}
+#cu-shells .cu-sw.on{box-shadow:0 0 0 2px #0d1016,0 0 0 4px oklch(0.86 0.14 200)}
+.cu-sw.locked{opacity:.45;cursor:help}
+.cu-sw.locked::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M3 6V4a3 3 0 0 1 6 0v2' fill='none' stroke='%23e9edf2' stroke-width='1.6'/%3E%3Crect x='1.5' y='6' width='9' height='7' rx='1.2' fill='%23e9edf2'/%3E%3C/svg%3E") center/11px 13px no-repeat}
+.cu-note{margin-top:12px;min-height:14px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5)}
+.cu-art{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.cu-art div{
+  aspect-ratio:1;display:grid;place-items:center;border-radius:6px;border:1px dashed rgba(255,255,255,.2);
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 5px,transparent 5px 10px);
+  font:8px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.35);
+}
+
+/* between the phone and a wide desk, one column */
+@media(max-width:860px) and (min-width:601px){
+  .wl-screen,.cu-screen{grid-template-columns:minmax(0,1fr)}
+}
+/* on a phone both are full-screen takeovers in the same shell */
+@media(max-width:600px){
+  .modal-overlay.takeover{padding:16px;align-items:stretch}
+  .takeover .pop-box{width:100%;height:calc(100vh - 32px);max-height:none;border-radius:26px 26px 44px 26px}
+  @supports(height:100dvh){.takeover .pop-box{height:calc(100dvh - 32px)}}
+  .takeover .pop-box>.bezel{flex:1 1 auto}
+  .takeover-keys{display:flex}
+  .takeover-keys .action-key{flex:1;min-height:44px;padding:15px 0;border-radius:24px;font-size:11px;letter-spacing:.16em}
+  .wl-screen,.cu-screen{grid-template-columns:minmax(0,1fr);padding:14px 13px;gap:16px;align-content:start}
+  .wl-tile{width:118px;height:64px}
+  .wl-sentence{font-size:14px;font-weight:500}
+  .wl-open{display:none}
+  .cu-preview{aspect-ratio:16/9}
+  .cu-cap{display:block}
+  .cu-rows{display:none}
+  .cu-trays{display:grid;grid-template-columns:repeat(4,1fr)}
+  .cu-trays .chip{padding:10px 0}
+  .cu-trays .full{display:none}.cu-trays .short{display:inline}
+  .cu-art{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cu-tiles.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Stats live in Wellness on the phone; Daily stays sprite, mood, tasks (6d) */
+  .unit-stats{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -1775,15 +1876,50 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: CUSTOMISE — a placeholder until the Phase 9b rebuild -->
-<div class="modal-overlay" id="modal-customize">
-  <div class="modal-box">
-    <div class="modal-head">CUSTOMISE<span class="modal-close" onclick="cancelCustomize()">✕</span></div>
-    <div class="modal-body">
-      <p class="cust-note">Customisation is being rebuilt. The sprite's shape, colours and backgrounds, and the shell's material, will be chosen here.</p>
-      <div class="form-actions">
-        <button class="px-btn" onclick="cancelCustomize()">CLOSE</button>
+<div class="modal-overlay pop takeover" id="modal-customize" style="--pop-w:818px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="cu-title">CUSTOMISE</span><button class="modal-close" onclick="cancelCustomize()" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen cu-screen">
+      <div class="cu-left">
+        <div class="cu-preview" id="cu-preview"><canvas id="cu-canvas"></canvas><div class="sprite-glass" id="cu-glass"></div></div>
+        <div class="cu-cap">LIVE PREVIEW</div>
+        <div class="cu-rows">
+          <div class="cu-row" data-tray="back"><span>BACK</span><b id="cu-sel-back"></b></div>
+          <div class="cu-row" data-tray="centre"><span>CENTRE</span><b id="cu-sel-centre"></b></div>
+          <div class="cu-row" data-tray="front"><span>FRONT</span><b id="cu-sel-front"></b></div>
+        </div>
       </div>
-    </div>
+      <div class="cu-right">
+        <div class="cu-trays" role="tablist">
+          <button class="chip on" data-tray="centre" onclick="cuTray('centre')"><span class="full">CENTRE</span><span class="short">CENTRE</span></button>
+          <button class="chip" data-tray="back" onclick="cuTray('back')"><span class="full">BACKGROUND</span><span class="short">BACK</span></button>
+          <button class="chip" data-tray="front" onclick="cuTray('front')"><span class="full">FOREGROUND</span><span class="short">FRONT</span></button>
+          <button class="chip" data-tray="shell" onclick="cuTray('shell')"><span class="full">SHELL</span><span class="short">SHELL</span></button>
+        </div>
+        <div class="cu-tray on" data-tray="centre">
+          <div class="fld-label">SILHOUETTE</div><div class="cu-tiles" id="cu-shapes"></div>
+          <div class="fld-label">IRIS</div><div class="cu-swatches" id="cu-iris"></div>
+          <div class="fld-label">WORN ITEMS — NEEDS REAL ART</div>
+          <div class="cu-art"><div>HAT</div><div>EYES</div><div>FACE</div><div>HANDS</div><div>SHOES</div></div>
+        </div>
+        <div class="cu-tray" data-tray="back">
+          <div class="fld-label">SCREEN</div><div class="cu-tiles four" id="cu-backs"></div>
+          <div class="fld-label">SCENES — NEEDS REAL ART</div>
+          <div class="cu-art"><div>SCENE</div><div>SCENE</div><div>SCENE</div></div>
+        </div>
+        <div class="cu-tray" data-tray="front">
+          <div class="fld-label">GLASS</div><div class="cu-tiles" id="cu-fronts"></div>
+          <div class="fld-label">EFFECTS — NEEDS REAL ART</div>
+          <div class="cu-art"><div>CRACKS</div><div>PAINT</div><div>STICKERS</div></div>
+        </div>
+        <div class="cu-tray" data-tray="shell">
+          <div class="fld-label" id="cu-shell-label">SHELL</div><div class="cu-swatches" id="cu-shells"></div>
+          <div class="cu-note" id="cu-shell-note"></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="pop-keys takeover-keys"><button class="action-key" onclick="cancelCustomize()">DONE</button></div>
   </div>
 </div>
 
@@ -1930,10 +2066,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: WELLNESS REPORT -->
-<div class="modal-overlay" id="modal-wellness">
-  <div class="modal-box">
-    <div class="modal-head">📊 WELLNESS REPORT<span class="modal-close" onclick="closeModal('modal-wellness')">✕</span></div>
-    <div class="modal-body" id="wellness-body"></div>
+<div class="modal-overlay pop takeover" id="modal-wellness" style="--pop-w:818px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>WELLNESS</span><button class="modal-close" onclick="closeModal('modal-wellness')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen wl-screen" id="wellness-body"></div></div>
+    <div class="pop-keys takeover-keys"><button class="action-key" onclick="closeModal('modal-wellness')">BACK TO DAILY</button></div>
   </div>
 </div>
 
@@ -2742,8 +2880,14 @@ function _taskRow(data,t){
 // ══════════════════════════════════════════
 function renderStats(data){
   const wrap=document.getElementById('stats-list');wrap.innerHTML='';
+  _rackRows(data,true).forEach(r=>wrap.appendChild(r));
+  renderDailySummary(data);
+}
+// One row per stat. Daily's rack carries the ids animations look for; copies don't.
+function _rackRows(data,withIds){
   const sli=data.statLastIncreased||{};
   const today=todayStr();
+  const rows=[];
   STATS_DEF.forEach(s=>{
     const total=data.stats[s.key]||0;
     // The bar is progress through the current tier of ten, so there is always room
@@ -2756,14 +2900,15 @@ function renderStats(data){
     const neglect=dg>=5?`<span class="rack-flag" title="Last raised ${dg} days ago">${dg}D</span>`:'<span class="rack-flag"></span>';
     const isActive=(data.activeStats||{})[s.key]!==false;
     const div=document.createElement('div');
-    div.className='rack-row stat-item'+(isActive?'':' off stat-inactive');div.setAttribute('data-stat',s.key);div.id='statitem-'+s.key;
+    div.className='rack-row stat-item'+(isActive?'':' off stat-inactive');div.setAttribute('data-stat',s.key);if(withIds)div.id='statitem-'+s.key;
     div.title=s.fullLabel+(isActive?'':' — inactive, does not affect mood');
-    div.innerHTML=`<div class="rack-head"><span class="rack-name">${s.label}</span>${neglect}<span class="rack-val" id="statval-${s.key}">${total}</span></div>
-      <div class="rack-bar"><div class="rack-fill stat-bar-inner" id="bar-${s.key}" style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>
-      <div class="rack-pips" id="pips-${s.key}" style="--hue:${STAT_HUE[s.key]}" title="${tiers} tier${tiers===1?'':'s'} of ten">${pips}</div>`;
-    wrap.appendChild(div);
+    const id=k=>withIds?` id="${k}-${s.key}"`:'';
+    div.innerHTML=`<div class="rack-head"><span class="rack-name">${s.label}</span>${neglect}<span class="rack-val"${id('statval')}>${total}</span></div>
+      <div class="rack-bar"><div class="rack-fill stat-bar-inner"${id('bar')} style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>
+      <div class="rack-pips"${id('pips')} style="--hue:${STAT_HUE[s.key]}" title="${tiers} tier${tiers===1?'':'s'} of ten">${pips}</div>`;
+    rows.push(div);
   });
-  renderDailySummary(data);
+  return rows;
 }
 
 // ══════════════════════════════════════════
@@ -3863,7 +4008,7 @@ function popClear(modalId){
   m.querySelectorAll('.fld-err').forEach(e=>e.remove());m.querySelectorAll('.bad').forEach(e=>e.classList.remove('bad'));
   const sc=m.querySelector('.pop-screen');if(sc)sc.scrollTop=0;
 }
-function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');if(id==='modal-wellness'||id==='modal-customize')_unmountMinis();}
 
 function closeWelcomeModal(){
   const nameInput=document.getElementById('welcome-name-input');
@@ -3876,7 +4021,7 @@ function closeWelcomeModal(){
 }
 document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.modal-overlay').forEach(el=>{
-    el.addEventListener('click',e=>{if(e.target===el&&!el.classList.contains('locked'))el.classList.remove('open');});
+    el.addEventListener('click',e=>{if(e.target===el&&!el.classList.contains('locked'))closeModal(el.id);});
   });
 });
 
@@ -4096,8 +4241,76 @@ function isStreakAtRisk(data,tid){
 // ══════════════════════════════════════════
 //  CUSTOMISE  (a placeholder until the Phase 9b rebuild)
 // ══════════════════════════════════════════
-function openCustomize(){openModal('modal-customize');}
+// The sprite's look. Applied live everywhere; kept for the session until Phase 10 saves it.
+const IRIS_COLOURS=[['CYAN','oklch(0.86 0.14 200)'],['AMBER','oklch(0.74 0.17 55)'],['LILAC','oklch(0.68 0.10 300)'],['LIME','oklch(0.86 0.20 130)']];
+const SPRITE_SHAPES=[['round','ROUND'],['slab','SLAB'],['sharp','SHARP']];
+const SPRITE_BACKS=[['grid','CYBER GRID'],['void','VOID'],['sky','NIGHT SKY'],['stripe','DUSK STRIPE']];
+const SPRITE_FRONTS=[['glass','GLASS + SCANLINES'],['clear','CLEAR']];
+let _look={shape:'round',iris:IRIS_COLOURS[0][1],bg:'grid'};
+let _front='glass';
+let _cuTray='centre';
+const _nameOf=(list,v)=>(list.find(x=>x[0]===v||x[1]===v)||[])[1]||'';
+const _title=t=>t.charAt(0)+t.slice(1).toLowerCase();
+function _applyLook(){
+  if(_sprite)_sprite.set(_look);
+  _miniSprites.forEach(sp=>{try{sp.set({iris:_look.iris});}catch(e){}});
+  document.getElementById('sprite-window')?.classList.toggle('clear',_front==='clear');
+}
+function openCustomize(){
+  openModal('modal-customize');
+  requestAnimationFrame(_renderCustomize);
+}
 function cancelCustomize(){closeModal('modal-customize');}
+function cuTray(t){_cuTray=t;_renderCustomize();}
+function _renderCustomize(){
+  _unmountMinis();
+  const data=load();
+  const shellId=(window._shellMaterial||SHELL_MATERIAL),shell=getMaterial(shellId);
+  document.getElementById('cu-title').textContent=_isPhone()?'CUSTOMISE':'CUSTOMISE — '+shell.name;
+  document.querySelectorAll('#modal-customize .cu-trays .chip').forEach(c=>c.classList.toggle('on',c.dataset.tray===_cuTray));
+  document.querySelectorAll('#modal-customize .cu-tray').forEach(c=>c.classList.toggle('on',c.dataset.tray===_cuTray));
+  document.querySelectorAll('#modal-customize .cu-row').forEach(c=>c.classList.toggle('on',c.dataset.tray===_cuTray));
+  document.getElementById('cu-sel-back').textContent=_title(_nameOf(SPRITE_BACKS,_look.bg));
+  document.getElementById('cu-sel-centre').textContent=_title(_nameOf(SPRITE_SHAPES,_look.shape))+' · '+_title(_nameOf(IRIS_COLOURS.map(x=>[x[1],x[0]]),_look.iris));
+  document.getElementById('cu-sel-front').textContent=_front==='glass'?'Glass + scanlines':'Clear';
+  const prev=document.getElementById('cu-preview');prev.classList.toggle('clear',_front==='clear');
+  _mountMini(prev,{mood:_moodShown||'steady'});
+  const tile=(on,cap,onclick,cls='')=>{const b=document.createElement('button');b.className='cu-tile'+(on?' on':'');b.setAttribute('aria-pressed',on);
+    b.innerHTML=`<div class="cu-win ${cls}"><canvas></canvas><div class="sprite-glass"></div></div><span class="cap">${cap}</span>`;b.onclick=onclick;return b;};
+  if(_cuTray==='centre'){
+    const sh=document.getElementById('cu-shapes');sh.innerHTML='';
+    SPRITE_SHAPES.forEach(([k,cap])=>{const b=tile(_look.shape===k,cap,()=>{_look.shape=k;_applyLook();_renderCustomize();},'clear');sh.appendChild(b);
+      requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{shape:k,bg:'void',mood:'steady'}));});
+    const ir=document.getElementById('cu-iris');ir.innerHTML='';
+    IRIS_COLOURS.forEach(([nm,col])=>{const b=document.createElement('button');b.className='cu-sw'+(_look.iris===col?' on':'');b.style.background=col;b.title=_title(nm);
+      b.setAttribute('aria-label',_title(nm)+' iris');b.onclick=()=>{_look.iris=col;_applyLook();_renderCustomize();};ir.appendChild(b);});
+  } else if(_cuTray==='back'){
+    const bk=document.getElementById('cu-backs');bk.innerHTML='';
+    SPRITE_BACKS.forEach(([k,cap])=>{const b=tile(_look.bg===k,cap,()=>{_look.bg=k;_applyLook();_renderCustomize();},'clear');bk.appendChild(b);
+      requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{bg:k,mood:'steady'}));});
+  } else if(_cuTray==='front'){
+    const fr=document.getElementById('cu-fronts');fr.innerHTML='';
+    SPRITE_FRONTS.forEach(([k,cap])=>{const b=tile(_front===k,cap,()=>{_front=k;_applyLook();_renderCustomize();},k==='clear'?'clear':'');fr.appendChild(b);
+      requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{mood:'steady'}));});
+  } else {
+    // Shell: owned materials apply at once; locked ones stay visible, with how to earn them.
+    const owned=unlockedMaterials(data);
+    document.getElementById('cu-shell-label').textContent='SHELL — '+shell.name;
+    const sw=document.getElementById('cu-shells');sw.innerHTML='';
+    const note=document.getElementById('cu-shell-note');note.textContent=owned.length<MATERIALS.length?'LOCKED SHELLS ARE EARNED WITH AWARDS':'';
+    MATERIALS.forEach(m=>{
+      const locked=!owned.includes(m.id);
+      const aw=ACHIEVEMENT_QUESTS.find(q=>q.cosmetic===m.id);
+      const b=document.createElement('button');b.className='cu-sw'+(m.id===shellId?' on':'')+(locked?' locked':'');b.style.background=m.face;
+      b.title=m.name+(locked?' — locked'+(aw?': earn the '+aw.name+' award':''):'');b.setAttribute('aria-label',b.title);
+      b.onclick=()=>{
+        if(locked){note.textContent=m.name+' · LOCKED'+(aw?' · EARN “'+aw.name.toUpperCase()+'”: '+aw.desc.toUpperCase():'');return;}
+        window._shellMaterial=m.id;applyShellMaterial(m.id);_updateDeviceHeader();_renderCustomize();
+      };
+      sw.appendChild(b);
+    });
+  }
+}
 
 // ══════════════════════════════════════════
 //  PHASE 5.4 — MANAGE ACTIVE STATS
@@ -4642,35 +4855,103 @@ function updateMoodDisplay(data){
 
 function openWellnessReport(){
   const data=load();
-  calculateMood(data); // ensures goal statuses are up to date
-  const mood=data.characterMood||calculateMood(data);
-  const sli=data.statLastIncreased||{};const today=todayStr();
-  const sm=spriteMood(data);
-  const smCol={thriving:'green',happy:'green',steady:'teal',concerned:'orange2',frustrated:'red',drained:'pink'}[sm.mood]||'white';
-  let html=`<div class="wellness-mood-line" style="color:var(--${smCol})">OVERALL: ${sm.mood.toUpperCase()}</div><div class="wellness-why" style="margin:6px 0 12px;font:13px/1.5 'Space Grotesk',sans-serif;color:var(--white)">${sm.why}</div>`;
-  html+=`<div class="wellness-section-hd" style="border-top:none;padding-top:0">STAT STATUS</div>`;
-  STATS_DEF.forEach(s=>{
-    const days=daysBetween(sli[s.key],today);
-    const icon=days>=10?'❌':days>=7?'⚠️':'✅';
-    const txt=!sli[s.key]?'Not tracked yet':`${days===0?'Today':days===1?'Yesterday':`${days} days ago`}`;
-    html+=`<div class="wellness-stat-row"><span class="wsr-icon">${STAT_EMOJI_MAP[s.key]||s.emoji}</span><span class="wsr-name">${s.fullLabel}</span><span class="wsr-val">${txt}</span><span class="wsr-status">${icon}</span></div>`;
-  });
-  const goals=data.customGoals||[];
-  if(goals.length){
-    html+=`<div class="wellness-section-hd">GOAL STATUS</div>`;
-    goals.forEach(g=>{
-      calculateGoalProgress(g,data);
-      const icon=g.status==='onTrack'?'✅':g.status==='atRisk'?'⚠️':'❌';
-      const desc=goalDescription(g,data);
-      const prog=g.type==='taskFrequency'?`${g.currentProgress||0}/${g.frequency}`
-        :g.type==='activityTime'?`${fmtHM(g.currentProgress||0)} / ${fmtHM(g.targetHours)}`
-        :`+${g.currentProgress||0}/+${g.targetIncrease}`;
-      html+=`<div class="wellness-stat-row"><span class="wsr-icon">🎯</span><span class="wsr-name">${desc}</span><span class="wsr-val">${prog}</span><span class="wsr-status">${icon}</span></div>`;
-    });
-  }
-  html+=`<div class="form-actions" style="margin-top:17.5px"><button class="px-btn" onclick="closeModal('modal-wellness')">CLOSE</button></div>`;
-  document.getElementById('wellness-body').innerHTML=html;
+  const w=wellnessModel(data);
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const card=(c,i)=>`<div class="wl-card${c.open?' go':''}" style="--sev:${c.col}" ${c.open?`role="button" tabindex="0" onclick="_wellnessOpen(${i})" onkeydown="if(event.key==='Enter')_wellnessOpen(${i})"`:''}>
+      <div><div class="wl-title">${esc(c.title)}</div><div class="wl-detail">${esc(c.detail)}</div></div>
+      ${c.open?`<button class="wl-open" tabindex="-1" onclick="event.stopPropagation();_wellnessOpen(${i})">OPEN</button>`:''}</div>`;
+  window._wlOpen=w.causes.map(c=>c.open);
+  const body=document.getElementById('wellness-body');
+  body.innerHTML=`<div class="wl-main">
+      <div class="wl-verdict"><div class="wl-tile" id="wl-tile"><canvas></canvas></div>
+        <div><span class="wl-badge" style="--mc:${w.moodCol}">${w.mood.toUpperCase()}</span><div class="wl-sentence">${esc(w.verdict)}</div></div></div>
+      ${w.causes.length?`<div class="wl-h">WHAT IS PULLING IT DOWN</div><div class="wl-cards">${w.causes.map(card).join('')}</div>`
+        :`<div class="wl-h">WHAT IS HOLDING IT UP</div><div class="wl-cards">${w.holding.map(c=>card(c,-1)).join('')}</div>`}
+      ${w.help.length?`<div class="wl-help"><div class="wl-h">WHAT WOULD HELP TODAY</div><p>${esc(w.help.join(' '))}</p></div>`:''}
+    </div>
+    <div class="wl-rack"><div class="wl-h">STATS · LV ${_tierLevel(data)}</div><div id="wl-rack-rows"></div>
+      <div class="wl-rack-foot"><span>${esc(document.getElementById('stats-footer')?.textContent||'')}</span><button class="sbtn ghost" onclick="closeModal('modal-wellness');openManageStats()">MANAGE</button></div></div>`;
+  const rows=document.getElementById('wl-rack-rows');_rackRows(data,false).forEach(r=>rows.appendChild(r));
   openModal('modal-wellness');
+  body.scrollTop=0;
+  requestAnimationFrame(()=>{_unmountMinis();_mountMini(document.getElementById('wl-tile'),{mood:w.mood});});
+}
+// Everything the Wellness window says, from real goal, task and stat data.
+function wellnessModel(data){
+  const sm=spriteMood(data);
+  const today=todayStr(),yest=yestStr();
+  const tasks=data.customTasks||[],hist=data.taskHistory||{};
+  const doneOn=(tid,ds)=>ds===today?!!data.todayChecked[tid]:!!(hist[ds]&&hist[ds][tid]);
+  const words=['no','one','two','three','four','five','six','seven','eight','nine','ten'];
+  const W=n=>n<words.length?words[n]:String(n);
+  const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+  const COL={fail:'#e0645c',risk:'oklch(0.74 0.17 55)',neglect:'oklch(0.68 0.10 300)',good:'oklch(0.86 0.20 130)'};
+  const causes=[],help=[];
+  // goals at risk or failing (new goals are still in their grace period)
+  const goals=(data.customGoals||[]).map(g=>{calculateGoalProgress(g,data);return g;}).filter(g=>!isGoalInGracePeriod(g));
+  const prog=g=>{const cur=g.currentProgress||0,max=g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;
+    return g.type==='taskFrequency'?`${cur} OF ${max}`:g.type==='activityTime'?`${_hrs(cur)} OF ${_hrs(max)}`:`+${cur} OF +${max}`;};
+  ['failing','atRisk'].forEach(st=>goals.filter(g=>g.status===st).forEach(g=>{
+    const left=getDaysLeftInPeriod(g.period);
+    const tail=g.lastPeriodMet===false&&!(g.streak>0)?'STREAK BROKEN':`${left} DAY${left===1?'':'S'} LEFT`;
+    causes.push({col:st==='failing'?COL.fail:COL.risk,title:cap(goalTitle(g,data))+(st==='failing'?' is failing':' is at risk'),
+      detail:prog(g)+' · '+tail,open:{kind:'goal',id:g.id},fail:st==='failing'});
+    if(st==='atRisk'){
+      if(g.type==='taskFrequency'){const t=tasks.find(x=>x.id===g.taskId);if(t&&!doneOn(t.id,today))help.push(`${t.name} today keeps “${goalTitle(g,data)}” within reach.`);}
+      else if(g.type==='statIncrease'){const need=g.targetIncrease-(g.currentProgress||0);const t=tasks.find(x=>x.stat===g.stat&&!doneOn(x.id,today));
+        const sd=STATS_DEF.find(x=>x.key===g.stat);if(t)help.push(`${t.name} closes ${Math.min(t.points||1,need)===need?'the':'some of the'} ${sd?sd.label:g.stat} gap.`);}
+      else{const need=(g.targetHours||0)-(g.currentProgress||0);const d=Math.max(1,_daysLeftInclusive(g.period));
+        help.push(`${fmtHMCeil(need/d)} of ${_goalTimeName(g,data)} today puts that goal back on pace.`);}
+    }
+  }));
+  // task runs of three days or more that broke yesterday
+  tasks.forEach(t=>{
+    if(doneOn(t.id,yest)||doneOn(t.id,today))return;
+    let n=0;const d=_dd(yest);d.setDate(d.getDate()-1);
+    while(n<400&&doneOn(t.id,_ds(d))){n++;d.setDate(d.getDate()-1);}
+    if(n>=3){causes.push({col:COL.fail,title:`${t.name} lost its ${W(n)}-day run`,detail:'YESTERDAY WAS MISSED',open:{kind:'task',id:t.id}});
+      help.push(`${t.name} today starts a new run.`);}
+  });
+  // nothing logged for days
+  let lastDone=null;for(const ds in hist){if(ds<=today&&Object.values(hist[ds]).some(Boolean)&&(!lastDone||ds>lastDone))lastDone=ds;}
+  if(tasks.some(t=>doneOn(t.id,today)))lastDone=today;
+  const idle=lastDone?daysBetween(lastDone,today):0;
+  if(idle>=3){causes.push({col:COL.neglect,title:`Nothing logged for ${W(idle)} days`,detail:'LAST ENTRY '+_dayLabel(lastDone)});help.push('One small task is enough to wake it up.');}
+  // the longest-neglected stat
+  const sli=data.statLastIncreased||{},active=data.activeStats||{};
+  const neg=STATS_DEF.filter(st=>active[st.key]!==false&&sli[st.key]).map(st=>({st,d:daysBetween(sli[st.key],today)})).filter(x=>x.d>=7).sort((a,b)=>b.d-a.d);
+  if(neg.length){
+    const top=neg[0];
+    causes.push({col:COL.neglect,title:`${top.st.label} untouched for ${top.d} days`,detail:'YOUR LONGEST NEGLECTED STAT'+(neg.length>1?` · ${neg.length-1} MORE OVER A WEEK`:'')});
+    const t=tasks.find(x=>x.stat===top.st.key);
+    help.push(t?`Any ${top.st.fullLabel} task, like ${t.name}, resets its clock.`:`A task for ${top.st.fullLabel} would bring it back into rotation.`);
+  }
+  // the verdict
+  const n=causes.length,f=causes.filter(c=>c.fail).length;
+  let verdict;
+  if(!n)verdict={thriving:'Everything is holding up.',happy:'A good day so far.',steady:'Nothing is slipping.'}[sm.mood]||sm.why;
+  else verdict=cap(W(n))+(n===1?' thing is slipping.':' things are slipping.')+(f?'':(n===1?' It isn’t lost.':n===2?' Neither is lost.':' None is lost.'));
+  // what is holding it up, when nothing is pulling it down
+  const holding=[];
+  const done=tasks.filter(t=>doneOn(t.id,today)).length;
+  if(done)holding.push({col:COL.good,title:`${cap(W(done))} of ${W(tasks.length)} done today`,detail:done===tasks.length?'EVERYTHING':'AND COUNTING'});
+  let best=null;tasks.forEach(t=>{const r=calcStreak(data,t.id);if(r>=2&&(!best||r>best.n))best={t,n:r};});
+  if(best)holding.push({col:COL.good,title:`${best.t.name} has a ${W(best.n)}-day run going`,detail:'YOUR LONGEST RUN'});
+  const ok=goals.filter(g=>g.status==='onTrack');
+  if(ok.length)holding.push({col:COL.good,title:`${cap(W(ok.length))} goal${ok.length===1?' is':'s are'} on track`,detail:ok.slice(0,2).map(g=>goalTitle(g,data).toUpperCase()).join(' · ')});
+  if(!holding.length)holding.push({col:COL.good,title:'Nothing to report yet',detail:'TICK A TASK AND IT STARTS HERE'});
+  const moodCol={thriving:COL.good,happy:'oklch(0.86 0.14 200)',steady:'oklch(0.86 0.14 200)',concerned:COL.risk,frustrated:COL.fail,drained:COL.neglect}[sm.mood];
+  return{mood:sm.mood,moodCol,verdict,causes,help:[...new Set(help)].slice(0,3),holding};
+}
+// OPEN: jump to the goal or task a cause names.
+function _wellnessOpen(i){
+  const o=(window._wlOpen||[])[i];if(!o)return;
+  closeModal('modal-wellness');
+  let el;
+  if(o.kind==='goal'){switchTab('quests');switchGoalsSeg('goals');el=document.getElementById('gcard-'+o.id);}
+  else{switchTab('daily');el=document.getElementById('task-'+o.id);}
+  if(!el)return;
+  setTimeout(()=>{el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.remove('jump');void el.offsetWidth;el.classList.add('jump');},60);
 }
 
 function goalDescription(g,data){
@@ -5534,9 +5815,9 @@ function initShell(){
 // around it carries the sprite's own background colour, so the few leftover
 // pixels at the edge are invisible.
 let _sprite = null;
-function fitSpriteCanvas(){
-  const wrap = document.getElementById('sprite-window');
-  const cv = document.getElementById('sprite-canvas');
+function fitSpriteCanvas(){ _fitSpriteIn(document.getElementById('sprite-window'), document.getElementById('sprite-canvas')); }
+// Size a sprite canvas to a whole pixel scale inside any window, and snap it to the pixel grid.
+function _fitSpriteIn(wrap, cv){
   if (!wrap || !cv) return;
   const w = wrap.clientWidth, h = wrap.clientHeight;
   if (!w || !h) return;
@@ -5566,12 +5847,22 @@ function fitSpriteCanvas(){
   if (Math.abs(fy) > 0.01) cv.style.top = (top - fy) + 'px';
 }
 
+// Extra sprites for the Wellness and Customise windows, stopped when they close.
+let _miniSprites=[];
+function _mountMini(wrap,opts){
+  const cv=wrap.querySelector('canvas');if(!cv)return null;
+  _fitSpriteIn(wrap,cv);
+  const sp=mountSprite(cv,{mood:'steady',..._look,..._fitSeed(opts)});
+  _miniSprites.push(sp);return sp;
+}
+const _fitSeed=o=>({...o,seed:o.seed||Math.random()});
+function _unmountMinis(){_miniSprites.forEach(sp=>{try{sp.destroy();}catch(e){}});_miniSprites=[];}
 function mountDailySprite(){
   const cv = document.getElementById('sprite-canvas');
   if (!cv || _sprite) return;
   fitSpriteCanvas();
   const mood = _moodShown || spriteMood(load()).mood;
-  _sprite = mountSprite(cv, {mood, shape:'round', bg:'grid'});
+  _sprite = mountSprite(cv, {mood, ..._look});
   if (!_moodShown) _showMood(mood);
 }
 function unmountDailySprite(){ if (_sprite) { _sprite.destroy(); _sprite = null; } }
@@ -5636,7 +5927,7 @@ function _updateDeviceHeader(data){
   const onGoals = _lastPage === 'quests', onTools = _lastPage === 'inventory';
   head.classList.toggle('page-label', onGoals || onTools);
   if (onTools) { mark.textContent = 'TOOLS'; if (meta) meta.textContent = _swState === 'running' ? 'RUNNING' : _swState === 'paused' ? 'PAUSED' : 'IDLE'; return; }
-  if (!onGoals) { mark.textContent = APP_NAME; const m = MATERIALS.find(x => x.id === SHELL_MATERIAL); if (meta && m) meta.textContent = m.name; return; }
+  if (!onGoals) { mark.textContent = APP_NAME; const m = MATERIALS.find(x => x.id === (window._shellMaterial || SHELL_MATERIAL)); if (meta && m) meta.textContent = m.name; return; }
   const c = _goalsCounts(data || load());
   mark.textContent = 'GOALS';
   if (meta) meta.textContent = _goalsSeg === 'goals' ? c.onTrack + ' ON TRACK' : _goalsSeg === 'projects' ? c.active + ' ACTIVE' : c.awardsDone + ' / ' + c.awards;
