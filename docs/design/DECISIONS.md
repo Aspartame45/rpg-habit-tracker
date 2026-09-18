@@ -96,12 +96,19 @@ Built against turn 4b on desktop and 6b on the phone.
   screen (GOALS first). Filters sit inside the screen. The shell's header names the
   page and reads out the segment; the action key takes its verb: `+ ADD GOAL`,
   `+ ADD PROJECT`, and none on Awards.
-- **Goal state is the existing logic,** unchanged: on track / at risk / failing
-  from `calculateGoalProgress`, streaks counted per period met at each rollover.
-  `STREAK BROKEN` shows when a weekly goal failed last week and has no streak
-  since. Monthly goals keep no record of last month's result, so they can't show
-  "broken", only no streak. New goals (the grace period) read `· NEW` on the type
-  line.
+- **Goal state** (on track / at risk / failing) is the existing live logic from
+  `calculateGoalProgress`. New goals (the grace period) read `· NEW` on the type line.
+- **Closing a period is now decided from history** (`_closeGoalPeriods`), for weekly
+  and monthly goals alike. When a week or month ends, the app checks whether the goal
+  was met in it, instead of trusting whatever status was last shown. Every period
+  that passed while the app was closed is judged separately. A goal set up part-way
+  through a period isn't blamed for missing it. Each goal remembers whether its last
+  period was met, so `STREAK BROKEN` now shows for monthly goals too.
+- **Achiever I and II** count every time a weekly goal is met (they never
+  progressed before: nothing increased the count). Weeks already met are counted
+  once, from history, when this version first runs.
+- **Consistent** completes when the same weekly goal is met four weeks in a row
+  (it used to require every goal to be on track at once).
 - **Goal names are generated** from the goal ("Exercise 5 times a week", "7 hours
   of Reading a week", "Raise INT by 8"), because goals have no name field.
 - **Where the controls went:** a goal card opens its history, which now holds

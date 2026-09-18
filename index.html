@@ -2146,22 +2146,9 @@ function fmtNum(n){return Number(n).toLocaleString('en-GB',{maximumFractionDigit
 function checkNewDay(data){
   const today=todayStr(),yest=yestStr();
   if(data.lastActiveDate!==today){
-    // Week rollover: snapshot previous week goal statuses before recalculating
-    const newWeekStart=getStartOfWeek();
-    if(data.lastWeekStart&&newWeekStart>data.lastWeekStart){
-      // Snapshot current goal status as previousWeekStatus (reflects last week's performance)
-      (data.customGoals||[]).forEach(g=>{
-        if(g.period==='week'){
-          g.streak=(g.status==='onTrack')?(g.streak||0)+1:0;
-        }
-        g.previousWeekStatus=g.status||null;
-      });
-      // Check if any goal was on-track last week (for goalWeekStreak)
-      const allOnTrack=(data.customGoals||[]).length>0&&(data.customGoals||[]).every(g=>g.status==='onTrack');
-      if(allOnTrack)data.goalWeekStreak=(data.goalWeekStreak||0)+1;
-      else data.goalWeekStreak=0;
-      data.lastWeekStart=newWeekStart;
-    }
+    // Close every goal period that has ended, weekly and monthly, from history.
+    _closeGoalPeriods(data);
+    data.lastWeekStart=getStartOfWeek();
     // Check if yesterday all tasks were completed (for Perfectionist quest)
     const hist=data.taskHistory||{};
     const yestTasks=hist[yest]||{};
@@ -3166,7 +3153,8 @@ function calcAchievementProgress(q,data){
       return{current:Math.min(n,q.target),target:q.target,pct:Math.min(100,n/q.target*100)};
     }
     case'goalWeekStreak':{
-      const n=data.goalWeekStreak||0;
+      // the longest current run of any one weekly goal
+      const n=Math.max(0,...(data.customGoals||[]).filter(g=>g.period==='week').map(g=>g.streak||0));
       return{current:Math.min(n,q.target),target:q.target,pct:Math.min(100,n/q.target*100)};
     }
     default:return{current:0,target:1,pct:0};
@@ -3943,9 +3931,9 @@ const ACHIEVEMENT_QUESTS=[
   {id:'renaissance',   name:'Renaissance',       icon:'🌟', desc:'Increase every stat in one day',             type:'allStatsInDay',  target:9,  cosmetic:'chrome'},
   {id:'specialist-1',  name:'Specialist I',      icon:'⚡', desc:'Increase one stat 10 times in a week',       type:'statWeekCount',  target:10, reward:{discipline:2}},
   {id:'balanced',      name:'Balanced Growth',   icon:'⚖️', desc:'Have no stat below 10',                      type:'allStatsMin',    target:10, reward:{discipline:4}},
-  {id:'achiever-1',    name:'Achiever I',        icon:'🎯', desc:'Complete 1 weekly goal on time',             type:'goalsCompleted', target:1,  reward:{initiative:2}},
-  {id:'achiever-2',    name:'Achiever II',       icon:'🎯', desc:'Complete 5 weekly goals on time',            type:'goalsCompleted', target:5,  reward:{initiative:5}},
-  {id:'consistent',    name:'Consistent',        icon:'📅', desc:'Hit a weekly goal 4 weeks in a row',         type:'goalWeekStreak', target:4,  cosmetic:'concrete'},
+  {id:'achiever-1',    name:'Achiever I',        icon:'🎯', desc:'Meet a weekly goal',             type:'goalsCompleted', target:1,  reward:{initiative:2}},
+  {id:'achiever-2',    name:'Achiever II',       icon:'🎯', desc:'Meet weekly goals 5 times',            type:'goalsCompleted', target:5,  reward:{initiative:5}},
+  {id:'consistent',    name:'Consistent',        icon:'📅', desc:'Meet the same weekly goal 4 weeks in a row',         type:'goalWeekStreak', target:4,  cosmetic:'concrete'},
   {id:'first-project', name:'First project',     icon:'🏁', desc:'Complete your first project',                type:'projectsCompleted',target:1, cosmetic:'aluminium'},
 ];
 
@@ -4013,14 +4001,90 @@ function getDaysLeftInPeriod(period){
   return 0;
 }
 
+// ── Closing goal periods ──
+// When a week or month ends, decide from history whether each goal was met, then
+// move its streak on. Deciding from history, not from the last status shown, means
+// a week the app wasn't opened for still counts correctly, and every missed period
+// in between breaks the streak.
+const _ds=d=>`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+const _dd=ds=>{const [y,m,d]=ds.split('-').map(Number);return new Date(y,m-1,d);};
+function _periodEnd(start,period){
+  const d=_dd(start);
+  if(period==='week'){d.setDate(d.getDate()+6);return _ds(d);}
+  return _ds(new Date(d.getFullYear(),d.getMonth()+1,0));
+}
+function _nextPeriod(start,period){
+  const d=_dd(start);
+  if(period==='week'){d.setDate(d.getDate()+7);return _ds(d);}
+  return _ds(new Date(d.getFullYear(),d.getMonth()+1,1));
+}
+function _goalMetBetween(g,data,start,end){
+  const hist=data.taskHistory||{};
+  if(g.type==='taskFrequency'){
+    let n=0;for(const d in hist){if(d>=start&&d<=end&&hist[d][g.taskId])n++;}
+    return n>=(g.frequency||1);
+  }
+  if(g.type==='activityTime'){
+    const logs=_goalTimeLogs(g,data);let h=0;
+    for(const d in logs){if(d>=start&&d<=end)h+=Number(logs[d])||0;}
+    return h>=(g.targetHours||0)-1e-9;
+  }
+  // Stat increase: the period's own snapshot when it has one, which counts every
+  // source of points; otherwise the points from tasks ticked in that period.
+  if(g.periodStart===start)return (data.stats[g.stat]||0)-(g.startValue||0)>=g.targetIncrease;
+  const pts={};(data.customTasks||[]).forEach(t=>{if(t.stat===g.stat)pts[t.id]=t.points||1;});
+  let inc=0;for(const d in hist){if(d>=start&&d<=end)for(const tid in hist[d]){if(hist[d][tid]&&pts[tid])inc+=pts[tid];}}
+  return inc>=g.targetIncrease;
+}
+// Once: count the weeks already met before goal hits were counted (Achiever).
+function _backfillGoalHits(data){
+  if(data.goalHitsCounted)return;
+  const thisWeek=getStartOfWeek();let n=0;
+  (data.customGoals||[]).filter(g=>g.period==='week').forEach(g=>{
+    const created=g.createdDate||g.startDate;if(!created)return;
+    // the first whole week after the goal was set up
+    let w=_ds((d=>{d.setDate(d.getDate()-((d.getDay()+6)%7));return d;})(_dd(created)));
+    if(w<created)w=_nextPeriod(w,'week');
+    // stop where the period closer takes over, so no week is counted twice
+    const upTo=g.openPeriod||(data.lastWeekStart&&data.lastWeekStart<thisWeek?data.lastWeekStart:thisWeek);
+    for(let i=0;w<upTo&&i<600;i++,w=_nextPeriod(w,'week'))if(_goalMetBetween(g,data,w,_periodEnd(w,'week')))n++;
+  });
+  data.completedGoalCount=Math.max(data.completedGoalCount||0,n);
+  data.goalHitsCounted=true;
+}
+function _closeGoalPeriods(data){
+  _backfillGoalHits(data);
+  const lastWeek=data.lastWeekStart;
+  (data.customGoals||[]).forEach(g=>{
+    const cur=getStartOfPeriod(g.period);
+    // Where this goal's open period began. Goals from before this was tracked
+    // resume from the last period the app saw, so today's rollover still counts.
+    if(!g.openPeriod){
+      g.openPeriod=g.period==='week'?(lastWeek&&lastWeek<cur?lastWeek:cur)
+        :((g._lastMonthPS||g.periodStart)&&(g._lastMonthPS||g.periodStart)<cur?(g._lastMonthPS||g.periodStart):cur);
+    }
+    let guard=0;
+    while(g.openPeriod<cur&&guard++<600){
+      const start=g.openPeriod,end=_periodEnd(start,g.period);
+      const met=_goalMetBetween(g,data,start,end);
+      const created=g.createdDate||g.startDate||start;
+      // A goal set up part-way through a period isn't blamed for missing it.
+      if(met||created<=start){
+        g.streak=met?(g.streak||0)+1:0;
+        g.lastPeriodMet=met;
+        if(g.period==='week'){
+          g.previousWeekStatus=met?'onTrack':'failing';
+          if(met)data.completedGoalCount=(data.completedGoalCount||0)+1;
+        }
+      }
+      g.openPeriod=_nextPeriod(start,g.period);
+    }
+  });
+}
+
 function calculateGoalProgress(goal,data){
   if(goal.type==='taskFrequency'){
     const ps=getStartOfPeriod(goal.period);
-    // Monthly streak: detect period rollover
-    if(goal.period==='month'&&goal._lastMonthPS&&goal._lastMonthPS<ps){
-      goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
-    }
-    if(goal.period==='month')goal._lastMonthPS=ps;
     let n=0;
     const hist=data.taskHistory||{};
     // Bound by today: a period runs from its start up to now. Without the upper
@@ -4037,10 +4101,6 @@ function calculateGoalProgress(goal,data){
     else goal.status='onTrack';
   } else if(goal.type==='activityTime'){
     const ps=getStartOfPeriod(goal.period);
-    if(goal.period==='month'&&goal._lastMonthPS&&goal._lastMonthPS<ps){
-      goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
-    }
-    if(goal.period==='month')goal._lastMonthPS=ps;
     const logs=_goalTimeLogs(goal,data);
     let hrs=0;
     const _tdy2=todayStr();
@@ -4058,10 +4118,6 @@ function calculateGoalProgress(goal,data){
   } else {
     const ps=getStartOfPeriod(goal.period);
     if(!goal.periodStart||goal.periodStart<ps){
-      // Monthly streak: detect period rollover for statIncrease goals
-      if(goal.periodStart&&goal.period==='month'){
-        goal.streak=(goal.status==='onTrack')?(goal.streak||0)+1:0;
-      }
       goal.periodStart=ps;goal.startValue=data.stats[goal.stat]||0;
     }
     const current=data.stats[goal.stat]||0;
@@ -4225,12 +4281,12 @@ function renderGoalCards(wrap,data){
     const prog=g.type==='taskFrequency'?`${cur} OF ${max}`:g.type==='activityTime'?`${_hrs(cur)} OF ${_hrs(max)}`:`+${cur} OF +${max}`;
     const [cls,label,col]=STATE[g.status]||STATE.onTrack;
     const grace=isGoalInGracePeriod(g);
-    // Streaks count whole periods met; a failed last period with no streak since is a broken one.
+    // Streaks count whole periods met; a missed last period means a broken one.
     const unit=g.period==='month'?'MONTH':'WEEK';
     const streak=g.streak||0;
     const left=getDaysLeftInPeriod(g.period);
     const right=streak>0?`<span class="run">STREAK ${streak} ${unit}${streak===1?'':'S'}</span>`
-      :(g.previousWeekStatus==='failing'&&g.period==='week')?'<span>STREAK BROKEN</span>'
+      :g.lastPeriodMet===false?'<span>STREAK BROKEN</span>'
       :g.status!=='onTrack'?`<span>${left} DAY${left===1?'':'S'} LEFT</span>`:'';
     let pace='';
     if(g.type==='activityTime'&&cur<max){
@@ -5159,6 +5215,7 @@ function init(){
   initHaptics();
   initDailySprite();
   checkNewDay(data);
+  if(!data.goalHitsCounted){_backfillGoalHits(data);save(data);}
   checkMonthRollover(data);
 
   const ni=document.getElementById('char-name');
@@ -5268,7 +5325,7 @@ const _SYNC_KEYS={
 // Fields the app recalculates by itself (checkboxes, streaks, goal status and so
 // on). A change to these alone never triggers a sync, and never counts as
 // "editing" an item that the other device deleted.
-const _SYNC_DERIVED=/^(todayChecked|characterMood|statsIncreasedToday|lastActiveDate|lastWeekStart|currentMonth|streaks|perfectStreak|goalWeekStreak|completedGoalCount)$|^customGoals\[\]\.(status|currentProgress|previousWeekStatus|streak)$|^(customQuests|completedQuests)\[\]\.totalHours$|^unlockedTitles\[\]\.isNew$/;
+const _SYNC_DERIVED=/^(todayChecked|characterMood|statsIncreasedToday|lastActiveDate|lastWeekStart|currentMonth|streaks|perfectStreak|goalWeekStreak|completedGoalCount)$|^customGoals\[\]\.(status|currentProgress|previousWeekStatus|streak|openPeriod|lastPeriodMet)$|^(customQuests|completedQuests)\[\]\.totalHours$|^unlockedTitles\[\]\.isNew$/;
 
 // How to resolve a value that BOTH devices changed, differently.
 function _syncPolicy(p){
@@ -5280,9 +5337,9 @@ function _syncPolicy(p){
   if(/^(streaks|lastCompleted|statLastIncreased)\./.test(p)
     ||/^(gold|perfectStreak|goalWeekStreak|completedGoalCount|lastActiveDate|lastWeekStart|currentMonth)$/.test(p)
     ||/^(customQuests|completedQuests)\[\]\.dailyLogs\.[^.]+$/.test(p)
-    ||/^customGoals\[\]\.(streak|currentProgress)$/.test(p))return'max';
+    ||/^customGoals\[\]\.(streak|currentProgress|openPeriod)$/.test(p))return'max';
   // recalculated summaries: take the cloud's
-  if(/^customGoals\[\]\.(status|previousWeekStatus)$/.test(p)||p==='characterMood'||p==='budgetHistory[]')return'remote';
+  if(/^customGoals\[\]\.(status|previousWeekStatus|lastPeriodMet)$/.test(p)||p==='characterMood'||p==='budgetHistory[]')return'remote';
   // completions: done on either device means done
   if(/^taskHistory\.[^.]+\.[^.]+$/.test(p)||/^(tutorialsViewed|statsIncreasedToday)\.[^.]+$/.test(p)
     ||/^defaultQuests\.[^.]+\.completed$/.test(p))return'or';
