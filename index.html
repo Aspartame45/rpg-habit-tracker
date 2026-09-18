@@ -1080,18 +1080,18 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 /* the task list's screen */
 .screen-tasks{display:flex;flex-direction:column;min-height:540px}
 .daily-headline{padding:15px 14px 4px;font:600 17px/1.35 'Space Grotesk',sans-serif;color:#e9edf2}
-#tasks-list{display:flex;flex-direction:column;gap:6px;padding:10px 11px 12px}
+.task-list{display:flex;flex-direction:column;gap:6px;padding:10px 11px 12px}
 .task-row{
   display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:7px;
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer;
 }
 .task-row.done{opacity:.5;background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06)}
-#tasks-list .task-cb{
+.task-list .task-cb{
   width:17px;height:17px;min-width:17px;flex:none;margin:0;padding:0;
   border:2px solid oklch(0.80 0.14 200);border-radius:3px;background:none;
   font-size:0;color:transparent;cursor:pointer;box-shadow:none;
 }
-#tasks-list .task-row.done .task-cb{background:oklch(0.80 0.14 200);border-color:transparent}
+.task-list .task-row.done .task-cb{background:oklch(0.80 0.14 200);border-color:transparent}
 .task-name{flex:1;min-width:0;font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
 .task-row.done .task-name{text-decoration:line-through}
 .task-run,.task-auto{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;flex:none}
@@ -1132,6 +1132,132 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 #daily-goals-watch .gbar-risk{background:oklch(0.74 0.17 55)}
 #daily-goals-watch .gbar-fail{background:#e0645c}
 
+
+/* Tier pips: one per ten points in a stat, beneath its bar. */
+.rack-pips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;min-height:6px}
+.rack-pips i{width:6px;height:6px;border-radius:1px;background:var(--hue);opacity:.75}
+.rack-pips span{font:8.5px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5);line-height:6px}
+/* Only on the phone: the highlighted section, the strip, the device. */
+.task-section-head,#tasks-highlighted,.tap-hint,.dock-side,.sprite-badge .why{display:none}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE PHONE IS THE DEVICE (Phase 5.5) — values from turn 6a of the reference
+   ══════════════════════════════════════════════════════════════════════════ */
+@media(min-width:601px){
+  #device,.device-bezel,.device-screen{display:contents}
+  .device-tex,.device-header,.device-keys{display:none}
+}
+@media(max-width:600px){
+  body{overflow:hidden}
+  #cartridge{display:none}
+  #device{
+    position:relative;display:flex;flex-direction:column;
+    width:calc(100vw - 32px);height:calc(100vh - 32px);margin:16px auto;
+    padding:13px 13px 15px;border-radius:26px 26px 44px 26px;
+    background:var(--shell-face);
+    box-shadow:0 18px 40px rgba(0,0,0,.55),
+               inset 0 2px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.28);
+  }
+  @supports(height:100dvh){#device{height:calc(100dvh - 32px)}}
+  .device-tex{position:absolute;inset:0;border-radius:inherit;background:var(--shell-tex);pointer-events:none}
+  .device-header{position:relative;display:flex;justify-content:space-between;align-items:center;padding:2px 4px 9px}
+  .device-meta{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:var(--shell-ink-soft)}
+  .device-bezel{
+    position:relative;flex:1 1 auto;min-height:0;display:flex;padding:9px;
+    background:rgba(0,0,0,.34);border-radius:12px;
+    box-shadow:inset 0 3px 7px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.3);
+  }
+  .device-screen{
+    flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    background:#0d1016;border-radius:8px;
+    scrollbar-width:thin;scrollbar-color:rgba(63,215,232,.35) rgba(0,0,0,.35);
+  }
+  .device-screen::-webkit-scrollbar{width:7px}
+  .device-screen::-webkit-scrollbar-track{background:rgba(0,0,0,.35);box-shadow:inset 1px 0 0 rgba(255,255,255,.06)}
+  .device-screen::-webkit-scrollbar-thumb{background:rgba(63,215,232,.3);border-radius:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+  .device-keys{position:relative}
+  .device-nav{display:flex;gap:8px;margin-top:13px}
+  .device-nav .tab-btn{flex:1;padding:14px 0;border-radius:7px;font-size:10px;letter-spacing:.1em}
+  .device-action{width:100%;margin-top:9px;padding:16px 0;border-radius:24px;font-size:11px;letter-spacing:.16em}
+
+  /* inside the screen, in reading order: the page, then the account and data tools */
+  #page{order:1;padding:0;max-width:none;margin:0;min-width:0}
+  html{overflow:hidden}
+  #user-info-bar{order:2;margin:0;padding:12px 13px 0;justify-content:flex-start}
+  .device-screen footer{order:3}
+  #footer{border-top:1px solid rgba(255,255,255,.06);padding:12px 13px;margin:12px 0 0}
+  #footer .footer-btns{flex-wrap:wrap}
+  #header{order:4;background:none;border:0;padding:6px 13px 12px;text-align:left}
+  #header-title,#header-sub{display:none}
+  #char-name-row{justify-content:flex-start;margin:0}
+  #char-name-row::before{content:'NAME';font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4);margin-right:10px}
+  #char-name{font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;text-align:left;width:auto}
+  #sound-btn{order:5;position:static;margin:4px 13px 16px}
+
+  /* nothing on the screen is tactile */
+  .device-screen .px-btn,.device-screen .quest-subtab{
+    background:rgba(255,255,255,.05);color:#e9edf2;border:1px solid rgba(255,255,255,.1);
+    border-radius:5px;font-size:9px;letter-spacing:.1em;box-shadow:none;
+  }
+  .device-screen .px-btn:active,.device-screen .quest-subtab:active{transform:none;box-shadow:none;background:rgba(255,255,255,.1)}
+  .device-screen .px-btn.success,.device-screen .quest-subtab.active{background:oklch(0.86 0.14 200);color:#06131a;border-color:transparent}
+  .device-screen .px-btn.success:active{transform:none;box-shadow:none;background:oklch(0.80 0.14 200)}
+
+  /* the Daily units dissolve into the one screen */
+  .daily-units{display:block;margin:0;padding:0}
+  .unit,.unit > .bezel,.unit .screen{display:contents}
+  .unit .shell-tex,.unit-sprite .shell-header,.unit-sprite .unit-keys,.unit-tasks .unit-label{display:none}
+  .unit-stats .unit-label{display:flex;padding:14px 13px 4px;border-top:1px solid rgba(255,255,255,.06);margin-top:6px}
+  .unit-stats .unit-title{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+  .unit-stats .unit-readout{color:rgba(233,237,242,.4)}
+  #stats-list{padding:8px 13px 0}
+  .rack-footer{margin:14px 13px 4px}
+  .unit-keys{margin:8px 11px 0}
+  .unit-keys-row .px-btn{min-height:44px}
+
+  /* the sprite dock: sticky, darkening into a strip as it collapses */
+  .sprite-dock{
+    position:sticky;top:0;z-index:5;padding:0 10px 10px;
+    background:rgba(11,15,21,var(--p,0));
+    box-shadow:inset 0 -1px 0 rgba(255,255,255,calc(.1 * var(--p,0))), 0 4px 10px rgba(0,0,0,calc(.45 * var(--p,0)));
+  }
+  #sprite-window{margin:0;border-radius:calc(6px - 1px * var(--p,0))}
+  .tap-hint{
+    display:block;position:absolute;right:9px;top:9px;
+    font:8.5px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.5);
+    background:rgba(0,0,0,.4);padding:3px 6px;border-radius:2px;
+    opacity:calc(1 - var(--p,0));pointer-events:none;
+  }
+  .sprite-badge{
+    display:flex;align-items:center;gap:5px;font:700 10px 'Chakra Petch',sans-serif;letter-spacing:.12em;
+    padding:5px 9px;border-radius:3px;box-shadow:0 2px 0 oklch(0.52 0.10 200);
+  }
+  .sprite-badge .why{display:inline;font:9px 'Share Tech Mono',monospace;opacity:.7}
+  #sprite-window .sprite-badge-wrap{opacity:calc(1 - var(--p,0))}
+  #sprite-window.collapsed .sprite-badge-wrap{pointer-events:none}
+  .dock-side{display:block;position:absolute;top:50%;transform:translateY(-50%);opacity:var(--p,0)}
+  .dock-count{margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);white-space:nowrap}
+
+  /* headline and rows, taller for thumbs */
+  .daily-headline{padding:13px 13px 5px;font-size:16px}
+  .task-list{gap:7px;padding:8px 11px 12px}
+  .task-row{padding:14px 13px}
+  .task-list .task-cb{width:20px;height:20px;min-width:20px}
+  .screen-tasks.has-highlights .task-section-head{
+    display:flex;justify-content:space-between;align-items:center;padding:6px 13px 4px;
+    font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4);
+  }
+  .screen-tasks.has-highlights #hl-hint{letter-spacing:.1em;color:rgba(233,237,242,.35)}
+  .screen-tasks.has-highlights #tasks-highlighted{display:flex}
+  .screen-tasks.has-highlights #all-head{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px}
+  .screen-footer{margin-top:0}
+
+  /* page change: the new screen slides in from the right, the shell stays put */
+  @keyframes pageIn{from{transform:translateX(100%)}to{transform:none}}
+  .tab-pane.slide-in{animation:pageIn 220ms ease-out}
+}
+
 /* the stat rack: readout only */
 .screen-stats{padding:12px 11px}
 .rack-row{margin-bottom:11px}
@@ -1158,14 +1284,21 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   #sprite-window{aspect-ratio:4/3}
   .screen-tasks{min-height:0}
 }
-@media(max-width:600px){
-  .daily-units{grid-template-columns:calc(100vw - 32px);margin:0 calc(50% - 50vw + 16px)}
-  .daily-headline{font-size:15px}
-}
 </style>
 </head>
 <body>
 
+<!-- The device. On desktop this wrapper draws nothing (display: contents), so the
+     page lays out exactly as before. On a phone it IS the page: one shell filling
+     the screen, the app inside its screen, navigation keys on the shell below. -->
+<div id="device" class="device">
+  <div class="device-tex"></div>
+  <div class="device-header">
+    <div class="shell-brand"><span class="led"></span><span class="app-wordmark">HABITRON</span></div>
+    <div class="device-meta" id="device-meta"></div>
+  </div>
+  <div class="device-bezel">
+   <div class="device-screen" id="device-screen">
 <header id="header">
   <div id="header-title">✦ RPG TASK TRACKER ✦</div>
   <div id="char-name-row">
@@ -1179,9 +1312,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 <nav id="cartridge" class="cartridge" aria-label="Pages">
   <div class="cartridge-brand"><span class="led"></span><span class="app-wordmark">HABITRON</span></div>
   <div id="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('daily')">DAILY</button>
-    <button class="tab-btn" onclick="switchTab('quests')">GOALS</button>
-    <button class="tab-btn" onclick="switchTab('inventory')">TOOLS</button>
+    <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">DAILY</button>
+    <button class="tab-btn" data-tab="quests" onclick="switchTab('quests')">GOALS</button>
+    <button class="tab-btn" data-tab="inventory" onclick="switchTab('inventory')">TOOLS</button>
   </div>
 </nav>
 <div id="user-info-bar">
@@ -1207,15 +1340,23 @@ body{background:#0b0d12;background-image:none}          /* the desk */
         <div class="bezel">
           <div class="screen" id="screen">
             <div class="status-line"><span id="status-time"></span><span id="status-date"></span></div>
+            <div class="sprite-dock" id="sprite-dock">
             <div id="sprite-window" onclick="openCustomize()" title="Customise">
               <div class="sprite-slot slot-bg" aria-hidden="true"></div>
               <canvas id="sprite-canvas"></canvas>
               <div class="sprite-slot slot-fg" aria-hidden="true"></div>
               <div class="sprite-glass" aria-hidden="true"></div>
+              <div class="tap-hint" aria-hidden="true">TAP TO CUSTOMISE</div>
               <div class="sprite-badge-wrap">
-                <button class="sprite-badge" id="sprite-badge" onclick="event.stopPropagation();openWellnessReport()" title="Why?"><span id="sprite-badge-mood">STEADY</span></button>
+                <button class="sprite-badge" id="sprite-badge" onclick="event.stopPropagation();openWellnessReport()" title="Why?"><span class="mood-text" id="sprite-badge-mood">STEADY</span><span class="why">WHY?</span></button>
                 <span class="sprite-badge-count" id="sprite-badge-count"></span>
               </div>
+            </div>
+            <!-- beside the pane once it has shrunk into the strip -->
+            <div class="dock-side" id="dock-side">
+              <button class="sprite-badge" onclick="openWellnessReport()" title="Why?"><span class="mood-text">STEADY</span><span class="why">WHY?</span></button>
+              <div class="dock-count" id="dock-count"></div>
+            </div>
             </div>
           </div>
         </div>
@@ -1236,7 +1377,10 @@ body{background:#0b0d12;background-image:none}          /* the desk */
           <div class="screen screen-tasks">
             <div id="yesterday-reminder">Tasks missed yesterday? <span class="inline-link" onclick="openBackdate()">LOG THEM</span></div>
             <div class="daily-headline" id="daily-headline"></div>
-            <div id="tasks-list"></div>
+            <div class="task-section-head" id="hl-head"><span>HIGHLIGHTED</span><span id="hl-hint"></span></div>
+            <div id="tasks-highlighted" class="task-list"></div>
+            <div class="task-section-head" id="all-head"><span>ALL TASKS</span><span></span></div>
+            <div id="tasks-list" class="task-list"></div>
             <div id="daily-goals-watch"></div>
             <div class="screen-footer"><span id="tasks-count"></span><span id="tasks-points"></span></div>
           </div>
@@ -1362,6 +1506,30 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
 </div><!-- end #page -->
 
+<footer>
+  <div id="footer">
+    <span class="footer-txt" id="footer-date">Loading…</span>
+    <div class="footer-btns">
+      <button class="px-btn" onclick="importData()">IMPORT</button>
+      <button class="px-btn" onclick="exportData()">EXPORT</button>
+      <button class="px-btn" onclick="openBackups()">BACKUPS</button>
+      <button class="px-btn danger" onclick="resetAllData()">RESET ALL</button>
+    </div>
+  </div>
+</footer>
+<div id="sound-btn" title="Toggle sound" onclick="toggleSound()">♪</div>
+   </div><!-- /device-screen -->
+  </div><!-- /device-bezel -->
+  <div class="device-keys">
+    <div class="device-nav">
+      <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">DAILY</button>
+      <button class="tab-btn" data-tab="quests" onclick="switchTab('quests')">GOALS</button>
+      <button class="tab-btn" data-tab="inventory" onclick="switchTab('inventory')">TOOLS</button>
+    </div>
+    <button class="px-btn success device-action" id="device-action" data-page="daily" onclick="deviceAction()">+ ADD TASK</button>
+  </div>
+</div><!-- /device -->
+
 <!-- MODAL: STOPWATCH QUEST SELECT -->
 <div class="modal-overlay" id="modal-sw-select">
   <div class="modal-box">
@@ -1416,17 +1584,6 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   </div>
 </div>
 
-<footer>
-  <div id="footer">
-    <span class="footer-txt" id="footer-date">Loading…</span>
-    <div class="footer-btns">
-      <button class="px-btn" onclick="importData()">IMPORT</button>
-      <button class="px-btn" onclick="exportData()">EXPORT</button>
-      <button class="px-btn" onclick="openBackups()">BACKUPS</button>
-      <button class="px-btn danger" onclick="resetAllData()">RESET ALL</button>
-    </div>
-  </div>
-</footer>
 
 <!-- LEVEL UP -->
 <div id="lu-overlay">
@@ -1611,6 +1768,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
             <input id="edit-task-min-m" type="number" min="0" max="55" step="5" value="10"/>
             <button class="num-btn plus"  onclick="numStep('edit-task-min-m',+5,0,55,5)">+</button>
           </div></div>
+      </div>
+      <div class="form-row highlight-row">
+        <label class="form-label" for="edit-task-highlight">HIGHLIGHT ON THE PHONE'S FRONT PAGE</label>
+        <button type="button" class="toggle" id="edit-task-highlight" role="switch" aria-checked="false"
+          onclick="this.classList.toggle('on');this.setAttribute('aria-checked',String(this.classList.contains('on')))"></button>
       </div>
       <div class="form-actions">
         <button class="px-btn" onclick="closeModal('modal-taskedit')">CANCEL</button>
@@ -1963,7 +2125,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
     <div id="cosm-unlock-close" class="px-btn success" onclick="document.getElementById('cosm-unlock-overlay').classList.remove('show')">✓ AWESOME</div>
   </div>
 </div>
-<div id="sound-btn" title="Toggle sound" onclick="toggleSound()">♪</div>
+
 <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)"/>
 
 <script>
@@ -2708,9 +2870,10 @@ document.addEventListener('click',function(e){
 // ══════════════════════════════════════════
 const TAB_NAMES=['daily','quests','inventory'];
 function switchTab(name){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',TAB_NAMES[i]===name));
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
+  _devicePageChanged(name);
   if(name==='daily'){const d=load();renderDailyCharacter(d);}
   if(name==='inventory'){renderInventoryTab(load());}
   if(name==='quests'){const d=load();renderQuests(d);}
@@ -2768,13 +2931,16 @@ function _dailyDate(d){
   const mo=d.toLocaleDateString('en-GB',{month:'short'}).toUpperCase().slice(0,3);
   return wd+' '+String(d.getDate()).padStart(2,'0')+' '+mo;
 }
-// The nearest title still to earn, across the stats that count.
-function _nextTitleGap(data){
+// Level is the number of tiers of ten filled across every stat. The title system
+// is being retired, so nothing here depends on it.
+function _tierLevel(data){const tot=getTotalStats(data);return STATS_DEF.reduce((n,s)=>n+Math.floor((tot[s.key]||0)/10),0);}
+// The nearest tier still to fill, across the stats that count.
+function _nextTierGap(data){
   const tot=getTotalStats(data);let best=null;
   STATS_DEF.forEach(s=>{
     if((data.activeStats||{})[s.key]===false)return;
-    const next=(CLASS_MILESTONES[s.key]||[]).find(m=>m.at>tot[s.key]);
-    if(next){const gap=next.at-tot[s.key];if(best===null||gap<best)best=gap;}
+    const gap=10-((tot[s.key]||0)%10);
+    if(best===null||gap<best)best=gap;
   });
   return best;
 }
@@ -2789,9 +2955,11 @@ function renderDailySummary(data){
   set('tasks-count',tasks.length+' TASK'+(tasks.length===1?'':'S')+' ON ROTATION');
   set('tasks-points','+'+pts+' POINT'+(pts===1?'':'S')+' TODAY');
   set('sprite-badge-count',done.length+' OF '+tasks.length);
-  set('stats-readout','LV '+(data.unlockedTitles||[]).length);
-  const gap=_nextTitleGap(data);
-  set('stats-footer',gap===null?'EVERY TITLE EARNED':'NEXT TITLE IN '+gap+' POINT'+(gap===1?'':'S'));
+  set('stats-readout','LV '+_tierLevel(data));
+  const gap=_nextTierGap(data);
+  set('stats-footer',gap===null?'EVERY STAT IS INACTIVE':'NEXT TIER IN '+gap+' POINT'+(gap===1?'':'S'));
+  set('dock-count',done.length+' OF '+tasks.length+' TODAY');
+  _dockSchedule();
   updateDailyClock();
 }
 function updateDailyClock(){
@@ -2801,8 +2969,21 @@ function updateDailyClock(){
 
 function renderTasks(data){
   const wrap=document.getElementById('tasks-list');wrap.innerHTML='';
+  const hlWrap=document.getElementById('tasks-highlighted');if(hlWrap)hlWrap.innerHTML='';
+  const hlTasks=data.customTasks.filter(t=>t.highlighted);
+  const scr=document.querySelector('.screen-tasks');
+  if(scr)scr.classList.toggle('has-highlights',hlTasks.length>0);
+  const hint=document.getElementById('hl-hint');
+  if(hint)hint.textContent='SCROLL FOR ALL '+data.customTasks.length+' ▾';
   if(!data.customTasks.length){wrap.innerHTML='<div class="empty-state">No tasks yet.<br>Tap + ADD TASK to add one.</div>';renderDailySummary(data);return;}
-  data.customTasks.forEach(t=>{
+  // Highlighted rows are a second view of the same tasks, with their own ids.
+  hlTasks.forEach(t=>{if(hlWrap)hlWrap.appendChild(_taskRow(data,t,'hl-task-'));});
+  data.customTasks.forEach(t=>{wrap.appendChild(_taskRow(data,t,'task-'));});
+  renderDailySummary(data);
+}
+function _taskRow(data,t){
+  const idPrefix=arguments[2]||'task-';
+  {
     const done=!!data.todayChecked[t.id];
     // Derive the streak live rather than trusting the stored value, which may be
     // stale (e.g. zeroed by an older build before the grace period existed).
@@ -2813,7 +2994,7 @@ function renderTasks(data){
     const sd=STATS_DEF.find(s=>s.key===t.stat);
     const hue=STAT_HUE[t.stat]||'rgba(233,237,242,.5)';
     const div=document.createElement('div');
-    div.className='task-row'+(done?' done':'');div.id='task-'+t.id;div.setAttribute('data-stat',t.stat);
+    div.className='task-row'+(done?' done':'');div.id=idPrefix+t.id;div.setAttribute('data-stat',t.stat);
     let auto='';
     if(t.linkedActivityId){
       const la=(data.logbookActivities||[]).find(a=>a.id===t.linkedActivityId);
@@ -2828,9 +3009,8 @@ function renderTasks(data){
       <span class="task-tag" style="color:${hue};border-color:color-mix(in oklch, ${hue} 50%, transparent)">${sd?sd.label:t.stat}${pts}</span>`;
     div.querySelector('.task-cb').addEventListener('click',e=>{e.stopPropagation();toggleTask(t.id);});
     div.addEventListener('click',()=>openTaskStats(t.id));
-    wrap.appendChild(div);
-  });
-  renderDailySummary(data);
+    return div;
+  }
 }
 
 // ══════════════════════════════════════════
@@ -2845,8 +3025,11 @@ function renderStats(data){
     const base=data.stats[s.key]||0;
     const bonus=bonuses[s.key]||0;
     const total=base+bonus;
-    // A pixel meter of the value itself, as in the reference, never quite empty.
-    const w=Math.max(4,Math.min(100,total));
+    // The bar is progress through the current tier of ten, so there is always room
+    // to fill it further. Each completed tier is a pip beneath it.
+    const tiers=Math.floor(total/10);
+    const w=Math.max(4,(total%10)*10);
+    const pips='<i></i>'.repeat(Math.min(tiers,10))+(tiers>10?`<span>+${tiers-10}</span>`:'');
     // Neglect, in the lilac of rest and recovery: typographic, never an emoji.
     const dg=daysBetween(sli[s.key],today);
     const neglect=dg>=5?`<span class="rack-flag" title="Last raised ${dg} days ago">${dg}D</span>`:'<span class="rack-flag"></span>';
@@ -2855,7 +3038,8 @@ function renderStats(data){
     div.className='rack-row stat-item'+(isActive?'':' off stat-inactive');div.setAttribute('data-stat',s.key);div.id='statitem-'+s.key;
     div.title=s.fullLabel+(isActive?'':' — inactive, does not affect mood')+(bonus>0?` — includes +${bonus} from items`:'');
     div.innerHTML=`<div class="rack-head"><span class="rack-name">${s.label}</span>${neglect}<span class="rack-val" id="statval-${s.key}">${total}</span></div>
-      <div class="rack-bar"><div class="rack-fill stat-bar-inner" id="bar-${s.key}" style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>`;
+      <div class="rack-bar"><div class="rack-fill stat-bar-inner" id="bar-${s.key}" style="width:${w}%;background:${STAT_HUE[s.key]}"></div></div>
+      <div class="rack-pips" id="pips-${s.key}" style="--hue:${STAT_HUE[s.key]}" title="${tiers} tier${tiers===1?'':'s'} of ten">${pips}</div>`;
     wrap.appendChild(div);
   });
   renderDailySummary(data);
@@ -3936,6 +4120,8 @@ function openAddTask(tid){
   document.getElementById('edit-task-icon').value=task?task.icon:'';
   document.getElementById('edit-task-stat').value=task?task.stat:'strength';
   document.getElementById('edit-task-pts').value=task?task.points:1;
+  const hl=document.getElementById('edit-task-highlight');
+  hl.classList.toggle('on',!!(task&&task.highlighted));hl.setAttribute('aria-checked',String(!!(task&&task.highlighted)));
   // populate linked-activity dropdown
   const asel=document.getElementById('edit-task-activity');asel.innerHTML='<option value="">— None —</option>';
   (data.logbookActivities||[]).forEach(a=>{
@@ -3959,8 +4145,9 @@ function saveTask(){
   const minH=Math.max(0,parseInt(document.getElementById('edit-task-min-h').value)||0);
   const minM=Math.max(0,parseInt(document.getElementById('edit-task-min-m').value)||0);
   const linkedMinMinutes=linkedActivityId?(minH*60+minM):0;
-  if(id){const task=data.customTasks.find(t=>t.id===id);if(task){task.name=name;task.icon=icon;task.stat=stat;task.points=pts;task.linkedActivityId=linkedActivityId;task.linkedMinMinutes=linkedMinMinutes;}}
-  else{const newId='task-'+Date.now();data.customTasks.push({id:newId,name,stat,points:pts,icon,linkedActivityId,linkedMinMinutes});data.streaks[newId]={current:0,best:0};data.lastCompleted[newId]=null;}
+  const highlighted=document.getElementById('edit-task-highlight').classList.contains('on');
+  if(id){const task=data.customTasks.find(t=>t.id===id);if(task){task.name=name;task.icon=icon;task.stat=stat;task.points=pts;task.linkedActivityId=linkedActivityId;task.linkedMinMinutes=linkedMinMinutes;task.highlighted=highlighted;}}
+  else{const newId='task-'+Date.now();data.customTasks.push({id:newId,name,stat,points:pts,icon,linkedActivityId,linkedMinMinutes,highlighted});data.streaks[newId]={current:0,best:0};data.lastCompleted[newId]=null;}
   // If linked and today's logged time already qualifies, auto-complete now
   let autoDone=[];
   if(linkedActivityId)autoDone=autoCheckLinkedTasks(data,linkedActivityId,todayStr());
@@ -5692,6 +5879,8 @@ function applyShellMaterial(id){
   r.setProperty('--key-ink', m.keyInk);
   const meta = document.getElementById('shell-meta');
   if (meta) meta.textContent = 'MK-I · ' + m.name;
+  const dmeta = document.getElementById('device-meta');
+  if (dmeta) dmeta.textContent = m.name;
   return m;
 }
 // A short haptic tap, on the action key only, where the platform offers one.
@@ -5723,9 +5912,13 @@ function fitSpriteCanvas(){
   const W = FIELD_W;
   const H = Math.max(24, Math.min(140, Math.round(W * h / w)));
   // Cover the window rather than fit inside it: take the next whole scale up and
-  // let the window crop the few spare pixels at the edges. Pixels stay exactly
-  // square, and the grid reaches every edge as it does in the reference.
-  const scale = Math.max(1, Math.ceil(Math.max(w / W, h / H)));
+  // let the window crop the spare pixels at the edges. Pixels stay exactly square
+  // and the grid reaches every edge, as in the reference. In the small strip pane
+  // on a phone, where the scale is only two or three, covering would crop the brows,
+  // so there it fits inside instead.
+  const small = w < 180;
+  const scale = small ? Math.max(1, Math.floor(Math.min(w / W, h / H)))
+                      : Math.max(1, Math.ceil(Math.max(w / W, h / H)));
   const cw = W * scale, ch = H * scale;
   cv.style.width = cw + 'px';
   cv.style.height = ch + 'px';
@@ -5749,9 +5942,77 @@ function mountDailySprite(){
   // Mood is a placeholder in this phase; real evaluation arrives later.
   _sprite = mountSprite(cv, {mood:'steady', shape:'round', bg:'grid'});
   const badge = document.getElementById('sprite-badge-mood');
-  if (badge) badge.textContent = 'STEADY';
+  document.querySelectorAll('.mood-text').forEach(el => { el.textContent = 'STEADY'; });
 }
 function unmountDailySprite(){ if (_sprite) { _sprite.destroy(); _sprite = null; } }
+// ── Phone device behaviour (Phase 5.5) ─────────────────────────────────────
+const _phoneQuery = window.matchMedia('(max-width:600px)');
+const _isPhone = () => _phoneQuery.matches;
+let _lastPage = 'daily', _dockRAF = 0;
+function _dockSchedule(){ if (!_dockRAF) _dockRAF = requestAnimationFrame(_dockUpdate); }
+// The sprite window collapses from full size to a 132x58 pane in a frozen strip,
+// driven by scroll position. The dock is sticky, and its bottom margin grows by
+// exactly what its height loses, so the list underneath moves one-to-one with the
+// finger instead of jumping.
+function _dockUpdate(){
+  _dockRAF = 0;
+  const dock = document.getElementById('sprite-dock'), win = document.getElementById('sprite-window');
+  const side = document.getElementById('dock-side'), sc = document.getElementById('device-screen');
+  if (!dock || !win || !sc) return;
+  const onDaily = document.getElementById('tab-daily').classList.contains('active');
+  if (!_isPhone() || !onDaily) {
+    if (dock.dataset.phone) {
+      dock.removeAttribute('style'); win.style.width = ''; win.style.height = '';
+      if (side) side.removeAttribute('style'); delete dock.dataset.phone;
+    }
+    return;
+  }
+  dock.dataset.phone = '1';
+  const box = document.querySelector('#tab-daily .daily-units');   // the units themselves draw no box on a phone
+  const fullW = Math.max(132, (box ? box.clientWidth : 300) - 20), fullH = Math.round(fullW * 3 / 4);
+  const minW = 132, minH = 58;
+  const hFull = fullH + 10, hMin = minH + 18;          // window plus its gap, strip plus padding
+  const status = document.querySelector('#tab-daily .status-line');
+  const start = status ? status.offsetHeight : 0;
+  const p = Math.max(0, Math.min(1, (sc.scrollTop - start) / (hFull - hMin)));
+  const w = Math.round(fullW + (minW - fullW) * p), h = Math.round(fullH + (minH - fullH) * p);
+  const padTop = 9 * p, padBot = 10 - p;
+  win.style.width = w + 'px'; win.style.height = h + 'px';
+  dock.style.paddingTop = padTop + 'px'; dock.style.paddingBottom = padBot + 'px';
+  dock.style.marginBottom = (hFull - (padTop + h + padBot)) + 'px';
+  dock.style.setProperty('--p', p.toFixed(3));
+  if (side) { side.style.left = (10 + w + 10) + 'px'; side.style.pointerEvents = p > 0.5 ? 'auto' : 'none'; }
+  win.classList.toggle('collapsed', p > 0.5);
+}
+function _devicePageChanged(name){
+  const key = document.getElementById('device-action');
+  if (key) {
+    // The action key follows the page. Tools gets its own keys with the stopwatch.
+    const label = { daily: '+ ADD TASK', quests: '+ ADD GOAL' }[name];
+    key.style.display = label ? '' : 'none';
+    if (label) { key.textContent = label; key.dataset.page = name; }
+  }
+  if (_isPhone() && name !== _lastPage) {
+    const sc = document.getElementById('device-screen');
+    if (sc) sc.scrollTop = 0;
+    const pane = document.getElementById('tab-' + name);
+    pane.classList.remove('slide-in'); void pane.offsetWidth; pane.classList.add('slide-in');
+  }
+  _lastPage = name;
+  _dockSchedule();
+}
+function deviceAction(){
+  const page = (document.getElementById('device-action') || {}).dataset.page;
+  if (page === 'quests') openAddGoal(); else openAddTask();
+}
+function initDevice(){
+  const sc = document.getElementById('device-screen');
+  if (sc) sc.addEventListener('scroll', _dockSchedule, { passive: true });
+  window.addEventListener('resize', _dockSchedule);
+  if (_phoneQuery.addEventListener) _phoneQuery.addEventListener('change', _dockSchedule);
+  _dockSchedule();
+}
+
 function initDailySprite(){
   const wrap = document.getElementById('sprite-window');
   if (!wrap) return;
@@ -5771,6 +6032,7 @@ function init(){
   const data=load();
   applyTheme(data.appTheme||'blue');
   initShell();
+  initDevice();
   setInterval(updateDailyClock, 20000);
   initHaptics();
   initDailySprite();

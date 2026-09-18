@@ -13,6 +13,9 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory a
 | 7 | The spec includes a d-pad, but nothing navigates between days, quests or slots yet | **No d-pad for now.** Add it when a feature needs it, or if testing shows an existing screen would benefit |
 | 8 | Keys sitting on the screen currently depress, because Phase 3 asked for it | **Accepted for now.** They move onto the shell as each layout is rebuilt |
 | 9 | Which keys are tactile? | **The shell is tactile, the screen is flat.** On mobile, any key not built into the shell is flat. On desktop, each panel follows the same rule: the sprite unit's WELLNESS, CUSTOMISE and ADD TASK keys sit on its shell and stay tactile, while everything inside its screen is flat. Applied as one rule on the screen, so it holds as pages move in. Supersedes 8 |
+| 10 | Should stats keep a bar that can always be filled further? | **Yes, the tier pips are back.** Each stat's bar shows progress through its current tier of ten points (never full, at least 4%), and below it one pip per completed tier, up to ten, then "+N". `LV` is the sum of completed tiers, and the rack footer reads `NEXT TIER IN N POINTS`. Supersedes the Phase 5 note on stat bars |
+| 11 | The old pixel character | **Removed completely.** The sprite replaces it |
+| 12 | The old title system | **Removed.** It may be replaced by something else later, but not in its current form |
 
 ## Phase 5 — how the Daily page was reconciled
 
@@ -27,10 +30,10 @@ phase is accepted against it:
   window crops the few spare pixels at its edges, so pixels stay exactly square and
   the grid still reaches every edge. The reference stretched its canvas instead.
 - **Points, not XP.** The reference says `+120 XP TODAY` and `NEXT LEVEL IN 380 XP`.
-  The app has no XP, so these read `+N POINTS TODAY` and `NEXT TITLE IN N POINTS`,
-  and `LV` is the existing total level, the number of titles earned.
-- **Stat bars show the value**, clamped to 4–100%, as in the reference. The old
-  tier pips are gone; a stat over 100 shows a full bar.
+  The app has no XP, so these read `+N POINTS TODAY`. (The title-based `LV` and
+  `NEXT TITLE` readouts that first shipped here were replaced by tiers in 5.5,
+  decisions 10 and 12.)
+- ~~Stat bars show the value, clamped to 4–100%.~~ Superseded by decision 10.
 - **Homes for controls the reference does not draw:** LOG PAST, MANAGE TASKS and
   help sit on the task unit's shell; MANAGE STATS sits on the stat unit's shell.
 - **The old character panel left Daily.** The pixel avatar and the equipped title
@@ -38,10 +41,29 @@ phase is accepted against it:
   sprite's badge, with Wellness holding the explanation; goals to watch and the
   yesterday reminder moved into the task list's screen.
 
-Not yet scheduled: the phone design in the README and turn 6 — one device filling
-the screen, navigation keys at its foot, the sprite collapsing into a header strip
-as you scroll, and highlighted tasks (decision 4). The plan's Phase 5 asks only for
-the three units stacked, which is what is built.
+## Phase 5.5 — the phone is the device
+
+Built against turn 6a. On a phone the whole app is one device filling the screen
+with a 16px gutter; on desktop the same markup draws nothing extra and the three
+units stand as before.
+- **Keys at the foot, on the shell:** DAILY / GOALS / TOOLS and a full-width action
+  key that follows the page — `+ ADD TASK` on Daily, `+ ADD GOAL` on Goals (until
+  the Goals segments in Phase 6), hidden on Tools (its instruments bring their own
+  keys in Phase 8). They are the only tactile keys on a phone (decision 9).
+- **The sprite collapses as you scroll**, interpolated, from full width at 4:3 to a
+  132×58 pane in a frozen strip beside the mood badge and `N OF M TODAY`. The list
+  moves one-to-one with the finger. In the strip the sprite fits inside rather than
+  covering, so the brows are never cropped. Badge opens Wellness and the sprite
+  opens Customise at both sizes.
+- **Highlighted tasks (decision 4):** a toggle in the task editor. When any are set,
+  a HIGHLIGHTED section leads the list with `SCROLL FOR ALL N ▾`; the full list
+  follows. Phone only; desktop shows the one list.
+- **Page change:** the incoming page slides in from the right over 220ms. The
+  reference also slides the outgoing page out; that is approximated for now.
+- **Everything else stays reachable on the screen:** LOG PAST, MANAGE TASKS, help
+  and MANAGE STATS as flat buttons; the stat rack at the end of Daily until the
+  Wellness rebuild takes it (9b); then account, data tools, name and sound.
+- **Rows are larger for thumbs:** 14/13 padding, 20px checkbox, 16px headline.
 
 ## Working arrangement
 
