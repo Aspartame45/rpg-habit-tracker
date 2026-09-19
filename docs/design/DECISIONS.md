@@ -279,6 +279,51 @@ BACK TO DAILY or DONE on the shell below).
   stays visible with its padlock and names the award that unlocks it.
 - The shell swatches are 44px on the phone, a comfortable tap size.
 
+## Phase 11 — everything without a mockup
+
+Every remaining surface now uses the established vocabulary. No new patterns:
+popups are the Phase 7 popup unit, lists are Records rows, charts are the Records
+chart, and switches are the settings toggle.
+- **Popups rebuilt:** Manage Tasks, the task editor, Activities, Active Stats,
+  Log Past, Task History, Goal History, Backups, Help, Welcome, the tier popup and
+  sign-in.
+  - Delete moved into each editor as a quiet control, as in Phase 7.
+  - List rows open the thing they name.
+  - Goal History draws the target as a dashed amber line across the chart, and
+    grey bars for weeks that missed it.
+- **The app's own confirm.** Every browser `confirm()` and `alert()` (17 and 7 of
+  them) is now a small popup (`askConfirm` / `tell`). It has a title and a named
+  action key, such as DELETE, RESTORE or CLOSE MONTH. CANCEL or a tap on the
+  backdrop answers no. It sits above whichever popup asked. Missing names are
+  marked inline on the field (`popError`), not in an alert.
+- **Settings replaces the old header and footer.**
+  - The old "RPG TASK TRACKER" header, the name field under it, the footer's data
+    buttons, the account bar and the floating sound switch are gone.
+  - Their controls live in one Settings popup: name, sound, account (sign in or
+    out, sync dot) and data (import, export, backups), with RESET ALL DATA as the
+    quiet control.
+  - On desktop, SETTINGS is a key on the cartridge bar. On a phone, it is a flat
+    full-width key at the end of the screen.
+  - The page footer is now only a quiet status line.
+- **Emoji picker:** its styling was lost in the Clean-up phase, so it had been
+  showing unstyled. It is now a flat panel under the icon field.
+- **Global:**
+  - The page font is Space Grotesk, and the pixel font is no longer loaded.
+  - The starfield is gone.
+  - The tab title reads `APP_NAME`.
+  - Scrollbars and floating messages match the screen, and no longer use emoji.
+  - The toggle track is the spec's 66×26 everywhere; the popup toggles had been
+    58 wide.
+- **Copy:**
+  - Help and Welcome were rewritten for Daily / Goals / Tools. They had still
+    said "RPG Task Tracker", "Marks" and "stored only in this browser".
+  - Welcome can only be left with START.
+- **Removed:** the legacy project editor (`modal-project` and its functions). It
+  was unreachable: nothing renders the old project list.
+- **Test note:** the page no longer forces `image-rendering: pixelated` on
+  everything, only on the sprite canvases. Text now gets normal subpixel
+  smoothing.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.

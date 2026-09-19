@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-<title>RPG Task Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<title>HABITRON</title>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -38,10 +37,9 @@ window._fbUser=null;
   --yellow:#ffea00;--teal:#1de9b6;
   --white:#f0f0ff;--dim:#7a7aaa;
 }
-html{image-rendering:pixelated;image-rendering:crisp-edges;
-  -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
 body{
-  font-family:'Press Start 2P',monospace;
+  font-family:'Space Grotesk',sans-serif;
   background-color:var(--body-bg,#0d0d2e);
   background-image:
     radial-gradient(ellipse at 30% 0%,var(--body-hi1,#2d1b69) 0%,transparent 50%),
@@ -50,31 +48,7 @@ body{
   min-height:100vh;color:var(--white);overflow-x:hidden;
   -webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;
 }
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    radial-gradient(1.25px 1.25px at 10% 12%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 22% 7%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 38% 20%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 55% 5%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 68% 16%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 82% 9%,#fff 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 5% 38%,rgba(255,255,255,.4) 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 46% 60%,rgba(255,255,255,.4) 0%,transparent 100%),
-    radial-gradient(1.25px 1.25px at 75% 48%,rgba(255,255,255,.3) 0%,transparent 100%);
-}
 
-/* ── HEADER ── */
-#header{position:relative;z-index:10;background:linear-gradient(180deg,#0a0a20 0%,#14143a 100%);
-  border-bottom:5px solid var(--b1);box-shadow:0 5px 0 #0a0a20,0 10px 0 var(--b1),0 12.5px 25px rgba(0,0,0,.8);
-  padding:15px 20px 10px;text-align:center;}
-#header-title{font-size:clamp(8.75px,2.2vw,15px);color:var(--gold);text-shadow:0 0 12.5px var(--gold),2.5px 2.5px 0 #000;letter-spacing:2.5px}
-#char-name-row{display:flex;align-items:center;justify-content:center;gap:10px;margin:5px 0}
-#char-name{font-family:'Press Start 2P',monospace;font-size:clamp(11.25px,2.5vw,17.5px);color:var(--white);
-  background:none;border:none;outline:none;text-align:center;text-shadow:2.5px 2.5px 0 #000;cursor:pointer;min-width:200px;}
-#char-name:focus{border-bottom:2.5px solid var(--gold);color:var(--gold)}
-.edit-btn{font-size:12.5px;color:var(--dim);cursor:pointer}.edit-btn:hover{color:var(--gold)}
-#header-sub{font-size:clamp(6.25px,1.1vw,7.5px);color:var(--b2);letter-spacing:3.75px}
 
 /* ── TABS ── */
 /* ── Cartridge bar (Phase 4) ── */
@@ -137,7 +111,6 @@ body::before{
 @media(max-width:1125px){.grid-daily{grid-template-columns:1fr 1fr}}
 @media(max-width:750px){.grid-daily{grid-template-columns:1fr}}
 /* Daily sprite column – larger, centered */
-.tut-text strong{color:var(--white)}
 
 /* ── RESERVE ── */
 .gold-card{
@@ -164,20 +137,7 @@ body::before{
 }
 #yesterday-reminder span{color:var(--teal);cursor:pointer;text-decoration:underline}
 #yesterday-reminder span:hover{color:var(--green)}
-.bd-task-row{display:flex;align-items:center;gap:12.5px;padding:8.75px 0;border-bottom:1.25px solid rgba(88,101,242,.15);}
-.bd-task-row:last-child{border-bottom:none}
-.bd-task-cb{width:22.5px;height:22.5px;min-width:22.5px;border:2.5px solid var(--b2);background:#0a0a1a;
-  display:flex;align-items:center;justify-content:center;font-size:12.5px;cursor:pointer;flex-shrink:0;transition:all .12s;}
-.bd-task-cb.checked{background:var(--green);border-color:var(--green2);color:#000}
 /* was-done but toggled OFF = will remove */
-.bd-task-cb.was-done:not(.checked){background:rgba(255,82,82,.12);border-color:var(--red);color:var(--red)}
-.bd-task-name.removing{text-decoration:line-through;opacity:.55}
-.bd-edit-tag{font-size:clamp(5px,.75vw,6.25px);color:var(--dim);white-space:nowrap;margin-left:5px}
-.bd-edit-tag.was-done{color:var(--teal)}
-.bd-edit-tag.removing{color:var(--red)}
-.bd-task-name{font-size:clamp(5px,.9vw,6.25px);color:var(--white);flex:1}
-.bd-task-already{font-size:clamp(5px,.75vw,6.25px);color:var(--green);white-space:nowrap}
-.bd-warn{font-size:clamp(5px,.8vw,6.25px);color:var(--gold2);padding:10px 0 5px;letter-spacing:1.25px;line-height:2}
 
 /* ── PHASE 5: MOOD SYSTEM ── */
 #sprite-wrap{position:relative;padding-top:62.5px;margin-bottom:5px}
@@ -269,29 +229,6 @@ body::before{
 .dgw-bar-inner.warn{background:var(--orange2)}
 
 /* ── TASK / GOAL STATS MODALS ── */
-.tsk-stat-row{display:flex;justify-content:space-between;align-items:center;padding:6.25px 0;border-bottom:1.25px solid rgba(88,101,242,.15);font-size:clamp(5px,.9vw,6.25px)}
-.tsk-stat-row:last-child{border-bottom:none}
-.tsk-stat-lbl{color:var(--dim);letter-spacing:1.25px}
-.tsk-stat-val{color:var(--white);letter-spacing:1.25px}
-.tsk-chart-wrap{margin:12.5px 0;overflow-x:auto}
-.tsk-chart{display:flex;align-items:flex-end;gap:5px;height:187.5px;padding:0 2.5px}
-.tsk-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:27.5px;height:100%}
-.tsk-bar-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;width:100%}
-.tsk-bar{background:var(--b2);width:20px;transition:height .3s;min-height:2.5px;border-radius:1.25px 1.25px 0 0}
-.tsk-bar.full{background:var(--green)}
-.tsk-bar-num{font-size:clamp(5px,.85vw,7.5px);color:var(--white);margin-bottom:2.5px;letter-spacing:0}
-.tsk-bar-lbl{font-size:clamp(3.75px,.6vw,5px);color:var(--dim);letter-spacing:0;text-align:center;white-space:nowrap;margin-top:3.75px}
-.tsk-daterange{display:flex;gap:7.5px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.tsk-daterange input[type=date]{font-family:'Press Start 2P',monospace;font-size:clamp(5px,.8vw,6.25px);background:#0a0a1a;border:2.5px solid var(--b1);color:var(--white);padding:5px 7.5px;outline:none}
-.tsk-daterange label{font-size:clamp(5px,.75vw,6.25px);color:var(--dim);letter-spacing:1.25px}
-.tsk-chart-toggle{display:flex;gap:7.5px;margin-bottom:7.5px}
-.tsk-chart-toggle button{font-family:'Press Start 2P',monospace;font-size:clamp(5px,.8vw,6.25px);padding:3.75px 10px;background:var(--b1);border:1.25px solid var(--b2);color:var(--b3);cursor:pointer}
-.tsk-chart-toggle button.active{background:var(--b2);color:var(--white)}
-.tsk-section-hd{font-size:clamp(5px,.85vw,6.25px);color:var(--dim);letter-spacing:2.5px;margin:12.5px 0 6.25px;border-top:1.25px solid rgba(88,101,242,.2);padding-top:10px}
-.gst-rate-row{display:flex;gap:12.5px;flex-wrap:wrap;margin:10px 0}
-.gst-rate-card{flex:1;min-width:100px;background:rgba(88,101,242,.1);border:1.25px solid var(--b1);padding:10px;text-align:center}
-.gst-rate-num{font-size:clamp(10px,2vw,15px);color:var(--green);text-shadow:0 0 10px var(--green)}
-.gst-rate-lbl{font-size:clamp(5px,.75vw,6.25px);color:var(--dim);margin-top:5px;letter-spacing:1.25px}
 
 /* Goal type radio */
 .goal-type-row{display:flex;gap:17.5px;margin-bottom:12.5px;flex-wrap:wrap}
@@ -346,7 +283,6 @@ body::before{
   .modal-box{max-width:825px;}
   .modal-box.wide{max-width:1075px;}
   .modal-head{padding:12.5px 20px;}
-  .modal-body{padding:22.5px 27.5px;}
 }
 .modal-overlay.open .modal-box{transform:scale(1)}
 .modal-head{background:var(--b1);padding:10px 15px;display:flex;align-items:center;justify-content:space-between;
@@ -361,87 +297,12 @@ body::before{
   transition:transform 80ms,box-shadow 80ms;
 }
 .modal-close:active{transform:translateY(2px);box-shadow:var(--key-pressed)}
-.modal-body{padding:17.5px 20px}
-.form-row{margin-bottom:15px}
-.form-label{font-size:clamp(6.25px,1vw,7.5px);color:var(--dim);letter-spacing:1.25px;display:block;margin-bottom:6.25px}
-.form-input,.form-select{font-family:'Press Start 2P',monospace;font-size:clamp(6.25px,1vw,7.5px);
-  background:#0a0a1a;border:2.5px solid var(--b1);color:var(--white);padding:7.5px 10px;width:100%;outline:none;}
-.form-input:focus,.form-select:focus{border-color:var(--teal)}
-.form-select option{background:#1a1a3a}
-.form-hint{font-size:clamp(5px,.8vw,6.25px);color:var(--dim);margin-top:3.75px}
-.form-row-inline{display:grid;grid-template-columns:1fr 1fr;gap:12.5px}
-.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
-.task-mgr-item{display:flex;align-items:center;gap:10px;padding:8.75px 0;border-bottom:1.25px solid rgba(88,101,242,.2);flex-wrap:wrap;}
-.task-mgr-item:last-child{border-bottom:none}
-.task-mgr-icon{font-size:17.5px;width:25px;text-align:center;flex-shrink:0}
-.task-mgr-name{font-size:clamp(5px,.9vw,6.25px);color:var(--white);flex:1;min-width:125px;word-break:break-word}
-.task-mgr-meta{font-size:clamp(5px,.8vw,6.25px);color:var(--dim);white-space:nowrap}
-.task-mgr-actions{display:flex;gap:5px;margin-left:auto;flex-shrink:0}
 
-/* ── LEVEL UP ── */
-#lu-overlay{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.75);opacity:0;pointer-events:none;transition:opacity .3s;}
-#lu-overlay.show{opacity:1;pointer-events:auto}
-#lu-box{background:var(--panel-face);border:5px solid var(--gold);
-  box-shadow:0 0 0 2.5px #b8860b,0 0 0 5px #000,0 0 0 7.5px #b8860b,0 0 62.5px var(--gold);
-  padding:32.5px 45px;text-align:center;transform:scale(.8);transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
-#lu-overlay.show #lu-box{transform:scale(1)}
-#lu-title{font-size:clamp(15px,4vw,25px);color:var(--gold);text-shadow:0 0 25px var(--gold),2.5px 2.5px 0 #000;letter-spacing:2.5px;animation:flicker 1.5s infinite}
-@keyframes flicker{0%,100%{opacity:1}50%{opacity:.85}}
-#lu-sub{font-size:clamp(7.5px,1.5vw,8.75px);color:var(--teal);margin:17.5px 0 22.5px;letter-spacing:1.25px;line-height:2.2;white-space:pre-line}
-/* styling comes from the action key class */
-#lu-close:hover{color:var(--white);border-color:var(--white)}
 
 /* ── FLOAT + MISC ── */
-.float-txt{position:fixed;pointer-events:none;z-index:9999;font-family:'Press Start 2P',monospace;font-size:13.75px;
-  color:var(--gold);text-shadow:2.5px 2.5px 0 #000,0 0 12.5px var(--gold);animation:floatUp 1.2s ease-out forwards;}
+.float-txt{position:fixed;pointer-events:none;z-index:9999;font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.08em;white-space:nowrap;
+  color:oklch(0.86 0.14 200);text-shadow:0 2px 8px rgba(0,0,0,.85);animation:floatUp 1.2s ease-out forwards;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-62.5px) scale(1.2)}100%{opacity:0;transform:translateY(-100px) scale(.9)}}
-/* Sound is the app's one setting, so it is the toggle switch. Text is hidden:
-   the knob position carries the state. */
-#sound-btn{
-  position:fixed;bottom:17.5px;right:17.5px;z-index:100;
-  width:66px;height:26px;border-radius:13px;padding:2px;border:0;
-  display:flex;align-items:center;justify-content:flex-end;
-  background:oklch(0.72 0.13 200);
-  box-shadow:inset 0 2px 4px rgba(0,0,0,.45);
-  cursor:pointer;touch-action:manipulation;font-size:0;color:transparent;
-  transition:background 120ms;
-}
-#sound-btn::after{
-  content:'';width:22px;height:22px;border-radius:50%;
-  background:linear-gradient(180deg,#f4f6f0,#cdd2c2);
-  box-shadow:0 1px 3px rgba(0,0,0,.45);
-}
-#sound-btn.muted{background:rgba(0,0,0,.35);justify-content:flex-start;opacity:1}
-#footer{border-top:5px solid var(--b1);padding:12.5px 20px;display:flex;justify-content:space-between;
-  align-items:center;flex-wrap:wrap;gap:10px;max-width:1375px;margin:0 auto;position:relative;z-index:1;}
-.footer-txt{font-size:clamp(5px,.9vw,6.25px);color:var(--dim);letter-spacing:1.25px}
-.footer-btns{display:flex;gap:7.5px;flex-wrap:wrap}
-::-webkit-scrollbar{width:7.5px}::-webkit-scrollbar-track{background:#0a0a1a}::-webkit-scrollbar-thumb{background:var(--b1)}
-/* ── Auth overlay ── */
-#auth-overlay{position:fixed;inset:0;background:rgba(0,0,10,.88);display:flex;align-items:center;justify-content:center;z-index:9999}
-#auth-overlay.hidden{display:none}
-.auth-box{background:var(--panel-face);border:2.5px solid var(--b1);box-shadow:0 0 30px rgba(88,101,242,.4);padding:35px 37.5px;max-width:425px;width:90%;display:flex;flex-direction:column;gap:10px}
-.auth-box h2{color:var(--b3);letter-spacing:2.5px;text-align:center;font-size:clamp(7.5px,1.3vw,10px);margin-bottom:2.5px}
-.auth-box>p{color:var(--dim);font-size:clamp(5px,.8vw,6.25px);text-align:center;margin-bottom:5px}
-.auth-box input{background:var(--panel-bg);border:2.5px solid var(--b2);color:var(--white);padding:11.25px 12.5px;font-family:'Press Start 2P',monospace;font-size:clamp(5px,.75vw,6.25px);width:100%}
-.auth-box input:focus{outline:none;border-color:var(--teal)}
-.auth-divider{text-align:center;color:var(--dim);font-size:clamp(5px,.7vw,6.25px);margin:2.5px 0}
-.auth-google-btn{background:#fff;color:#333;display:flex;align-items:center;justify-content:center;gap:8.75px;font-size:clamp(5px,.75vw,6.25px)}
-.auth-google-btn img{width:17.5px;height:17.5px;flex-shrink:0}
-.auth-err{color:var(--red);font-size:clamp(5px,.7vw,6.25px);text-align:center;min-height:17.5px}
-.auth-skip{color:var(--dim);font-size:clamp(5px,.7vw,6.25px);text-align:center;cursor:pointer;text-decoration:underline;margin-top:5px}
-.auth-skip:hover{color:var(--white)}
-/* ── User info bar in tab strip ── */
-#user-info-bar{display:none;align-items:center;justify-content:flex-end;gap:7.5px;
-  max-width:1375px;margin:-10px auto 14px;padding:0 20px;
-  font-size:clamp(5px,.7vw,6.25px);color:var(--dim);white-space:nowrap}
-#user-info-bar.visible{display:flex}
-#user-email-lbl{color:var(--teal);max-width:150px;overflow:hidden;text-overflow:ellipsis}
-.sync-dot{width:7.5px;height:7.5px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0}
-.sync-dot.syncing{background:var(--gold);animation:sdBlink .8s infinite}
-.sync-dot.offline{background:var(--dim)}
-@keyframes sdBlink{0%,100%{opacity:1}50%{opacity:.25}}
 
 /* ══════════════════════════════════════════════════════════════════════════
    CONTROL VOCABULARY (Phase 3)
@@ -690,7 +551,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   padding:8px 2px 6px;border-top:1px solid rgba(255,255,255,.06);
 }
 #daily-goals-watch .dgw-row{padding:6px 2px}
-#daily-goals-watch .dgw-label{font:500 12px 'Space Grotesk',sans-serif;color:#e9edf2}
+#daily-goals-watch .dgw-label{font:500 12px 'Space Grotesk',sans-serif;letter-spacing:0;color:#e9edf2}
 #daily-goals-watch .dgw-pct{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.55)}
 #daily-goals-watch .goal-bar-outer{position:relative;height:9px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.06);border:0;margin-top:5px!important}
 #daily-goals-watch .goal-bar-outer::after{
@@ -754,16 +615,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   /* inside the screen, in reading order: the page, then the account and data tools */
   #page{order:1;padding:0;max-width:none;margin:0;min-width:0}
   html{overflow:hidden}
-  #user-info-bar{order:2;margin:0;padding:12px 13px 0;justify-content:flex-start}
   .device-screen footer{order:3}
-  #footer{border-top:1px solid rgba(255,255,255,.06);padding:12px 13px;margin:12px 0 0}
-  #footer .footer-btns{flex-wrap:wrap}
-  #header{order:4;background:none;border:0;padding:6px 13px 12px;text-align:left}
-  #header-title,#header-sub{display:none}
-  #char-name-row{justify-content:flex-start;margin:0}
-  #char-name-row::before{content:'NAME';font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4);margin-right:10px}
-  #char-name{font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;text-align:left;width:auto}
-  #sound-btn{order:5;position:static;margin:4px 13px 16px}
 
   /* nothing on the screen is tactile */
   .device-screen .px-btn,.device-screen .quest-subtab{
@@ -1073,12 +925,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .fld-toggle small{display:block;margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
 .fld-toggle input,.pick-row input,.seg2 input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
 .tgl{
-  flex:none;width:58px;height:26px;border-radius:13px;padding:2px;box-sizing:border-box;display:inline-flex;align-items:center;
+  flex:none;width:66px;height:26px;border-radius:13px;padding:2px;box-sizing:border-box;display:inline-flex;align-items:center;
   background:rgba(0,0,0,.35);box-shadow:inset 0 2px 4px rgba(0,0,0,.45);transition:background 120ms;
 }
 .tgl::after{content:'';width:22px;height:22px;border-radius:50%;background:linear-gradient(180deg,#f4f6f0,#cdd2c2);box-shadow:0 1px 3px rgba(0,0,0,.45);transition:transform 120ms}
 .fld-toggle input:checked+.tgl{background:oklch(0.72 0.13 200)}
-.fld-toggle input:checked+.tgl::after{transform:translateX(32px)}
+.fld-toggle input:checked+.tgl::after{transform:translateX(40px)}
 .fld-toggle input:focus-visible+.tgl,.pick-row input:focus-visible~.dot,.seg2 input:focus-visible+span{outline:2px solid oklch(0.80 0.14 200 / .8);outline-offset:2px}
 .pick-list{display:flex;flex-direction:column;gap:6px}
 .pick-row{
@@ -1413,6 +1265,147 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   /* Stats live in Wellness on the phone; Daily stays sprite, mood, tasks (6d) */
   .unit-stats{display:none!important}
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PHASE 11 — the remaining popups and the page chrome, in the same vocabulary
+   ══════════════════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:7px}::-webkit-scrollbar-track{background:#0b0d12}::-webkit-scrollbar-thumb{background:rgba(63,215,232,.3)}
+.empty-state{padding:18px 6px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
+.float-txt.center{font-size:16px}
+
+/* the page footer: a quiet status line. Settings live on the cartridge on
+   desktop, and at the foot of the screen on a phone. */
+#footer{display:flex;justify-content:center;align-items:center;gap:12px;max-width:1375px;margin:0 auto;padding:4px 20px 26px;position:relative;z-index:1}
+.footer-txt{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.35);text-align:center}
+@media(min-width:601px){.footer-set{display:none}}
+@media(max-width:600px){
+  #footer{flex-direction:column-reverse;align-items:stretch;gap:10px;max-width:none;border-top:1px solid rgba(255,255,255,.06);padding:14px 13px 16px;margin:12px 0 0}
+  .footer-set{min-height:44px}
+}
+.cart-set{margin-left:10px}
+
+/* list rows inside popups open the thing they name */
+.mgr-list{display:flex;flex-direction:column;gap:6px}
+.pop-screen .rec-row{padding:11px 12px;min-height:44px}
+.rec-row.on{border-color:oklch(0.80 0.14 200 / .55);background:rgba(255,255,255,.07)}
+.rec-row.static{cursor:default}
+.rec-row.static:active{background:rgba(255,255,255,.05)}
+.row-ico{flex:none;width:22px;text-align:center;font-size:17px;line-height:1}
+.row-go{flex:none;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.fld-pair{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:end}
+.pop-screen .fld-in.icon-in{font-size:18px;padding:7px 11px}
+.pop-h{font:700 10px 'Chakra Petch',sans-serif;letter-spacing:.14em;color:rgba(233,237,242,.7)}
+.act-form{padding-top:13px;border-top:1px solid rgba(255,255,255,.07)}
+.stat-toggles{display:flex;flex-direction:column;gap:6px}
+.stat-toggles .fld-toggle{padding:8px 11px}
+
+/* log past */
+.bd-list{display:flex;flex-direction:column;gap:6px}
+.bd-row{
+  display:flex;align-items:center;gap:11px;width:100%;min-height:42px;padding:10px 11px;border-radius:5px;text-align:left;cursor:pointer;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.bd-row.on{background:rgba(255,255,255,.06)}
+.bd-task-cb{width:17px;height:17px;flex:none;box-sizing:border-box;border:2px solid oklch(0.80 0.14 200);border-radius:3px}
+.bd-task-cb.checked{background:oklch(0.80 0.14 200);border-color:transparent}
+.bd-task-name{flex:1;min-width:0;font:500 13px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
+.bd-task-name.removing{text-decoration:line-through;color:rgba(233,237,242,.5)}
+.bd-edit-tag{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.4)}
+.bd-edit-tag.add{color:oklch(0.86 0.14 200)}
+.bd-edit-tag.was-done{color:oklch(0.86 0.20 130)}
+.bd-edit-tag.removing{color:#e0645c}
+
+/* task and goal history: the Records chart view, in a popup */
+.pop-screen.hist{gap:14px}
+.hist .rec-title{font-size:20px}
+.hist .rec-chips{margin:0}
+.hist .rec-chart{height:150px;margin-top:0}
+.st-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.st-tiles>div{min-width:0;padding:10px 11px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.st-tiles span{display:block;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.st-tiles b{display:block;margin-top:5px;font:400 14px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gst-state{margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em}
+.gst-state.onTrack{color:oklch(0.86 0.20 130)}.gst-state.atRisk{color:oklch(0.74 0.17 55)}.gst-state.failing{color:#e0645c}.gst-state.grace{color:rgba(233,237,242,.45)}
+.gchart{position:relative;display:flex;align-items:flex-end;gap:8px;height:128px;border-bottom:1px solid rgba(255,255,255,.1)}
+.gchart .rec-col{height:auto;justify-content:flex-end}
+.gchart .rec-bar{flex:none}
+.gchart .rec-bar.miss{background:rgba(233,237,242,.22)}
+.gchart-target{position:absolute;left:0;right:0;height:0;border-top:1px dashed oklch(0.74 0.17 55);pointer-events:none}
+.gchart-target span{position:absolute;right:0;bottom:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:oklch(0.74 0.17 55)}
+.gchart.dense .rec-bar-v{display:none}
+.gchart-l{display:flex;gap:8px;margin-top:6px}
+.gchart-l span{flex:1;min-width:0;text-align:center;font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4);white-space:nowrap;overflow:hidden}
+.gchart-l.dense span:not(:first-child):not(:last-child){visibility:hidden}
+@media(max-width:600px){
+  .rec-chart.mid .rec-col:nth-child(even) .rec-bar-l,.gchart-l.mid span:nth-child(even){visibility:hidden}
+  .rec-chart.mid .rec-bar-v,.gchart.mid .rec-bar-v{font-size:9px}
+}
+@media(max-width:600px){
+  .st-tiles{grid-template-columns:1fr 1fr}
+  .st-tiles>div:last-child:nth-child(odd){grid-column:1/-1}
+  .gchart,.gchart-l{gap:4px}
+}
+
+/* backups */
+.bk-cur{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.bk-reach{flex:none;text-align:right;font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4)}
+.bk-reach.more{color:oklch(0.86 0.20 130)}
+
+/* help and welcome */
+.tut-row{display:flex;gap:12px;align-items:baseline}
+.tut-n{flex:none;font:10px 'Share Tech Mono',monospace;color:oklch(0.86 0.14 200)}
+.tut-row p{font:13px/1.55 'Space Grotesk',sans-serif;color:rgba(233,237,242,.75)}
+.tut-row b{font-weight:600;color:#e9edf2}
+.welcome-lead{font:500 15px/1.5 'Space Grotesk',sans-serif;color:#e9edf2}
+
+/* the app's own confirm, above any popup that asked */
+#modal-ask{z-index:1100}
+.ask-text{font:14px/1.55 'Space Grotesk',sans-serif;color:#e9edf2;white-space:pre-line;overflow-wrap:anywhere}
+
+/* settings */
+.acct{display:flex;align-items:center;gap:10px;padding:9px 9px 9px 11px;border-radius:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font:12px/1.4 'Space Grotesk',sans-serif;color:rgba(233,237,242,.65)}
+.acct>span:not(.sync-dot){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+#user-info-bar{display:none}
+#user-info-bar.visible{display:flex}
+#user-info-bar.visible+.acct-off{display:none}
+#user-email-lbl{color:#e9edf2;white-space:nowrap}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:oklch(0.86 0.20 130);display:inline-block;flex:none}
+.sync-dot.syncing{background:oklch(0.74 0.17 55);animation:sdBlink .8s infinite}
+.sync-dot.offline{background:rgba(233,237,242,.3)}
+@keyframes sdBlink{0%,100%{opacity:1}50%{opacity:.25}}
+.set-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.set-grid .sbtn,.acct .sbtn{min-height:38px}
+.set-foot{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);text-align:center}
+
+/* level-up: a small unit dropping in, like any popup */
+#lu-overlay{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;
+  background:rgba(6,8,12,.72);opacity:0;pointer-events:none;transition:opacity .2s}
+#lu-overlay.show{opacity:1;pointer-events:auto}
+#lu-overlay.show #lu-box{transform:none}
+.lu-screen{text-align:center;padding:20px 14px}
+#lu-sub{font:600 17px/1.45 'Space Grotesk',sans-serif;color:#e9edf2;white-space:pre-line;overflow-wrap:anywhere}
+
+/* sign-in */
+#auth-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,8,12,.9)}
+#auth-overlay.hidden{display:none}
+#auth-overlay .pop-box{transform:none}
+.auth-err:empty{display:none}
+.auth-err{margin-top:-4px}
+.auth-google{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:40px;background:#f2f4f7;color:#1f2329}
+.auth-google:active{background:#dfe3e8}
+.auth-google img{width:16px;height:16px}
+
+/* emoji picker: a flat panel under the field */
+#emoji-picker{position:fixed;z-index:100000;display:none;width:270px;padding:8px;border-radius:8px;
+  background:#11141b;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 34px rgba(0,0,0,.65)}
+#emoji-picker.open{display:block}
+.emoji-cats{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.emoji-cat-btn{padding:6px 9px;border:0;border-radius:4px;cursor:pointer;background:rgba(255,255,255,.05);
+  font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.08em;color:rgba(233,237,242,.6)}
+.emoji-cat-btn.active{background:oklch(0.80 0.14 200);color:#06131a}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;max-height:190px;overflow-y:auto}
+.emoji-cell{cursor:pointer;font-size:20px;text-align:center;padding:5px 0;border-radius:4px;line-height:1}
+.emoji-cell:hover{background:rgba(255,255,255,.08)}
 </style>
 </head>
 <body>
@@ -1428,14 +1421,6 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   </div>
   <div class="device-bezel">
    <div class="device-screen" id="device-screen">
-<header id="header">
-  <div id="header-title">✦ RPG TASK TRACKER ✦</div>
-  <div id="char-name-row">
-    <input id="char-name" type="text" value="Adventurer" maxlength="24" spellcheck="false"/>
-    <span class="edit-btn px-btn sm" onclick="document.getElementById('char-name').focus()">✎</span>
-  </div>
-  <div id="header-sub">DAILY CHARACTER SHEET</div>
-</header>
 
 <!-- The cartridge bar: one shell strip, above the panels on every page. -->
 <nav id="cartridge" class="cartridge" aria-label="Pages">
@@ -1444,13 +1429,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
     <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">DAILY</button>
     <button class="tab-btn" data-tab="quests" onclick="switchTab('quests')">GOALS</button>
     <button class="tab-btn" data-tab="inventory" onclick="switchTab('inventory')">TOOLS</button>
+    <button class="tab-btn cart-set" onclick="openSettings()">SETTINGS</button>
   </div>
 </nav>
-<div id="user-info-bar">
-  <span class="sync-dot" id="sync-dot"></span>
-  <span id="user-email-lbl"></span>
-  <button class="px-btn sm" onclick="fbSignOut()">SIGN OUT</button>
-</div>
 
 <div id="page">
 
@@ -1661,18 +1642,10 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
 </div><!-- end #page -->
 
-<footer>
-  <div id="footer">
-    <span class="footer-txt" id="footer-date">Loading…</span>
-    <div class="footer-btns">
-      <button class="px-btn" onclick="importData()">IMPORT</button>
-      <button class="px-btn" onclick="exportData()">EXPORT</button>
-      <button class="px-btn" onclick="openBackups()">BACKUPS</button>
-      <button class="px-btn danger" onclick="resetAllData()">RESET ALL</button>
-    </div>
-  </div>
+<footer id="footer">
+  <span class="footer-txt" id="footer-status"></span>
+  <button class="sbtn footer-set" onclick="openSettings()">SETTINGS</button>
 </footer>
-<div id="sound-btn" title="Toggle sound" onclick="toggleSound()">♪</div>
    </div><!-- /device-screen -->
   </div><!-- /device-bezel -->
   <div class="device-keys">
@@ -1701,23 +1674,21 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: MANAGE LOGBOOK ACTIVITIES -->
-<div class="modal-overlay" id="modal-manage-activities">
-  <div class="modal-box">
-    <div class="modal-head">📖 MANAGE ACTIVITIES<span class="modal-close" onclick="closeModal('modal-manage-activities')">✕</span></div>
-    <div class="modal-body">
-      <div id="manage-act-list"></div>
-      <div class="tsk-section-hd" id="act-form-hd">ADD ACTIVITY</div>
-      <input type="hidden" id="edit-act-id"/>
-      <div class="form-row"><label class="form-label">NAME</label>
-        <input class="form-input" id="edit-act-name" type="text" maxlength="40" placeholder="e.g. Reading"/></div>
-      <div class="form-row"><label class="form-label">ICON / EMOJI</label>
-        <input class="form-input" id="edit-act-icon" type="text" maxlength="4" placeholder="📖"/>
-        <div class="form-hint">Click the field to pick an emoji</div></div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="resetActForm()">CLEAR</button>
-        <button class="px-btn success" onclick="saveActivity()">SAVE</button>
+<div class="modal-overlay pop" id="modal-manage-activities" style="--pop-w:410px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>ACTIVITIES</span><button class="modal-close" onclick="closeModal('modal-manage-activities')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <div class="mgr-list" id="manage-act-list"></div>
+      <div class="pop-group act-form">
+        <div class="pop-h" id="act-form-hd">NEW ACTIVITY</div>
+        <input type="hidden" id="edit-act-id"/>
+        <label class="fld"><span class="fld-label">NAME</span><input class="fld-in" id="edit-act-name" type="text" maxlength="40" placeholder="e.g. Reading" autocomplete="off"/></label>
+        <label class="fld"><span class="fld-label">ICON<span class="opt">OPTIONAL</span></span><input class="fld-in icon-in" id="edit-act-icon" type="text" maxlength="4" placeholder="📖" autocomplete="off"/></label>
       </div>
-    </div>
+    </div></div>
+    <div class="pop-keys"><button class="pill" id="act-pill" onclick="actPill()">DONE</button><button class="action-key" id="act-save-btn" onclick="saveActivity()">ADD ACTIVITY</button></div>
+    <button class="pop-quiet" id="act-delete-btn" onclick="deleteActivity(document.getElementById('edit-act-id').value)" style="display:none">DELETE ACTIVITY</button>
   </div>
 </div>
 
@@ -1741,10 +1712,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
 <!-- LEVEL UP -->
 <div id="lu-overlay">
-  <div id="lu-box">
-    <div id="lu-title">★ LEVEL UP! ★</div>
-    <div id="lu-sub"></div>
-    <div id="lu-close" class="px-btn success" onclick="hideLU()">[ OK ]</div>
+  <div id="lu-box" class="modal-box pop-box" style="--pop-w:320px">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="lu-title">TIER UP</span></div>
+    <div class="bezel"><div class="screen pop-screen lu-screen"><div id="lu-sub"></div></div></div>
+    <div class="pop-keys"><button id="lu-close" class="action-key" onclick="hideLU()">OK</button></div>
   </div>
 </div>
 
@@ -1787,94 +1759,38 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: TASK MANAGER -->
-<div class="modal-overlay" id="modal-taskmgr">
-  <div class="modal-box">
-    <div class="modal-head">MANAGE TASKS<span class="modal-close" onclick="closeModal('modal-taskmgr')">✕</span></div>
-    <div class="modal-body">
-      <div id="task-mgr-list"></div>
-      <div style="margin-top:17.5px;text-align:right"><button class="px-btn" onclick="openAddTask(null)">+ ADD NEW TASK</button></div>
-    </div>
+<div class="modal-overlay pop" id="modal-taskmgr" style="--pop-w:410px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>MANAGE TASKS</span><button class="modal-close" onclick="closeModal('modal-taskmgr')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen"><div class="mgr-list" id="task-mgr-list"></div></div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-taskmgr')">DONE</button><button class="action-key" onclick="openAddTask(null)">+ NEW TASK</button></div>
   </div>
 </div>
 
 <!-- MODAL: ADD/EDIT TASK -->
-<div class="modal-overlay" id="modal-taskedit">
-  <div class="modal-box">
-    <div class="modal-head"><span id="taskedit-title">ADD TASK</span><span class="modal-close" onclick="closeModal('modal-taskedit')">✕</span></div>
-    <div class="modal-body">
+<div class="modal-overlay pop" id="modal-taskedit" style="--pop-w:410px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="taskedit-title">NEW TASK</span><button class="modal-close" onclick="closeModal('modal-taskedit')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
       <input type="hidden" id="edit-task-id"/>
-      <div class="form-row"><label class="form-label">TASK NAME</label>
-        <input class="form-input" id="edit-task-name" type="text" maxlength="60" placeholder="e.g. Cold Shower"/></div>
-      <div class="form-row"><label class="form-label">ICON / EMOJI</label>
-        <input class="form-input" id="edit-task-icon" type="text" maxlength="4" placeholder="🧊"/>
-        <div class="form-hint">Single emoji or symbol</div></div>
-      <div class="form-row-inline">
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">STAT</label>
-          <select class="form-select" id="edit-task-stat">
-            <option value="strength">Strength</option><option value="focus">Focus</option>
-            <option value="intelligence">Intelligence</option><option value="charisma">Charisma</option>
-            <option value="creativity">Creativity</option><option value="initiative">Initiative</option>
-            <option value="discipline">Discipline</option>
-            <option value="agility">Agility</option><option value="vitality">Vitality</option>
-          </select></div>
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">POINTS</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-task-pts',-1,1,10)">−</button>
-            <input id="edit-task-pts" type="number" min="1" max="10" value="1"/>
-            <button class="num-btn plus"  onclick="numStep('edit-task-pts',+1,1,10)">+</button>
-          </div></div>
+      <label class="fld"><span class="fld-label">NAME</span><input class="fld-in" id="edit-task-name" type="text" maxlength="60" placeholder="e.g. Cold shower" autocomplete="off"/></label>
+      <label class="fld"><span class="fld-label">ICON<span class="opt">ONE EMOJI OR SYMBOL</span></span><input class="fld-in icon-in" id="edit-task-icon" type="text" maxlength="4" placeholder="🧊" autocomplete="off"/></label>
+      <div class="fld-pair">
+        <label class="fld"><span class="fld-label">STAT</span><select class="fld-in" id="edit-task-stat"><option value="strength">Strength</option><option value="focus">Focus</option><option value="intelligence">Intelligence</option><option value="charisma">Charisma</option><option value="creativity">Creativity</option><option value="initiative">Initiative</option><option value="discipline">Discipline</option><option value="agility">Agility</option><option value="vitality">Vitality</option></select></label>
+        <div class="fld"><span class="fld-label">POINTS</span><span class="stepper lg"><button type="button" class="step" onclick="numStep('edit-task-pts',-1,1,10,1)" aria-label="Less">−</button><input id="edit-task-pts" type="number" min="1" max="10" step="1" value="1"/><button type="button" class="step plus" onclick="numStep('edit-task-pts',+1,1,10,1)" aria-label="More">+</button></span></div>
       </div>
-      <div class="form-row">
-        <label class="form-label">LINK TO RECORDS ACTIVITY (optional)</label>
-        <select class="form-select" id="edit-task-activity" onchange="onTaskActivityChange()">
-          <option value="">— None —</option>
-        </select>
-        <div class="form-hint">Auto-completes this task when enough time is logged</div>
-      </div>
-      <div class="form-row-inline" id="task-minlink-row" style="display:none">
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">MIN HOURS</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-task-min-h',-1,0,24)">−</button>
-            <input id="edit-task-min-h" type="number" min="0" max="24" value="0"/>
-            <button class="num-btn plus"  onclick="numStep('edit-task-min-h',+1,0,24)">+</button>
-          </div></div>
-        <div class="form-row" style="margin-bottom:0"><label class="form-label">MIN MINUTES</label>
-          <div class="num-input-wrap">
-            <button class="num-btn minus" onclick="numStep('edit-task-min-m',-5,0,55,5)">−</button>
-            <input id="edit-task-min-m" type="number" min="0" max="55" step="5" value="10"/>
-            <button class="num-btn plus"  onclick="numStep('edit-task-min-m',+5,0,55,5)">+</button>
-          </div></div>
-      </div>
-      <div class="form-row highlight-row">
-        <label class="form-label" for="edit-task-highlight">HIGHLIGHT ON THE PHONE'S FRONT PAGE</label>
-        <button type="button" class="toggle" id="edit-task-highlight" role="switch" aria-checked="false"
-          onclick="this.classList.toggle('on');this.setAttribute('aria-checked',String(this.classList.contains('on')))"></button>
-      </div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="closeModal('modal-taskedit')">CANCEL</button>
-        <button class="px-btn success" onclick="saveTask()">SAVE TASK</button>
-      </div>
-    </div>
+      <label class="fld"><span class="fld-label">LINKED ACTIVITY<span class="opt">OPTIONAL</span></span><select class="fld-in" id="edit-task-activity" onchange="onTaskActivityChange()"><option value="">None</option></select></label>
+      <div class="fld" id="task-minlink-row" style="display:none"><span class="fld-label">TICKS ITSELF ONCE THE DAY HAS</span><div class="step-row"><span class="stepper lg"><button type="button" class="step" onclick="numStep('edit-task-min-h',-1,0,24,1)" aria-label="Less">−</button><input id="edit-task-min-h" type="number" min="0" max="24" step="1" value="0"/><button type="button" class="step plus" onclick="numStep('edit-task-min-h',+1,0,24,1)" aria-label="More">+</button></span><span class="step-unit">H</span><span class="stepper lg"><button type="button" class="step" onclick="numStep('edit-task-min-m',-1,0,55,5)" aria-label="Less">−</button><input id="edit-task-min-m" type="number" min="0" max="55" step="5" value="0"/><button type="button" class="step plus" onclick="numStep('edit-task-min-m',+1,0,55,5)" aria-label="More">+</button></span><span class="step-unit">MIN</span></div></div>
+      <label class="fld-toggle"><span><b>Highlight on the phone</b><small>LEADS THE DAILY LIST ON A PHONE</small></span><input type="checkbox" id="edit-task-highlight"/><span class="tgl"></span></label>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-taskedit')">CANCEL</button><button class="action-key" id="task-save-btn" onclick="saveTask()">ADD TASK</button></div>
+    <button class="pop-quiet" id="task-delete-btn" onclick="deleteTaskFromEditor()" style="display:none">DELETE TASK</button>
   </div>
 </div>
 
 <!-- MODAL: ADD/EDIT PROJECT -->
-<div class="modal-overlay" id="modal-project">
-  <div class="modal-box">
-    <div class="modal-head"><span id="proj-modal-title">ADD PROJECT</span><span class="modal-close" onclick="closeModal('modal-project')">✕</span></div>
-    <div class="modal-body">
-      <input type="hidden" id="edit-proj-id"/>
-      <div class="form-row"><label class="form-label">PROJECT NAME</label>
-        <input class="form-input" id="edit-proj-name" type="text" maxlength="60" placeholder="e.g. Looksmaxxing Video"/></div>
-      <div class="form-row"><label class="form-label">TARGET HOURS (optional)</label>
-        <input class="form-input" id="edit-proj-target" type="number" min="0" step="0.5" placeholder="e.g. 40"/></div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="closeModal('modal-project')">CANCEL</button>
-        <button class="px-btn success" onclick="saveProject()">SAVE PROJECT</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL: CUSTOMISE — a placeholder until the Phase 9b rebuild -->
 <div class="modal-overlay pop takeover" id="modal-customize" style="--pop-w:818px">
@@ -1938,19 +1854,15 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: MANAGE STATS (Phase 5.4) -->
-<div class="modal-overlay" id="modal-managestats">
-  <div class="modal-box">
-    <div class="modal-head">⚙ MANAGE ACTIVE STATS<span class="modal-close" onclick="closeModal('modal-managestats')">✕</span></div>
-    <div class="modal-body">
-      <div class="form-hint" style="margin-bottom:15px;line-height:1.8">
-        Select which stats affect your character's mood and wellness. Unchecked stats will still track progress but won't make your character sad if neglected.
-      </div>
-      <div id="manage-stats-list"></div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="closeModal('modal-managestats')">CANCEL</button>
-        <button class="px-btn success" onclick="saveManageStats()">SAVE</button>
-      </div>
-    </div>
+<div class="modal-overlay pop" id="modal-managestats" style="--pop-w:380px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>ACTIVE STATS</span><button class="modal-close" onclick="closeModal('modal-managestats')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <div class="pick-hint">Active stats count toward the sprite's mood. An inactive stat still earns points, but leaving it alone won't upset the sprite.</div>
+      <div class="stat-toggles" id="manage-stats-list"></div>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-managestats')">CANCEL</button><button class="action-key" onclick="saveManageStats()">SAVE</button></div>
   </div>
 </div>
 
@@ -1980,93 +1892,108 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 </div>
 
 <!-- MODAL: LOCAL BACKUPS -->
-<div class="modal-overlay" id="modal-backups">
-  <div class="modal-box wide">
-    <div class="modal-head">🛟 LOCAL BACKUPS<span class="modal-close" onclick="closeModal('modal-backups')">✕</span></div>
-    <div class="modal-body">
-      <div style="font-size:clamp(5px,.85vw,6.25px);color:var(--dim);line-height:1.9;margin-bottom:12.5px">
-        Snapshots kept on THIS device only — cloud sync can never overwrite them.
-        Restoring replaces your current data and pushes it to the cloud.
-      </div>
-      <div id="backups-list"></div>
-      <div class="form-actions" style="margin-top:15px">
-        <button class="px-btn" onclick="_makeBackup(load(),'manual');renderBackupsList();spawnFloatCenter('🛟 Snapshot saved')">+ SNAPSHOT NOW</button>
-        <button class="px-btn" onclick="closeModal('modal-backups')">CLOSE</button>
-      </div>
-    </div>
+<div class="modal-overlay pop" id="modal-backups" style="--pop-w:460px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>BACKUPS</span><button class="modal-close" onclick="closeModal('modal-backups')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <div class="pick-hint">Snapshots are kept on this device only, so sync can never overwrite them. Restoring replaces your data on every device, and snapshots the current data first.</div>
+      <div class="mgr-list" id="backups-list"></div>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-backups')">CLOSE</button><button class="action-key" onclick="snapshotNow()">SNAPSHOT NOW</button></div>
   </div>
 </div>
 
 <!-- MODAL: TASK STATS -->
-<div class="modal-overlay" id="modal-task-stats">
-  <div class="modal-box wide">
-    <div class="modal-head"><span id="tsk-stats-title">TASK STATS</span><span class="modal-close" onclick="closeModal('modal-task-stats')">✕</span></div>
-    <div class="modal-body" id="tsk-stats-body"></div>
+<div class="modal-overlay pop" id="modal-task-stats" style="--pop-w:560px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="tsk-stats-title">TASK HISTORY</span><button class="modal-close" onclick="closeModal('modal-task-stats')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen hist" id="tsk-stats-body"></div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-task-stats')">CLOSE</button><button class="action-key" onclick="closeModal('modal-task-stats');openAddTask(window._tsk.tid)">EDIT TASK</button></div>
   </div>
 </div>
 
 <!-- MODAL: GOAL STATS -->
-<div class="modal-overlay" id="modal-goal-stats">
-  <div class="modal-box wide">
-    <div class="modal-head"><span id="gst-title">GOAL STATS</span><span class="modal-close" onclick="closeModal('modal-goal-stats')">✕</span></div>
-    <div class="modal-body" id="gst-body"></div>
+<div class="modal-overlay pop" id="modal-goal-stats" style="--pop-w:560px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="gst-title">GOAL HISTORY</span><button class="modal-close" onclick="closeModal('modal-goal-stats')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen hist" id="gst-body"></div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-goal-stats')">CLOSE</button><button class="action-key" onclick="closeModal('modal-goal-stats');openAddGoal(window._gstId)">EDIT GOAL</button></div>
+    <button class="pop-quiet" onclick="deleteGoal(window._gstId)">DELETE GOAL</button>
   </div>
 </div>
 
 <!-- MODAL: TUTORIAL -->
-<div class="modal-overlay" id="modal-tutorial">
-  <div class="modal-box">
-    <div class="modal-head"><span id="tut-title">WELCOME</span><span class="modal-close" onclick="closeTutorialModal()">✕</span></div>
-    <div id="tut-body" class="tut-modal-body"></div>
+<div class="modal-overlay pop" id="modal-tutorial" style="--pop-w:400px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="tut-title">HELP</span><button class="modal-close" onclick="closeTutorialModal()" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen" id="tut-body"></div></div>
+    <div class="pop-keys"><button class="action-key" onclick="closeTutorialModal()">GOT IT</button></div>
   </div>
 </div>
 
 <!-- MODAL: WELCOME (first visit) -->
-<div class="modal-overlay" id="modal-welcome">
-  <div class="modal-box">
-    <div class="modal-head">✦ WELCOME, ADVENTURER!</div>
-    <div class="modal-body">
-      <div class="form-row" style="margin-bottom:20px">
-        <label class="form-label" style="margin-bottom:10px">ENTER YOUR NAME, ADVENTURER</label>
-        <input type="text" id="welcome-name-input" class="form-input" maxlength="24" placeholder="Your name..." style="width:100%;font-size:clamp(8.75px,1.4vw,11.25px);text-align:center;padding:10px"/>
-      </div>
-      <div class="form-hint" style="margin-bottom:15px;line-height:1.8">
-        <p style="margin-bottom:12.5px">RPG Task Tracker turns your daily habits and to-dos into an RPG character sheet. Complete real-life tasks to earn points in 9 stats (Strength, Focus, Intelligence, Charisma, Creativity, Initiative, Discipline, Agility, Vitality), and keep your sprite in good spirits.</p>
-        <p style="margin-bottom:12.5px"><strong>Getting started:</strong></p>
-        <ul style="margin:0 0 12.5px 22.5px;padding:0">
-          <li>Check off tasks on the DAILY tab to earn stat points and build streaks.</li>
-          <li>Add your own custom tasks from PROJECTS / task management.</li>
-          <li>Your mood reflects how recently you've worked on each active stat — keep them all warm!</li>
-        </ul>
-        <p style="margin-bottom:0"><strong>⚠ Your data is stored only in this browser (localStorage).</strong> It is not synced or backed up anywhere. Use the EXPORT button regularly to save a backup file, and IMPORT to restore it.</p>
-      </div>
-      <div class="form-actions">
-        <button class="px-btn success" onclick="closeWelcomeModal()">BEGIN ADVENTURE!</button>
-      </div>
-    </div>
+<div class="modal-overlay pop locked" id="modal-welcome" style="--pop-w:400px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="welcome-title">WELCOME</span></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <p class="welcome-lead">Turn daily habits into stats. Tick tasks to earn points, set goals, and keep the sprite in good spirits.</p>
+      <label class="fld"><span class="fld-label">YOUR NAME</span><input class="fld-in" type="text" id="welcome-name-input" maxlength="24" placeholder="Your name" autocomplete="off" onkeydown="if(event.key==='Enter')closeWelcomeModal()"/></label>
+      <div class="tut-row"><span class="tut-n">01</span><p><b>Daily</b> is today's tasks. Tick one when you do it.</p></div>
+      <div class="tut-row"><span class="tut-n">02</span><p><b>Goals</b> holds weekly and monthly targets, projects, and awards.</p></div>
+      <div class="tut-row"><span class="tut-n">03</span><p><b>Tools</b> has the stopwatch, a monthly budget and time records.</p></div>
+      <div class="pick-hint">Sign in to sync between devices. Without an account your data stays in this browser, so export a backup now and then from Settings.</div>
+    </div></div>
+    <div class="pop-keys"><button class="action-key" onclick="closeWelcomeModal()">START</button></div>
   </div>
 </div>
 
 <!-- MODAL: EDIT HISTORICAL TASKS -->
-<div class="modal-overlay" id="modal-backdate">
-  <div class="modal-box">
-    <div class="modal-head">📅 EDIT HISTORICAL TASKS<span class="modal-close" onclick="closeModal('modal-backdate')">✕</span></div>
-    <div class="modal-body">
-      <div class="form-row">
-        <label class="form-label">SELECT DATE (up to 30 days back)</label>
-        <input class="form-input" id="bd-date" type="date" onchange="renderBdTasks()"/>
-      </div>
-      <div id="bd-tasks-list"></div>
-      <div class="bd-warn">⚠ Green = completed. Click to toggle. Unchecking removes stat points & recalculates streaks.</div>
-      <div class="form-actions">
-        <button class="px-btn" onclick="closeModal('modal-backdate')">CANCEL</button>
-        <button class="px-btn success" onclick="saveBackdate()">SAVE CHANGES</button>
-      </div>
-    </div>
+<div class="modal-overlay pop" id="modal-backdate" style="--pop-w:410px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>LOG PAST</span><button class="modal-close" onclick="closeModal('modal-backdate')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <label class="fld"><span class="fld-label">DAY<span class="opt">UP TO 30 DAYS BACK</span></span><input class="fld-in" id="bd-date" type="date" onchange="renderBdTasks()"/></label>
+      <div class="bd-list" id="bd-tasks-list"></div>
+      <div class="pick-hint">Ticked means done that day. Unticking a task takes its points back and recalculates its run.</div>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="closeModal('modal-backdate')">CANCEL</button><button class="action-key" onclick="saveBackdate()">SAVE CHANGES</button></div>
   </div>
 </div>
 
 <!-- MODAL: WELLNESS REPORT -->
+<div class="modal-overlay pop" id="modal-settings" style="--pop-w:400px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span>SETTINGS</span><button class="modal-close" onclick="closeModal('modal-settings')" aria-label="Close">✕</button></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <label class="fld"><span class="fld-label">NAME</span><input class="fld-in" id="char-name" type="text" value="Adventurer" maxlength="24" spellcheck="false" autocomplete="off"/></label>
+      <label class="fld-toggle"><span><b>Sound</b><small>TICKS, TONES AND KEY CLICKS</small></span><input type="checkbox" id="sound-btn" checked onchange="toggleSound()"/><span class="tgl"></span></label>
+      <div class="fld"><span class="fld-label">ACCOUNT</span>
+        <div class="acct" id="user-info-bar"><span class="sync-dot" id="sync-dot"></span><span id="user-email-lbl"></span><button class="sbtn" onclick="fbSignOut()">SIGN OUT</button></div>
+        <div class="acct acct-off"><span>Not signed in. Your data is saved in this browser only.</span><button class="sbtn go" onclick="fbShowSignIn()">SIGN IN</button></div>
+      </div>
+      <div class="fld"><span class="fld-label">DATA</span>
+        <div class="set-grid"><button class="sbtn" onclick="importData()">IMPORT</button><button class="sbtn" onclick="exportData()">EXPORT</button><button class="sbtn" onclick="closeModal('modal-settings');openBackups()">BACKUPS</button></div></div>
+      <div class="set-foot" id="footer-date"></div>
+    </div></div>
+    <div class="pop-keys"><button class="action-key" onclick="closeModal('modal-settings')">DONE</button></div>
+    <button class="pop-quiet" onclick="resetAllData()">RESET ALL DATA</button>
+  </div>
+</div>
+<div class="modal-overlay pop" id="modal-ask" style="--pop-w:340px">
+  <div class="modal-box pop-box">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span id="ask-title">CONFIRM</span></div>
+    <div class="bezel"><div class="screen pop-screen"><div class="ask-text" id="ask-text"></div></div></div>
+    <div class="pop-keys"><button class="pill" id="ask-no" onclick="_askDone(false)">CANCEL</button><button class="action-key" id="ask-yes" onclick="_askDone(true)">OK</button></div>
+  </div>
+</div>
 <div class="modal-overlay pop takeover" id="modal-wellness" style="--pop-w:818px">
   <div class="modal-box pop-box">
     <div class="shell-tex"></div>
@@ -2594,37 +2521,36 @@ function renderBackupsList(){
   const wrap=document.getElementById('backups-list');if(!wrap)return;
   const arr=_loadBackups().slice().sort((a,b)=>b.ts-a.ts);
   const cur=load(),curInfo=_backupSummary(cur);
-  if(!arr.length){wrap.innerHTML='<div class="empty-state">No snapshots yet. One is taken each day, and before any restore, import or sync that removes data.</div>';return;}
+  if(!arr.length){wrap.innerHTML='<div class="rec-empty">No snapshots yet. One is taken each day, and before any restore, import or sync that removes data.</div>';return;}
   const label={daily:'daily',legacy:'older version'};
   // Each row shows how far its history reaches, so the right one is easy to find.
-  wrap.innerHTML=`<div style="font-size:clamp(5px,.8vw,6.25px);color:var(--b3);margin-bottom:10px">CURRENT DATA: ${curInfo.days} days · last day ${curInfo.last}</div>`+
+  wrap.innerHTML=`<div class="bk-cur">NOW · ${curInfo.days} DAYS · LAST DAY ${curInfo.last}</div>`+
     arr.map(b=>{
       let info={days:'?',last:'?'};try{info=_backupSummary(JSON.parse(b.json));}catch(e){}
       const dt=new Date(b.ts);
-      const when=dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      const when=dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' · '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       const why=b.kind==='event'?b.reason:(label[b.kind]||b.kind)+(b.kind==='legacy'?' · '+b.reason:'');
       const reaches=info.last>curInfo.last;
-      return `<div style="display:flex;align-items:center;gap:10px;padding:7.5px 0;border-bottom:1.25px solid rgba(88,101,242,.15)">
-        <span style="flex:1;font-size:clamp(5px,.9vw,6.25px);line-height:1.9">${when}<br><span style="color:var(--dim)">${why}</span></span>
-        <span style="font-size:clamp(5px,.9vw,6.25px);color:${reaches?'var(--green)':'var(--dim)'};white-space:nowrap;text-align:right;line-height:1.9">${info.days} days<br>to ${info.last}</span>
-        <button class="px-btn sm" onclick="restoreBackup('${b.id}')">RESTORE</button>
-      </div>`;
+      return `<div class="rec-row static"><div><div class="rec-name">${when}</div><div class="rec-sub">${String(why).toUpperCase()}</div></div>
+        <span class="bk-reach${reaches?' more':''}">${info.days} DAYS<br>TO ${info.last}</span>
+        <button class="sbtn" onclick="restoreBackup('${b.id}')">RESTORE</button></div>`;
     }).join('');
 }
-function restoreBackup(id){
+function snapshotNow(){_makeBackup(load(),'manual');renderBackupsList();spawnFloatCenter('Snapshot saved');}
+async function restoreBackup(id){
   const b=_loadBackups().find(x=>x.id===id);if(!b)return;
   let restored;
-  try{restored=JSON.parse(b.json);}catch(e){alert('This snapshot is damaged and cannot be restored.');return;}
+  try{restored=JSON.parse(b.json);}catch(e){tell('This snapshot is damaged and can’t be restored.',{title:'RESTORE'});return;}
   const cur=load(),a=_backupSummary(restored),c=_backupSummary(cur);
-  if(!confirm('Restore the snapshot from '+new Date(b.ts).toLocaleString('en-GB')+'?\n\n'+
-    'Snapshot: '+a.days+' days of history, last day '+a.last+'\n'+
-    'Current:  '+c.days+' days of history, last day '+c.last+'\n\n'+
-    'This replaces your data on every device. Your current data is snapshotted first, so this is reversible.'))return;
+  if(!await askConfirm('Restore the snapshot from '+new Date(b.ts).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'?\n\n'+
+    'Snapshot: '+a.days+' days, last day '+a.last+'.\n'+
+    'Now: '+c.days+' days, last day '+c.last+'.\n\n'+
+    'This replaces your data on every device. Your current data is snapshotted first, so it can be undone.',{title:'RESTORE',yes:'RESTORE'}))return;
   _makeBackup(cur,'before-restore');
   closeModal('modal-backups');
-  spawnFloatCenter('🛟 Restoring…');
-  _syncReplaceAll(restored).then(state=>{
-    if(state==='failed')alert('Restored on this device, but the cloud could not be updated yet. It will be sent on the next sync.');
+  spawnFloatCenter('Restoring…');
+  _syncReplaceAll(restored).then(async state=>{
+    if(state==='failed')await tell('Restored on this device, but the cloud couldn’t be updated yet. It will be sent on the next sync.',{title:'RESTORE'});
     location.reload();
   });
 }
@@ -2655,7 +2581,7 @@ function findFutureEntries(){
 
 // Permanently delete future-dated entries. Asks for confirmation first, and
 // re-syncs stats so the numbers stay consistent with the remaining history.
-function cleanFutureEntries(){
+async function cleanFutureEntries(){
   const data=load(),today=todayStr();
   const removed={taskHistory:[],logbook:[],quests:[]};
   for(const d in(data.taskHistory||{})){if(d>today)removed.taskHistory.push(d);}
@@ -2663,11 +2589,11 @@ function cleanFutureEntries(){
   (data.customQuests||[]).forEach(q=>{for(const d in(q.dailyLogs||{})){if(d>today)removed.quests.push(q.name+' '+d);}});
   const total=removed.taskHistory.length+removed.logbook.length+removed.quests.length;
   if(!total){console.log('Nothing to clean — no future-dated entries.');return;}
-  if(!confirm(`Delete ${total} future-dated entr${total===1?'y':'ies'}?\n\n`+
+  if(!await askConfirm(`Delete ${total} future-dated entr${total===1?'y':'ies'}?\n\n`+
       `Task days: ${removed.taskHistory.join(', ')||'none'}\n`+
       `Records: ${removed.logbook.join(', ')||'none'}\n`+
       `Projects: ${removed.quests.join(', ')||'none'}\n\n`+
-      `This cannot be undone. Export a backup first if unsure.`))return;
+      `This cannot be undone. Export a backup first if unsure.`,{title:'CLEAN UP',yes:'DELETE'}))return;
   removed.taskHistory.forEach(d=>{delete data.taskHistory[d];});
   (data.logbookActivities||[]).forEach(a=>{for(const d in(a.dailyLogs||{})){if(d>today)delete a.dailyLogs[d];}});
   (data.customQuests||[]).forEach(q=>{
@@ -2684,7 +2610,7 @@ function cleanFutureEntries(){
   try{renderLogbook();}catch(e){}
   updateMoodDisplay(data);
   console.log('Cleaned '+total+' future-dated entr'+(total===1?'y':'ies')+'.');
-  spawnFloatCenter('🧹 Removed '+total+' future-dated entr'+(total===1?'y':'ies'));
+  spawnFloatCenter('Removed '+total+' future-dated entr'+(total===1?'y':'ies'));
 }
 
 // Derive the todayChecked map from taskHistory for a given day.
@@ -2730,8 +2656,7 @@ function playCoin(){[880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>tone(f,'s
 function playClick(){tone(380,'square',.022,.09);setTimeout(()=>tone(220,'square',.028,.05),16);}
 function toggleSound(){
   soundOn=!soundOn;
-  const b=document.getElementById('sound-btn');
-  b.textContent=soundOn?'♪':'✕';b.classList.toggle('muted',!soundOn);
+  const b=document.getElementById('sound-btn');if(b)b.checked=soundOn;
   localStorage.setItem('rpg_sound',soundOn?'1':'0');
 }
 document.addEventListener('click',function(e){
@@ -2916,46 +2841,7 @@ function _rackRows(data,withIds){
 //  RENDER: PROJECTS
 // ══════════════════════════════════════════
 function renderProjects(data){renderQuests(data);}
-function _renderProjectsLegacy(data){
-  const wrap=document.getElementById('projects-list');if(!wrap)return;wrap.innerHTML='';
-  if(!data.projects.length)wrap.innerHTML='<div class="empty-state">No active projects.<br>Click + NEW to start one.</div>';
-  else data.projects.forEach(proj=>wrap.appendChild(buildProjectCard(proj)));
-
-  const cw=document.getElementById('completed-list');cw.innerHTML='';
-  if(!data.completedProjects.length)cw.innerHTML='<div class="empty-state">No completed projects yet.</div>';
-  else [...data.completedProjects].reverse().forEach(proj=>{
-    const div=document.createElement('div');div.className='completed-card';
-    div.innerHTML=`<span style="font-size:20px">🏆</span>
-      <span class="completed-name">${proj.name}</span>
-      <div class="completed-meta">${proj.totalHours}h · ${fmtDate(proj.completedDate)}</div>
-      <button class="px-btn sm danger" onclick="deleteCompleted('${proj.id}')">✕</button>`;
-    cw.appendChild(div);
-  });
-}
 function calcProjectHours(proj){return Object.values(proj.dailyLogs||{}).reduce((s,h)=>s+Number(h),0);}
-function buildProjectCard(proj){
-  const total=calcProjectHours(proj),days=daysSince(proj.startDate);
-  const avg=(total/days).toFixed(1),today=todayStr();
-  const todayH=proj.dailyLogs[today]||0;
-  const pct=proj.targetHours?Math.min(100,(total/proj.targetHours)*100):0;
-  const div=document.createElement('div');div.className='project-card';div.id='proj-'+proj.id;
-  div.innerHTML=`<div class="project-name">${proj.name}</div>
-    <div class="project-stats">
-      <span class="project-stat">TOTAL <span>${total.toFixed(1)}h</span></span>
-      <span class="project-stat">AVG/DAY <span>${avg}h</span></span>
-      <span class="project-stat">DAYS <span>${days}</span></span>
-      ${proj.targetHours?`<span class="project-stat">GOAL <span>${proj.targetHours}h</span></span>`:''}
-    </div>
-    ${proj.targetHours?`<div class="project-bar-outer"><div class="project-bar-inner" style="width:${pct}%"></div></div>`:''}
-    <div class="project-actions">
-      <input class="hours-input" type="number" min="0" step="0.5" placeholder="+hrs today"
-        value="${todayH||''}" id="hours-${proj.id}" onchange="logHours('${proj.id}',this.value)"/>
-      <button class="px-btn sm" onclick="openEditProject('${proj.id}')">EDIT</button>
-      <button class="px-btn sm success" onclick="completeProject('${proj.id}')">DONE ✓</button>
-      <button class="px-btn sm danger" onclick="deleteProject('${proj.id}')">✕</button>
-    </div>`;
-  return div;
-}
 
 // ══════════════════════════════════════════
 //  RENDER: INVENTORY TAB
@@ -3103,7 +2989,7 @@ function renderLogbookActivity(actId){
   const avg=total/nBuckets;
   const todayH=Number(logs[todayStr()]||0);
   const dmy=ds=>ds.slice(8)+'/'+ds.slice(5,7)+'/'+ds.slice(0,4);
-  const bars=keys.length?`<div class="rec-chart${keys.length>16?' dense':''}">`+keys.map((k,i)=>{
+  const bars=keys.length?`<div class="rec-chart${keys.length>16?' dense':keys.length>7?' mid':''}">`+keys.map((k,i)=>{
       const v=vals[i];return`<div class="rec-col" title="${_bucketLabel(k,st.gran)}: ${fmtHM(v)}"><span class="rec-bar-v">${_dur(v)}</span><div class="rec-bar" style="height:${Math.max(2,Math.round(v/mx*100))}%"></div><span class="rec-bar-l">${_bucketLabel(k,st.gran)}</span></div>`;
     }).join('')+'</div>':'<div class="rec-empty">No time logged in this range.</div>';
   const gchip=(g,t)=>`<button class="chip${st.gran===g?' on':''}" onclick="window._lb.gran='${g}';renderLogbookActivity('${actId}')">${t}</button>`;
@@ -3173,41 +3059,53 @@ function saveLogTime(){
 function openManageActivities(){resetActForm();renderManageActList();openModal('modal-manage-activities');}
 function renderManageActList(){
   const data=load();const wrap=document.getElementById('manage-act-list');if(!wrap)return;
-  const acts=data.logbookActivities||[];
-  if(!acts.length){wrap.innerHTML='<div class="empty-state" style="padding:7.5px 0">No activities yet.</div>';return;}
-  wrap.innerHTML=acts.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:6.25px 0;border-bottom:1.25px solid rgba(88,101,242,.15)">
-    <span style="font-size:20px">${a.icon||'📓'}</span>
-    <span style="flex:1;font-size:clamp(6.25px,1vw,7.5px)">${a.name}</span>
-    <button class="px-btn sm" onclick="editActivity('${a.id}')">EDIT</button>
-    <button class="px-btn sm danger" onclick="deleteActivity('${a.id}')">✕</button>
-  </div>`).join('');
+  const acts=data.logbookActivities||[],cur=document.getElementById('edit-act-id').value;
+  if(!acts.length){wrap.innerHTML='<div class="rec-empty">No activities yet. Add the first one below.</div>';return;}
+  wrap.innerHTML='';
+  acts.forEach(a=>{
+    const total=Object.values(a.dailyLogs||{}).reduce((s,h)=>s+(Number(h)||0),0);
+    const b=document.createElement('button');b.className='rec-row'+(a.id===cur?' on':'');b.onclick=()=>editActivity(a.id);
+    b.innerHTML='<span class="row-ico"></span><div><div class="rec-name"></div><div class="rec-sub">'+_dur(total)+' LOGGED</div></div><span class="row-go">EDIT</span>';
+    b.querySelector('.row-ico').textContent=a.icon||'📓';b.querySelector('.rec-name').textContent=a.name;
+    wrap.appendChild(b);
+  });
 }
 function resetActForm(){
   document.getElementById('edit-act-id').value='';
   document.getElementById('edit-act-name').value='';
   document.getElementById('edit-act-icon').value='';
-  document.getElementById('act-form-hd').textContent='ADD ACTIVITY';
+  document.getElementById('act-form-hd').textContent='NEW ACTIVITY';
+  document.getElementById('act-save-btn').textContent='ADD ACTIVITY';
+  document.getElementById('act-pill').textContent='DONE';
+  document.getElementById('act-delete-btn').style.display='none';
+  popClear('modal-manage-activities');renderManageActList();
 }
+function actPill(){if(document.getElementById('edit-act-id').value)resetActForm();else closeModal('modal-manage-activities');}
 function editActivity(id){
   const data=load();const a=(data.logbookActivities||[]).find(x=>x.id===id);if(!a)return;
+  popClear('modal-manage-activities');
   document.getElementById('edit-act-id').value=a.id;
   document.getElementById('edit-act-name').value=a.name;
   document.getElementById('edit-act-icon').value=a.icon||'';
   document.getElementById('act-form-hd').textContent='EDIT ACTIVITY';
+  document.getElementById('act-save-btn').textContent='SAVE';
+  document.getElementById('act-pill').textContent='BACK';
+  document.getElementById('act-delete-btn').style.display='';
+  renderManageActList();
 }
 function saveActivity(){
-  const name=document.getElementById('edit-act-name').value.trim();if(!name){alert('Name required.');return;}
+  const name=document.getElementById('edit-act-name').value.trim();if(!name){popError('edit-act-name','Give the activity a name.');return;}
   const icon=document.getElementById('edit-act-icon').value.trim()||'📓';
   const id=document.getElementById('edit-act-id').value;
   const data=load();if(!data.logbookActivities)data.logbookActivities=[];
   if(id){const a=data.logbookActivities.find(x=>x.id===id);if(a){a.name=name;a.icon=icon;}}
   else{data.logbookActivities.push({id:'act-'+Date.now(),name,icon,dailyLogs:{},createdDate:todayStr()});}
-  save(data);renderManageActList();resetActForm();renderLogbook();
+  save(data);resetActForm();renderLogbook();
 }
-function deleteActivity(id){
-  if(!confirm('Delete this activity? All logged hours will be lost.'))return;
+async function deleteActivity(id){
+  if(!id||!await askConfirm('Delete this activity? All the time logged on it will be lost.',{title:'DELETE ACTIVITY',yes:'DELETE'}))return;
   const data=load();data.logbookActivities=(data.logbookActivities||[]).filter(x=>x.id!==id);
-  save(data);renderManageActList();
+  save(data);resetActForm();
   if(window._lbView===id)window._lbView='index';
   renderLogbook();
 }
@@ -3271,9 +3169,9 @@ function openAddTxn(tid,type){
   openModal('modal-txn');
   setTimeout(()=>document.getElementById('edit-txn-desc').focus(),60);
 }
-function deleteTxnFromEditor(){
+async function deleteTxnFromEditor(){
   const id=document.getElementById('edit-txn-id').value;if(!id)return;
-  if(!confirm('Delete this entry?'))return;
+  if(!await askConfirm('Delete this entry?',{title:'DELETE ENTRY',yes:'DELETE'}))return;
   const data=load();
   data.budgetTransactions=(data.budgetTransactions||[]).filter(t=>t.id!==id);
   save(data);closeModal('modal-txn');renderBudgetModal(data);
@@ -3295,8 +3193,8 @@ function saveTxn(){
   // refresh gold card if inventory tab is active
   const inv=document.getElementById('tab-inventory');if(inv&&inv.classList.contains('active'))renderInventoryTab(data);
 }
-function deleteTxn(tid){
-  if(!confirm('Delete this transaction?'))return;
+async function deleteTxn(tid){
+  if(!await askConfirm('Delete this entry?',{title:'DELETE ENTRY',yes:'DELETE'}))return;
   const data=load();
   data.budgetTransactions=(data.budgetTransactions||[]).filter(t=>t.id!==tid);
   save(data);renderBudgetModal(data);
@@ -3323,10 +3221,10 @@ function closeMonth(){
   renderInventoryTab(data);
   if(surplus>0){
     playCoin();
-    showLU(`Month closed!\n+${fmtNum(surplus)} MARKS banked!\nTotal Marks: ${fmtNum(data.gold)}`);
-    spawnFloatCenter(`💰 +${fmtNum(surplus)} MARKS`);
+    showLU(`+${fmtNum(surplus)} banked.\nReserve: ${fmtNum(data.gold)}`,'MONTH CLOSED');
+    spawnFloatCenter(`+${fmtNum(surplus)} BANKED`);
   } else {
-    showLU(`${monthLabel(cur)} closed.\nNothing to bank this month.`);
+    showLU(`${monthLabel(cur)} is closed.\nNothing to bank this month.`,'MONTH CLOSED');
   }
 }
 
@@ -3433,8 +3331,8 @@ function swHold(){
   document.getElementById('sw-stop-started').textContent=st?`STARTED ${String(st.getHours()).padStart(2,'0')}:${String(st.getMinutes()).padStart(2,'0')}`:'';
   openModal('modal-sw-stop');
 }
-function swDiscard(){
-  if(!confirm('Discard this session? The time won’t be registered anywhere.'))return;
+async function swDiscard(){
+  if(!await askConfirm('Discard this session? The time won’t be registered anywhere.',{title:'DISCARD SESSION',yes:'DISCARD'}))return;
   closeModal('modal-sw-stop');swReset();
 }
 
@@ -3527,7 +3425,7 @@ function swConfirmStop(){
         q.dailyLogs[today]=parseFloat(((q.dailyLogs[today]||0)+hrs).toFixed(2));
         q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
         save(data);renderQuests(data);
-        spawnFloatCenter(`⏱ +${hrs}h → ${q.name}`);
+        spawnFloatCenter(`+${hrs}h → ${q.name}`);
       }
     } else if(kind==='act'){
       const a=(data.logbookActivities||[]).find(x=>x.id===tid);
@@ -3536,7 +3434,7 @@ function swConfirmStop(){
         a.dailyLogs[today]=parseFloat(((a.dailyLogs[today]||0)+hrs).toFixed(3));
         const autoDone=autoCheckLinkedTasks(data,tid,today);
         save(data);renderLogbook();renderInventoryTab(data);
-        spawnFloatCenter(`📖 +${fmtHM(hrs)} → ${a.name}`);
+        spawnFloatCenter(`+${fmtHM(hrs)} → ${a.name}`);
         if(autoDone.length){renderTasks(data);renderStats(data);updateMoodDisplay(data);autoDone.forEach(nm=>setTimeout(()=>spawnFloatCenter(`✓ ${nm} auto-completed`),250));}
       }
     }
@@ -3562,13 +3460,13 @@ function checkMonthRollover(data){
   const cur=monthStr();
   if(data.currentMonth&&data.currentMonth!==cur){
     // Old month data exists — prompt
-    setTimeout(()=>{
+    setTimeout(async()=>{
       const label=monthLabel(data.currentMonth);
       const txns=data.budgetTransactions||[];
       const income=txns.filter(t=>t.type==='income').reduce((s,t)=>s+Number(t.amount),0);
       const expenses=txns.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
       const surplus=income-expenses;
-      if(confirm(`📅 ${label} has ended!\n\nBalance: ${surplus>=0?'+':''}${fmtNum(surplus)}\n\nClose the month and bank the marks now?`))
+      if(await askConfirm(`${label} has ended, with a balance of ${surplus>=0?'+':''}${fmtNum(surplus)}.\n\nClose the month and bank it now?`,{title:'MONTH ENDED',yes:'CLOSE MONTH',no:'LATER'}))
         closeMonth();
     },800);
   }
@@ -3609,7 +3507,7 @@ function toggleTask(tid){
     const newVal=data.stats[task.stat];
     save(data);renderStats(data);renderTasks(data);pulseBar(task.stat);updateMoodDisplay(data);checkAchievements(data);
     if(newVal%10===0){
-      const line=`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}!`;
+      const line=`${STATS_DEF.find(s=>s.key===task.stat).fullLabel} reached ${newVal}.`;
       setTimeout(()=>{showLU(line);playLU();},800);
     }
     return;
@@ -3695,7 +3593,7 @@ function checkAchievements(data){
     Object.entries(q.reward||{}).forEach(([k,v])=>{if(v>0){data.stats[k]=(data.stats[k]||0)+v;const sd=STATS_DEF.find(s=>s.key===k);lines.push(`+${v} ${sd?sd.fullLabel:k}`);}});
     changed=true;
     if(q.cosmetic)lines.push(_materialName(q.cosmetic)+' shell unlocked');
-    setTimeout(()=>{spawnFloatCenter(`🏆 AWARD: ${q.name}!`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`);playLU();},600);
+    setTimeout(()=>{spawnFloatCenter(`AWARD: ${q.name}`);if(lines.length)showLU(`${q.name}\n${lines.join(', ')}`,'AWARD');playLU();},600);
   });
   if(changed){save(data);renderStats(data);renderAchievements(data);}
   return changed;
@@ -3865,8 +3763,8 @@ function logQuestHours(qid,val){
   spawnFloatCenter(h>0?`⏱ Logged ${h}h today`:'⏱ Hours cleared');
 }
 
-function completeQuest(qid){
-  if(!confirm('Mark this project as complete and claim rewards?'))return;
+async function completeQuest(qid){
+  if(!await askConfirm('Mark this project complete and claim its rewards?',{title:'COMPLETE PROJECT',yes:'COMPLETE'}))return;
   const data=load();const idx=(data.customQuests||[]).findIndex(q=>q.id===qid);if(idx===-1)return;
   const q=data.customQuests.splice(idx,1)[0];
   q.completed=true;q.completedDate=todayStr();q.totalHours=parseFloat(calcQuestHours(q).toFixed(2));
@@ -3878,23 +3776,23 @@ function completeQuest(qid){
   if(!data.completedGoalCount)data.completedGoalCount=0;
   save(data);
   renderStats(data);updateMoodDisplay(data);renderQuests(data);checkAchievements(data);
-  spawnFloatCenter('🏆 PROJECT COMPLETE!');tone(659,'square',.3,.1);
-  if(lines.length)setTimeout(()=>showLU('Project Rewards:\n'+lines.join(', ')),800);
+  spawnFloatCenter('PROJECT COMPLETE');tone(659,'square',.3,.1);
+  if(lines.length)setTimeout(()=>showLU(q.name+'\n'+lines.join(', '),'PROJECT COMPLETE'),800);
 }
 
-function deleteQuest(qid){
-  if(!confirm('Delete this project? All logged hours will be lost.'))return;
+async function deleteQuest(qid){
+  if(!await askConfirm('Delete this project? All the time logged on it will be lost.',{title:'DELETE PROJECT',yes:'DELETE'}))return;
   const data=load();data.customQuests=(data.customQuests||[]).filter(q=>q.id!==qid);save(data);renderQuests(data);
 }
 
-function deleteQuestFromEditor(){
+async function deleteQuestFromEditor(){
   const id=document.getElementById('edit-quest-id').value;if(!id)return;
-  if(!confirm('Delete this project? All logged hours will be lost.'))return;
+  if(!await askConfirm('Delete this project? All the time logged on it will be lost.',{title:'DELETE PROJECT',yes:'DELETE'}))return;
   const data=load();data.customQuests=(data.customQuests||[]).filter(q=>q.id!==id);save(data);
   closeModal('modal-quest');renderQuests(data);
 }
-function deleteCompletedQuest(qid){
-  if(!confirm('Remove from archive?'))return;
+async function deleteCompletedQuest(qid){
+  if(!await askConfirm('Remove this project from the archive?',{title:'REMOVE PROJECT',yes:'REMOVE'}))return;
   const data=load();data.completedQuests=(data.completedQuests||[]).filter(q=>q.id!==qid);save(data);renderCompletedQuests(data);renderAchievements(data);
 }
 
@@ -3980,10 +3878,7 @@ function saveQuest(){
 function showTutorial(tabName){
   const t=TUTORIALS[tabName];if(!t)return;
   document.getElementById('tut-title').textContent=t.title;
-  document.getElementById('tut-body').innerHTML=
-    `<p>Here\'s a quick overview of what you can do here:</p>`+
-    t.items.map(item=>`<div class="tut-item"><span class="tut-emoji">${item.e}</span><span class="tut-text">${item.t}</span></div>`).join('')+
-    `<div class="form-actions" style="margin-top:17.5px"><button class="px-btn success" onclick="closeTutorialModal()">GOT IT!</button></div>`;
+  document.getElementById('tut-body').innerHTML=t.items.map((item,i)=>`<div class="tut-row"><span class="tut-n">${String(i+1).padStart(2,'0')}</span><p>${item}</p></div>`).join('');
   openModal('modal-tutorial');
 }
 
@@ -4009,7 +3904,30 @@ function popClear(modalId){
   m.querySelectorAll('.fld-err').forEach(e=>e.remove());m.querySelectorAll('.bad').forEach(e=>e.classList.remove('bad'));
   const sc=m.querySelector('.pop-screen');if(sc)sc.scrollTop=0;
 }
-function closeModal(id){document.getElementById(id).classList.remove('open');if(id==='modal-wellness'||id==='modal-customize')_unmountMinis();}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  if(id==='modal-wellness'||id==='modal-customize')_unmountMinis();
+  if(id==='modal-ask'&&_askResolve){const r=_askResolve;_askResolve=null;r(false);}
+}
+// The app's own confirm, instead of the browser's box. Resolves true for the
+// action key; CANCEL, the backdrop or a newer question resolve false.
+let _askResolve=null;
+function askConfirm(msg,o={}){
+  return new Promise(res=>{
+    if(_askResolve){const r=_askResolve;_askResolve=null;r(false);}
+    _askResolve=res;
+    document.getElementById('ask-title').textContent=o.title||'CONFIRM';
+    document.getElementById('ask-text').textContent=msg;
+    document.getElementById('ask-yes').textContent=o.yes||'OK';
+    const no=document.getElementById('ask-no');no.textContent=o.no||'CANCEL';no.style.display=o.alert?'none':'';
+    openModal('modal-ask');
+    setTimeout(()=>{try{document.getElementById('ask-yes').focus({preventScroll:true});}catch(e){}},60);
+  });
+}
+function tell(msg,o={}){return askConfirm(msg,{...o,alert:true,yes:o.yes||'OK'});}
+function _askDone(v){const r=_askResolve;_askResolve=null;closeModal('modal-ask');if(r)r(v);}
+function openSettings(){updateFooter();const b=document.getElementById('sound-btn');if(b)b.checked=soundOn;openModal('modal-settings');}
+function fbShowSignIn(){closeModal('modal-settings');const ov=document.getElementById('auth-overlay');if(ov)ov.classList.remove('hidden');}
 
 function closeWelcomeModal(){
   const nameInput=document.getElementById('welcome-name-input');
@@ -4029,42 +3947,47 @@ document.addEventListener('DOMContentLoaded',()=>{
 function openTaskMgr(){renderTaskMgr();openModal('modal-taskmgr');}
 function renderTaskMgr(){
   const data=load();const wrap=document.getElementById('task-mgr-list');wrap.innerHTML='';
-  if(!data.customTasks.length){wrap.innerHTML='<div class="empty-state">No tasks. Add one below.</div>';return;}
+  if(!data.customTasks.length){wrap.innerHTML='<div class="rec-empty">No tasks yet. Add one with + NEW TASK.</div>';return;}
   data.customTasks.forEach(t=>{
     const sd=STATS_DEF.find(s=>s.key===t.stat);
-    const div=document.createElement('div');div.className='task-mgr-item';
-    div.innerHTML=`<span class="task-mgr-icon">${t.icon||'·'}</span>
-      <span class="task-mgr-name">${t.name}</span>
-      <span class="task-mgr-meta">+${t.points} ${sd?sd.label:t.stat}</span>
-      <div class="task-mgr-actions">
-        <button class="px-btn sm" onclick="openAddTask('${t.id}')">EDIT</button>
-        <button class="px-btn sm danger" onclick="deleteTask('${t.id}')">✕</button>
-      </div>`;
-    wrap.appendChild(div);
+    const act=t.linkedActivityId&&(data.logbookActivities||[]).find(a=>a.id===t.linkedActivityId);
+    const bits=['+'+t.points+' '+(sd?sd.label:t.stat)];
+    if(act)bits.push('AUTO ≥'+_dur((t.linkedMinMinutes||0)/60)+' '+act.name.toUpperCase());
+    if(t.highlighted)bits.push('HIGHLIGHTED');
+    const b=document.createElement('button');b.className='rec-row';b.onclick=()=>openAddTask(t.id);
+    b.innerHTML='<span class="row-ico"></span><div><div class="rec-name"></div><div class="rec-sub"></div></div><span class="row-go">EDIT</span>';
+    b.querySelector('.row-ico').textContent=t.icon||'·';b.querySelector('.rec-name').textContent=t.name;b.querySelector('.rec-sub').textContent=bits.join(' · ');
+    wrap.appendChild(b);
   });
 }
-function deleteTask(tid){
-  if(!confirm('Delete this task? Historical stat points are kept.'))return;
+async function deleteTask(tid){
+  if(!await askConfirm('Delete this task? The stat points it has already earned are kept.',{title:'DELETE TASK',yes:'DELETE'}))return false;
   const data=load();data.customTasks=data.customTasks.filter(t=>t.id!==tid);
   delete data.streaks[tid];delete data.lastCompleted[tid];delete data.todayChecked[tid];
-  save(data);renderTaskMgr();renderTasks(data);
+  save(data);renderTaskMgr();renderTasks(data);return true;
+}
+async function deleteTaskFromEditor(){
+  const id=document.getElementById('edit-task-id').value;
+  if(id&&await deleteTask(id))closeModal('modal-taskedit');
 }
 function onTaskActivityChange(){
   const has=!!document.getElementById('edit-task-activity').value;
-  document.getElementById('task-minlink-row').style.display=has?'flex':'none';
+  document.getElementById('task-minlink-row').style.display=has?'':'none';
 }
 function openAddTask(tid){
   const data=load();const task=tid?data.customTasks.find(t=>t.id===tid):null;
-  document.getElementById('taskedit-title').textContent=task?'EDIT TASK':'ADD TASK';
+  popClear('modal-taskedit');
+  document.getElementById('taskedit-title').textContent=task?'EDIT TASK':'NEW TASK';
+  document.getElementById('task-save-btn').textContent=task?'SAVE':'ADD TASK';
+  document.getElementById('task-delete-btn').style.display=task?'':'none';
   document.getElementById('edit-task-id').value=task?task.id:'';
   document.getElementById('edit-task-name').value=task?task.name:'';
   document.getElementById('edit-task-icon').value=task?task.icon:'';
   document.getElementById('edit-task-stat').value=task?task.stat:'strength';
   document.getElementById('edit-task-pts').value=task?task.points:1;
-  const hl=document.getElementById('edit-task-highlight');
-  hl.classList.toggle('on',!!(task&&task.highlighted));hl.setAttribute('aria-checked',String(!!(task&&task.highlighted)));
+  document.getElementById('edit-task-highlight').checked=!!(task&&task.highlighted);
   // populate linked-activity dropdown
-  const asel=document.getElementById('edit-task-activity');asel.innerHTML='<option value="">— None —</option>';
+  const asel=document.getElementById('edit-task-activity');asel.innerHTML='<option value="">None</option>';
   (data.logbookActivities||[]).forEach(a=>{
     const o=document.createElement('option');o.value=a.id;o.textContent=`${a.icon||'📓'} ${a.name}`;
     if(task&&task.linkedActivityId===a.id)o.selected=true;
@@ -4077,7 +4000,7 @@ function openAddTask(tid){
   openModal('modal-taskedit');
 }
 function saveTask(){
-  const name=document.getElementById('edit-task-name').value.trim();if(!name){alert('Task name required.');return;}
+  const name=document.getElementById('edit-task-name').value.trim();if(!name){popError('edit-task-name','Give the task a name.');return;}
   const data=load();const id=document.getElementById('edit-task-id').value;
   const icon=document.getElementById('edit-task-icon').value.trim()||'·';
   const stat=document.getElementById('edit-task-stat').value;
@@ -4086,7 +4009,7 @@ function saveTask(){
   const minH=Math.max(0,parseInt(document.getElementById('edit-task-min-h').value)||0);
   const minM=Math.max(0,parseInt(document.getElementById('edit-task-min-m').value)||0);
   const linkedMinMinutes=linkedActivityId?(minH*60+minM):0;
-  const highlighted=document.getElementById('edit-task-highlight').classList.contains('on');
+  const highlighted=document.getElementById('edit-task-highlight').checked;
   if(id){const task=data.customTasks.find(t=>t.id===id);if(task){task.name=name;task.icon=icon;task.stat=stat;task.points=pts;task.linkedActivityId=linkedActivityId;task.linkedMinMinutes=linkedMinMinutes;task.highlighted=highlighted;}}
   else{const newId='task-'+Date.now();data.customTasks.push({id:newId,name,stat,points:pts,icon,linkedActivityId,linkedMinMinutes,highlighted});data.streaks[newId]={current:0,best:0};data.lastCompleted[newId]=null;}
   // If linked and today's logged time already qualifies, auto-complete now
@@ -4132,31 +4055,13 @@ function autoCheckLinkedTasks(data,activityId,date){
   });
   return completed;
 }
-function openAddProject(){
-  document.getElementById('proj-modal-title').textContent='ADD PROJECT';
-  document.getElementById('edit-proj-id').value='';document.getElementById('edit-proj-name').value='';
-  document.getElementById('edit-proj-target').value='';openModal('modal-project');
-}
-function openEditProject(pid){
-  const data=load();const proj=data.projects.find(p=>p.id===pid);if(!proj)return;
-  document.getElementById('proj-modal-title').textContent='EDIT PROJECT';
-  document.getElementById('edit-proj-id').value=proj.id;document.getElementById('edit-proj-name').value=proj.name;
-  document.getElementById('edit-proj-target').value=proj.targetHours||'';openModal('modal-project');
-}
-function saveProject(){
-  const name=document.getElementById('edit-proj-name').value.trim();if(!name){alert('Project name required.');return;}
-  const data=load();const id=document.getElementById('edit-proj-id').value;
-  const target=parseFloat(document.getElementById('edit-proj-target').value)||null;
-  if(id){const proj=data.projects.find(p=>p.id===id);if(proj){proj.name=name;proj.targetHours=target;}}
-  else data.projects.push({id:'proj-'+Date.now(),name,startDate:todayStr(),dailyLogs:{},completed:false,targetHours:target});
-  save(data);renderProjects(data);closeModal('modal-project');
-}
 
 // ══════════════════════════════════════════
 //  LEVEL UP
 // ══════════════════════════════════════════
 let luTimer=null;
-function showLU(text){
+function showLU(text,title){
+  document.getElementById('lu-title').textContent=title||'TIER UP';
   document.getElementById('lu-sub').textContent=text;
   document.getElementById('lu-overlay').classList.add('show');
   if(luTimer)clearTimeout(luTimer);luTimer=setTimeout(hideLU,5000);
@@ -4169,7 +4074,7 @@ function hideLU(){document.getElementById('lu-overlay').classList.remove('show')
 function flashTask(tid){const el=document.getElementById('task-'+tid);if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),700);}
 function pulseBar(key){const b=document.getElementById('bar-'+key);if(!b)return;b.classList.remove('pulse');void b.offsetWidth;b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),800);}
 function spawnFloat(pid,txt){const el=document.getElementById(pid);if(!el)return;const r=el.getBoundingClientRect();const d=document.createElement('div');d.className='float-txt';d.textContent=txt;d.style.left=r.left+r.width*.3+'px';d.style.top=r.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1300);}
-function spawnFloatCenter(txt){const d=document.createElement('div');d.className='float-txt';d.textContent=txt;d.style.left='50%';d.style.top='40%';d.style.transform='translateX(-50%)';d.style.fontSize='16.25px';document.body.appendChild(d);setTimeout(()=>d.remove(),1500);}
+function spawnFloatCenter(txt){const d=document.createElement('div');d.className='float-txt center';d.textContent=txt;d.style.left='50%';d.style.top='40%';d.style.marginLeft='-'+Math.min(160,txt.length*4.5)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1500);}
 
 // ══════════════════════════════════════════
 //  EXPORT / IMPORT / RESET
@@ -4182,22 +4087,22 @@ function importData(){document.getElementById('import-file').click();}
 function handleImport(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=ev=>{
+  reader.onload=async ev=>{
     let d;
     try{d=JSON.parse(ev.target.result);if(!d||!d.stats)throw new Error('bad');}
-    catch(err){alert('Invalid backup file.');return;}
+    catch(err){tell('That file isn’t a backup this app can read.',{title:'IMPORT'});return;}
     const info=_backupSummary(d);
-    if(!confirm('Replace ALL current data with this backup?\n\n'+
-      'Backup: '+info.days+' days of history, last day '+info.last+'\n\n'+
-      'This replaces your data on every device. Your current data is snapshotted first.'))return;
+    if(!await askConfirm('Replace all your data with this backup?\n\n'+
+      'Backup: '+info.days+' days of history, last day '+info.last+'.\n\n'+
+      'This replaces your data on every device. Your current data is snapshotted first.',{title:'IMPORT',yes:'REPLACE'}))return;
     _makeBackup(load(),'before-import');
     _syncReplaceAll(d).then(()=>location.reload());
   };
   reader.readAsText(file);e.target.value='';
 }
-function resetAllData(){
-  if(!confirm('DELETE ALL DATA? This cannot be undone.'))return;
-  if(!confirm('Absolutely sure?'))return;
+async function resetAllData(){
+  if(!await askConfirm('Delete all your data? A snapshot is kept on this device, but nothing else can bring it back.',{title:'RESET ALL DATA',yes:'DELETE ALL'}))return;
+  if(!await askConfirm('Are you sure? Every task, stat, goal and record will be gone.',{title:'RESET ALL DATA',yes:'YES, DELETE'}))return;
   _makeBackup(load(),'before-reset');
   ['rpg_tracker_v2','rpg_tracker_v1',SYNC_BASE_KEY,SYNC_PENDING_KEY].forEach(k=>localStorage.removeItem(k));
   location.reload();
@@ -4207,7 +4112,7 @@ function updateFooter(){
   const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
   const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   const label=window._fbUser?`SYNCED TO CLOUD · ${timeStr}`:`DATA SAVED LOCALLY · ${dateStr}`;
-  document.getElementById('footer-date').textContent=`${label} · ${APP_VERSION}`;
+  ['footer-date','footer-status'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=`${label} · ${APP_VERSION}`;});
 }
 window._lastFooterSync=null;
 function _updateFooterSyncTime(){window._lastFooterSync=new Date();updateFooter();}
@@ -4354,14 +4259,13 @@ function openManageStats(){
 }
 function renderManageStatsList(){
   const wrap=document.getElementById('manage-stats-list');if(!wrap)return;
-  wrap.innerHTML='';
+  const data=load();wrap.innerHTML='';
   STATS_DEF.forEach(s=>{
-    const checked=tempActiveStats[s.key]!==false;
-    const row=document.createElement('div');row.className='mstat-row';
-    row.innerHTML=`<span class="mstat-cb${checked?' checked':''}">${checked?'✓':''}</span>
-      <span class="mstat-label"><span>${s.emoji}</span> ${s.fullLabel}</span>`;
-    row.onclick=()=>{tempActiveStats[s.key]=!(tempActiveStats[s.key]!==false);renderManageStatsList();};
-    wrap.appendChild(row);
+    const on=tempActiveStats[s.key]!==false;
+    const l=document.createElement('label');l.className='fld-toggle';
+    l.innerHTML='<span><b>'+s.fullLabel+'</b><small>'+s.label+' · '+(data.stats[s.key]||0)+' POINTS</small></span><input type="checkbox" data-stat="'+s.key+'"'+(on?' checked':'')+'/><span class="tgl"></span>';
+    l.querySelector('input').onchange=e=>{tempActiveStats[s.key]=e.target.checked;};
+    wrap.appendChild(l);
   });
 }
 function saveManageStats(){
@@ -4396,32 +4300,31 @@ function renderBdTasks(){
   data.customTasks.forEach(t=>{
     const wasDone=isTaskDoneOn(data,t.id,date);
     const sd=STATS_DEF.find(s=>s.key===t.stat);
-    const row=document.createElement('div');row.className='bd-task-row';
-    const cb=document.createElement('div');
+    const gain='+'+t.points+' '+(sd?sd.label:t.stat);
+    const row=document.createElement('button');row.type='button';row.className='bd-row'+(wasDone?' on':'');
+    const cb=document.createElement('span');
     cb.className='bd-task-cb'+(wasDone?' was-done checked':'');
-    cb.textContent=wasDone?'✓':'';
     cb.dataset.tid=t.id;
     cb.dataset.wasChecked=wasDone?'1':'0';
-    const nm=document.createElement('span');nm.className='bd-task-name';nm.textContent=`${t.icon||'·'} ${t.name}`;
-    const pill=document.createElement('span');pill.className='bd-edit-tag'+(wasDone?' was-done':'');
-    pill.textContent=wasDone?'WAS DONE':'+'+t.points+' '+(sd?sd.label:t.stat);
-    cb.onclick=()=>{
+    const nm=document.createElement('span');nm.className='bd-task-name';nm.textContent=(t.icon?t.icon+' ':'')+t.name;
+    const tag=document.createElement('span');tag.className='bd-edit-tag'+(wasDone?' was-done':'');
+    tag.textContent=wasDone?'WAS DONE':gain;
+    row.onclick=()=>{
       const nowChecked=!cb.classList.contains('checked');
-      cb.classList.toggle('checked',nowChecked);
-      cb.textContent=nowChecked?'✓':'';
-      const removing=wasDone&&!nowChecked;
-      pill.className='bd-edit-tag'+(removing?' removing':wasDone?' was-done':'');
-      pill.textContent=removing?'WILL REMOVE':nowChecked?'+'+t.points+' '+(sd?sd.label:t.stat):'WAS DONE'||'+'+t.points+' '+(sd?sd.label:t.stat);
+      cb.classList.toggle('checked',nowChecked);row.classList.toggle('on',nowChecked);
+      const removing=wasDone&&!nowChecked,adding=!wasDone&&nowChecked;
+      tag.className='bd-edit-tag'+(removing?' removing':adding?' add':wasDone?' was-done':'');
+      tag.textContent=removing?'WILL REMOVE':wasDone?'WAS DONE':gain;
       nm.className='bd-task-name'+(removing?' removing':'');
     };
-    row.appendChild(cb);row.appendChild(nm);row.appendChild(pill);
+    row.appendChild(cb);row.appendChild(nm);row.appendChild(tag);
     wrap.appendChild(row);
   });
 }
 
-function saveBackdate(){
+async function saveBackdate(){
   const date=document.getElementById('bd-date').value;
-  if(!date){alert('Select a date.');return;}
+  if(!date){popError('bd-date','Pick a day.');return;}
 
   // Compute diff before loading heavy data
   const rows=[...document.querySelectorAll('#bd-tasks-list .bd-task-cb')];
@@ -4437,11 +4340,11 @@ function saveBackdate(){
   const data=load();
   const addNames=toAdd.map(id=>(data.customTasks.find(t=>t.id===id)||{name:id}).name);
   const remNames=toRemove.map(id=>(data.customTasks.find(t=>t.id===id)||{name:id}).name);
-  let msg=`Update tasks for ${fmtDate(date)}?`;
-  if(addNames.length)msg+=`\n\n+ Adding: ${addNames.join(', ')}`;
-  if(remNames.length)msg+=`\n- Removing: ${remNames.join(', ')}`;
-  msg+=`\n\nThis will adjust your stats and streaks.`;
-  if(!confirm(msg))return;
+  let msg=`Update ${fmtDate(date)}?\n`;
+  if(addNames.length)msg+=`\nDone: ${addNames.join(', ')}`;
+  if(remNames.length)msg+=`\nNot done: ${remNames.join(', ')}`;
+  msg+=`\n\nStats and runs are adjusted to match.`;
+  if(!await askConfirm(msg,{title:'LOG PAST',yes:'SAVE'}))return;
 
   if(!data.taskHistory)data.taskHistory={};
   if(!data.taskHistory[date])data.taskHistory[date]={};
@@ -4492,8 +4395,8 @@ function saveBackdate(){
   closeModal('modal-backdate');
   renderStats(data);renderTasks(data);
   updateYesterdayReminder(data);updateMoodDisplay(data);renderGoals(data);
-  if(luLines.length){setTimeout(()=>{showLU(luLines.join('\n'));playLU();},400);}
-  else{spawnFloatCenter('📅 HISTORY UPDATED');}
+  if(luLines.length){setTimeout(()=>{showLU(luLines.join('\n'),'TIER UP');playLU();},400);}
+  else{spawnFloatCenter('HISTORY UPDATED');}
 }
 
 function updateYesterdayReminder(data){
@@ -4582,27 +4485,23 @@ function _materialName(id){const m=MATERIALS.find(x=>x.id===id);return m?m.name:
 
 // ── Per-tab tutorial content ──
 const TUTORIALS={
-  daily:{title:'📅 DAILY TAB',items:[
-    {e:'✅',t:'<strong>Check off tasks</strong> each day to earn stat points and build streaks.'},
-    {e:'📊',t:'<strong>Your stats grow</strong> as you complete tasks — each task maps to a stat.'},
-    {e:'😊',t:'<strong>Your character\'s mood</strong> reflects how consistently you\'ve worked each stat.'},
-    {e:'🔧',t:'<strong>Manage Tasks</strong> — add, edit, or remove your daily habits.'},
-    {e:'📝',t:'<strong>Log Past</strong> — backdate tasks if you forgot to check them off.'},
-    {e:'💊',t:'<strong>Stats panel</strong> on the right shows all 9 stats with streak info.'},
+  daily:{title:'HOW DAILY WORKS',items:[
+    '<b>Tick a task</b> when you do it. It earns points for its stat and builds its run.',
+    '<b>The sprite</b> shows how things are going. WELLNESS explains its mood, and CUSTOMISE changes its look.',
+    '<b>LOG PAST</b> ticks tasks for an earlier day, up to 30 days back.',
+    '<b>MANAGE TASKS</b> adds, edits and removes tasks. Tap a task to see its history.',
+    '<b>Stats</b> fill a tier every ten points. MANAGE STATS chooses which ones count toward the mood.',
   ]},
-  quests:{title:'⚔ GOALS PAGE',items:[
-    {e:'🏆',t:'<strong>Awards</strong> auto-track your progress — complete them to earn stat bonuses.'},
-    {e:'🎯',t:'<strong>Projects</strong> let you create long-running goals with optional time tracking.'},
-    {e:'⏱️',t:'<strong>Log hours</strong> on projects each day and see your average work rate.'},
-    {e:'✅',t:'<strong>Mark projects complete</strong> to earn stat rewards and archive them.'},
-    {e:'📋',t:'<strong>Personal Goals</strong> on the right track recurring habits — they reset each week or month.'},
+  quests:{title:'HOW GOALS WORKS',items:[
+    '<b>Goals</b> are weekly or monthly targets: a task so many times, a stat raised, or time on an activity. Each shows whether it is on track.',
+    '<b>Projects</b> are longer pieces of work. Log time on them, then complete them for their stat rewards.',
+    '<b>Awards</b> complete by themselves and pay out stat points. Some also unlock shell materials.',
   ]},
-  inventory:{title:'🎒 TOOLS PAGE',items:[
-    {e:'💰',t:'<strong>Marks</strong> are earned from monthly budget surplus when you close a budget month.'},
-    {e:'📊',t:'<strong>Budget Tracker</strong> — log income and expenses, then close the month to earn marks.'},
-    {e:'⏱',t:'<strong>Stopwatch</strong> — time a session and log it towards a Project or a Records activity.'},
-    {e:'📖',t:'<strong>Records</strong> track hours spent on activities (reading, meditating…). Tap ✏️ to manage them.'},
-    {e:'📓',t:'<strong>Tap an activity</strong> to see its hours chart, filter by date, and log time manually.'},
+  inventory:{title:'HOW TOOLS WORKS',items:[
+    '<b>The stopwatch</b> times a session and registers it to a project or a Records activity.',
+    '<b>The Reserve</b> is a monthly budget. Log income and expenses, and closing the month banks the balance.',
+    '<b>Records</b> keep the time spent on activities. Open one for its chart, or use LOG TIME to add time by hand.',
+    '<b>A task linked to an activity</b> ticks itself once enough time is logged that day.',
   ]},
 };
 const MOOD_LABELS={happy:'HAPPY',neutral:'NEUTRAL',concerned:'CONCERNED',sad:'SAD',critical:'CRITICAL'};
@@ -4876,7 +4775,7 @@ function updateMoodDisplay(data){
   if(prevMood==='happy'&&mood!=='happy'){
     const sli2=data.statLastIncreased||{};const today2=todayStr();const active2=data.activeStats||{};
     let ws=null,wd=0;STATS_DEF.forEach(s=>{if(active2[s.key]===false)return;const d=daysBetween(sli2[s.key],today2);if(d>=7&&d>wd){wd=d;ws=s;}});
-    if(ws)setTimeout(()=>spawnFloatCenter(`⚠ ${ws.fullLabel} neglected ${wd} days!`),200);
+    if(ws)setTimeout(()=>spawnFloatCenter(`${ws.fullLabel} untouched for ${wd} days`),200);
   }
   // update daily character panel
   renderDailyGoalsWatch(data);
@@ -5119,8 +5018,8 @@ function renderGoalsInto(containerId,data){
   save(data);
 }
 
-function deleteGoal(gid){
-  if(!confirm('Delete this goal?'))return;
+async function deleteGoal(gid){
+  if(!await askConfirm('Delete this goal and its history?',{title:'DELETE GOAL',yes:'DELETE'}))return;
   const data=load();
   data.customGoals=(data.customGoals||[]).filter(g=>g.id!==gid);
   save(data);closeModal('modal-goal-stats');renderGoals(data);updateMoodDisplay(data);
@@ -5279,7 +5178,6 @@ function saveGoal(){
 function openTaskStats(tid){
   const data=load();
   const task=data.customTasks.find(t=>t.id===tid);if(!task)return;
-  document.getElementById('tsk-stats-title').textContent=(task.icon||'·')+' '+task.name;
   const hist=data.taskHistory||{};
   const firstDate=Object.keys(hist).filter(d=>hist[d][tid]).sort()[0]||todayStr();
   const range=_defaultRange(firstDate);
@@ -5308,29 +5206,23 @@ function _tskRender(){
   const streak={current:_live,best:Math.max(_st.best||0,_live)};
   const firstDate=Object.keys(hist).filter(d=>hist[d]&&hist[d][st.tid]).sort()[0];
   const mx=Math.max(...counts,1);
+  const days=n=>n+' DAY'+(n===1?'':'S');
   const chart=keys.length
-    ?`<div class="tsk-chart">`+keys.map((k,i)=>{
-        const v=counts[i];const h=Math.round((v/mx)*120);
-        return`<div class="tsk-bar-col"><div class="tsk-bar-wrap"><div class="tsk-bar-num">${v}</div><div class="tsk-bar${v>=mx?' full':''}" style="height:${Math.max(3,h)}px"></div></div><div class="tsk-bar-lbl">${_bucketLabel(k,gran)}</div></div>`;
-      }).join('')+`</div>`
-    :'<div class="empty-state" style="padding:10px 0">No completions in this range.</div>';
+    ?`<div class="rec-chart${keys.length>16?' dense':keys.length>7?' mid':''}">`+keys.map((k,i)=>{const v=counts[i];
+        return`<div class="rec-col"><span class="rec-bar-v">${v}</span><div class="rec-bar" style="height:${Math.max(2,Math.round(v/mx*100))}%"></div><span class="rec-bar-l">${_bucketLabel(k,gran)}</span></div>`;}).join('')+'</div>'
+    :'<div class="rec-empty">Not done in this range.</div>';
+  const chip=(g,t)=>`<button class="chip${gran===g?' on':''}" onclick="window._tsk.view='${g}';_tskRender()">${t}</button>`;
   const body=document.getElementById('tsk-stats-body');
   body.innerHTML=`
-    <div class="tsk-daterange">
-      <label>FROM</label><input type="date" value="${st.start}" onchange="window._tsk.start=this.value;_tskRender()"/>
-      <label>TO</label><input type="date" value="${st.end}" onchange="window._tsk.end=this.value;_tskRender()"/>
-    </div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TOTAL COMPLETIONS</span><span class="tsk-stat-val">${totalDone}</span></div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">AVG / ${gran.toUpperCase()}</span><span class="tsk-stat-val">${avg}×</span></div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">CURRENT STREAK</span><span class="tsk-stat-val">${streak.current} days</span></div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">BEST STREAK</span><span class="tsk-stat-val">${streak.best} days</span></div>
-    ${firstDate?`<div class="tsk-stat-row"><span class="tsk-stat-lbl">FIRST COMPLETED</span><span class="tsk-stat-val">${fmtDate(firstDate)}</span></div>`:''}
-    <div class="tsk-section-hd">FREQUENCY CHART</div>
-    <div class="tsk-chart-toggle">
-      <button class="${gran==='week'?'active':''}" onclick="window._tsk.view='week';_tskRender()">WEEKLY</button>
-      <button class="${gran==='month'?'active':''}" onclick="window._tsk.view='month';_tskRender()">MONTHLY</button>
-    </div>
-    <div class="tsk-chart-wrap">${chart}</div>`;
+    <div class="rec-head"><div><div class="rec-title"></div>
+        <div class="rec-range"><input type="date" aria-label="From" value="${st.start}" onchange="window._tsk.start=this.value;_tskRender()"/>→<input type="date" aria-label="To" value="${st.end}" onchange="window._tsk.end=this.value;_tskRender()"/></div></div>
+      <div class="rec-stats"><div><div class="rec-stat-l">DONE</div><div class="rec-stat-v cy">${totalDone}</div></div>
+        <div><div class="rec-stat-l">AVG / ${gran.toUpperCase()}</div><div class="rec-stat-v">${avg}×</div></div></div></div>
+    <div class="st-tiles"><div><span>CURRENT RUN</span><b>${days(streak.current)}</b></div><div><span>BEST RUN</span><b>${days(streak.best)}</b></div>
+      <div><span>FIRST DONE</span><b>${firstDate?fmtDate(firstDate).toUpperCase():'—'}</b></div></div>
+    <div class="rec-chips">${chip('week','WEEK')}${chip('month','MONTH')}</div>
+    ${chart}`;
+  body.querySelector('.rec-title').textContent=(task.icon?task.icon+' ':'')+task.name;
 }
 
 // ── Goal Stats Modal ──
@@ -5338,7 +5230,7 @@ function openGoalStats(gid){
   const data=load();
   const goal=(data.customGoals||[]).find(g=>g.id===gid);if(!goal)return;
   const desc=goalDescription(goal,data);
-  document.getElementById('gst-title').textContent='🎯 '+desc;
+  window._gstId=gid;
   const body=document.getElementById('gst-body');
   openModal('modal-goal-stats');
 
@@ -5394,53 +5286,31 @@ function openGoalStats(gid){
   const completionRate=Math.round((completedPeriods/totalPeriods)*100);
   const avgPerPeriod=totalPeriods>0?(isAct?fmtHM(avgRaw):avgRaw.toFixed(1)):'—';
 
-  function pLabel(pk){
-    if(period==='week'){const d=new Date(pk);return`${p(d.getMonth()+1)}/${p(d.getDate())}`;}
-    const [y,m]=pk.split('-');const names=['J','F','M','A','M','J','J','A','S','O','N','D'];return names[parseInt(m)-1]+(y.slice(2));
-  }
-
+  const pLabel=pk=>_bucketLabel(pk,period==='week'?'week':'month');
   const streak=goal.streak||0;
-  const maxVal=Math.max(target,...counts,1);
+  const maxVal=Math.max(target,...counts,1),PLOT=110;
+  const fmtV=v=>isAct?_dur(v):String(v);
+  const dense=periods.length>16?' dense':periods.length>7?' mid':'';
   const chartHtml=periods.length
-    ?`<div class="tsk-chart">`+periods.map((pk,i)=>{
-        const v=counts[i];
-        const h=Math.round((v/maxVal)*52);
-        const met=v>=target;
-        return`<div class="tsk-bar-col">
-          <div class="tsk-bar${met?' full':''}" style="height:${Math.max(2,h)}px"></div>
-          <div class="tsk-bar-lbl">${pLabel(pk)}</div>
-        </div>`;
-      }).join('')+
-      `<div class="tsk-bar-col" style="margin-left:5px;border-left:1.25px dashed rgba(255,255,255,.15);padding-left:5px">
-        <div style="height:${Math.round((target/maxVal)*52)}px;width:17.5px;border-top:2.5px dashed var(--gold)"></div>
-        <div class="tsk-bar-lbl" style="color:var(--gold)">goal</div>
-      </div>`+
-      `</div>`
-    :'<div class="empty-state" style="padding:10px 0">No history yet.</div>';
-
+    ?`<div class="gchart${dense}"><div class="gchart-target" style="bottom:${Math.round(target/maxVal*PLOT)}px"><span>TARGET</span></div>`+
+      periods.map((pk,i)=>{const v=counts[i];return`<div class="rec-col"><span class="rec-bar-v">${fmtV(v)}</span><div class="rec-bar${v>=target?'':' miss'}" style="height:${Math.max(2,Math.round(v/maxVal*PLOT))}px"></div></div>`;}).join('')+
+      `</div><div class="gchart-l${dense}">`+periods.map(pk=>`<span>${pLabel(pk)}</span>`).join('')+'</div>'
+    :'<div class="rec-empty">No history yet.</div>';
+  calculateGoalProgress(goal,data);
+  const grace=isGoalInGracePeriod(goal);
+  const state=grace?'grace':goal.status;
+  const stateTxt={onTrack:'ON TRACK',atRisk:'AT RISK',failing:'FAILING',grace:'NEW THIS '+period.toUpperCase()}[state]||'';
+  const unit=period==='week'?'WEEK':'MONTH';
   body.innerHTML=`
-    <div class="gst-rate-row">
-      <div class="gst-rate-card">
-        <div class="gst-rate-num">${completionRate}%</div>
-        <div class="gst-rate-lbl">COMPLETION RATE</div>
-      </div>
-      <div class="gst-rate-card">
-        <div class="gst-rate-num">${avgPerPeriod}${isAct?'':'×'}</div>
-        <div class="gst-rate-lbl">AVG / ${period.toUpperCase()}</div>
-      </div>
-      <div class="gst-rate-card">
-        <div class="gst-rate-num">${streak}</div>
-        <div class="gst-rate-lbl">STREAK 🔥</div>
-      </div>
-    </div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">PERIODS COMPLETED</span><span class="tsk-stat-val">${completedPeriods} / ${totalPeriods}</span></div>
-    <div class="tsk-stat-row"><span class="tsk-stat-lbl">TARGET / ${period.toUpperCase()}</span><span class="tsk-stat-val">${isAct?fmtHM(target):target+'×'}</span></div>
-    <div class="tsk-section-hd">${isAct?'HOURS':'COMPLETIONS'} PER ${period.toUpperCase()} <span style="color:var(--gold);font-size:clamp(3.75px,.6vw,5px)">(gold dashed = target)</span></div>
-    <div class="tsk-chart-wrap">${chartHtml}</div>
-    <div class="form-actions" style="margin-top:17.5px">
-      <button class="px-btn" style="margin-right:auto" onclick="deleteGoal('${gid}')">DELETE</button>
-      <button class="px-btn success" onclick="closeModal('modal-goal-stats');openAddGoal('${gid}')">EDIT GOAL</button>
-    </div>`;
+    <div class="rec-head"><div><div class="rec-title"></div><div class="gst-state ${state}">${stateTxt}</div></div>
+      <div class="rec-stats"><div><div class="rec-stat-l">MET</div><div class="rec-stat-v cy">${completionRate}%</div></div>
+        <div><div class="rec-stat-l">AVG / ${unit}</div><div class="rec-stat-v">${avgPerPeriod}${isAct?'':'×'}</div></div></div></div>
+    <div class="st-tiles"><div><span>RUN</span><b>${streak} ${unit}${streak===1?'':'S'}</b></div>
+      <div><span>PERIODS MET</span><b>${completedPeriods} / ${totalPeriods}</b></div>
+      <div><span>TARGET</span><b>${isAct?_dur(target):target+'×'} / ${unit}</b></div></div>
+    <div class="fld-label">${isAct?'TIME':isFreq?'COMPLETIONS':'ACTIVE DAYS'} PER ${unit}</div>
+    ${chartHtml}`;
+  body.querySelector('.rec-title').textContent=desc;
 }
 
 function renderDailyGoalsWatch(data){
@@ -5834,6 +5704,8 @@ function initHaptics(){
 
 function initShell(){
   document.querySelectorAll('.app-wordmark').forEach(el => { el.textContent = APP_NAME; });
+  document.title = APP_NAME;
+  const wt = document.getElementById('welcome-title'); if (wt) wt.textContent = 'WELCOME TO ' + APP_NAME;
   applyShellMaterial(SHELL_MATERIAL);
 }
 
@@ -6004,7 +5876,7 @@ function initDailySprite(){
 
 function init(){
   const sp=localStorage.getItem('rpg_sound');
-  if(sp==='0'){soundOn=false;const b=document.getElementById('sound-btn');b.textContent='✕';b.classList.add('muted');}
+  if(sp==='0'){soundOn=false;const b=document.getElementById('sound-btn');if(b)b.checked=false;}
 
   const data=load();
   initShell();
@@ -6061,9 +5933,9 @@ document.addEventListener('DOMContentLoaded',function(){
     console.error('[init] failed:',e);
     var b=document.createElement('div');
     b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#c00;color:#fff;'+
-      'font:15px/1.5 monospace;padding:12.5px 17.5px;text-align:center;white-space:pre-wrap';
-    b.textContent='⚠ APP FAILED TO START\n'+(e&&e.message?e.message:e)+
-      '\nYour saved data is intact. Try a hard-refresh (Ctrl+F5); if it persists, use IMPORT to restore a backup.';
+      'font:14px/1.5 sans-serif;padding:14px 18px;text-align:center;white-space:pre-wrap';
+    b.textContent='The app failed to start.\n'+(e&&e.message?e.message:e)+
+      '\nYour saved data is intact. Try a hard-refresh (Ctrl+F5); if it persists, import a backup from Settings.';
     document.body.appendChild(b);
   }
 });
@@ -6083,15 +5955,14 @@ function _fbShowBanner(msg,color){
   let b=document.getElementById('fb-banner');
   if(!b){
     b=document.createElement('div');b.id='fb-banner';
-    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;font-family:"Press Start 2P",monospace;'+
-      'font-size:clamp(5px,.75vw,6.25px);padding:7.5px 15px;text-align:center;letter-spacing:1.25px;'+
-      'display:none;cursor:pointer;';
+    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;font:10px/1.4 "Share Tech Mono",monospace;'+
+      'padding:9px 16px;text-align:center;letter-spacing:.1em;display:none;cursor:pointer;';
     b.onclick=()=>b.style.display='none';
     document.body.prepend(b);
   }
-  b.style.background=color||'#c00';
+  b.style.background=color==='#1a5c1a'?'oklch(0.55 0.13 150)':'#b3443d';
   b.style.color='#fff';
-  b.textContent=msg+' (click to dismiss)';
+  b.textContent=msg.replace(/^[^\w(]+/,'')+' · TAP TO DISMISS';
   b.style.display='block';
   if(color==='#1a5c1a')setTimeout(()=>b.style.display='none',3000);
 }
@@ -6599,7 +6470,7 @@ window.__APP_JS_OK=true;
   function banner(msg){
     var b=document.createElement('div');
     b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#c00;color:#fff;'+
-      'font:15px/1.5 monospace;padding:12.5px 17.5px;text-align:center;white-space:pre-wrap';
+      'font:14px/1.5 sans-serif;padding:14px 18px;text-align:center;white-space:pre-wrap';
     b.textContent=msg;
     (document.body||document.documentElement).appendChild(b);
   }
@@ -6608,7 +6479,7 @@ window.__APP_JS_OK=true;
   });
   function check(){
     if(window.__APP_JS_OK)return;
-    banner('⚠ APP FAILED TO LOAD — the main script did not finish parsing.\n'+
+    banner('The app failed to load: the main script did not finish parsing.\n'+
       (window.__APP_JS_ERR?('Error: '+window.__APP_JS_ERR+'\n'):'')+
       'This usually means the deployed index.html is truncated or corrupted.\n'+
       'Re-upload the complete file (check the last line is </html>), then hard-refresh (Ctrl+F5).');
@@ -6620,21 +6491,18 @@ window.__APP_JS_OK=true;
 
 <!-- ── Auth Overlay ── -->
 <div id="auth-overlay">
-  <div class="auth-box">
-    <h2>RPG HABIT TRACKER</h2>
-    <p>Sign in to sync your data across devices</p>
-    <input type="email" id="auth-email" placeholder="Email address" autocomplete="email"/>
-    <input type="password" id="auth-pass" placeholder="Password" autocomplete="current-password"
-      onkeydown="if(event.key==='Enter')fbLogin()"/>
-    <button class="px-btn success" onclick="fbLogin()">LOG IN</button>
-    <button class="px-btn" onclick="fbSignup()">CREATE ACCOUNT</button>
-    <div class="auth-divider">— or —</div>
-    <button class="px-btn auth-google-btn" onclick="fbGoogleLogin()">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G"/>
-      CONTINUE WITH GOOGLE
-    </button>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-skip" onclick="fbSkip()">Skip — play offline without syncing</div>
+  <div class="modal-box pop-box auth-box" style="--pop-w:380px">
+    <div class="shell-tex"></div>
+    <div class="pop-head"><span class="app-wordmark">HABITRON</span><span>SIGN IN</span></div>
+    <div class="bezel"><div class="screen pop-screen">
+      <div class="pick-hint">Sign in to sync your data between devices.</div>
+      <label class="fld"><span class="fld-label">EMAIL</span><input class="fld-in" type="email" id="auth-email" autocomplete="email"/></label>
+      <label class="fld"><span class="fld-label">PASSWORD</span><input class="fld-in" type="password" id="auth-pass" autocomplete="current-password" onkeydown="if(event.key==='Enter')fbLogin()"/></label>
+      <div class="fld-err auth-err" id="auth-err"></div>
+      <button class="sbtn auth-google" onclick="fbGoogleLogin()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt=""/>CONTINUE WITH GOOGLE</button>
+    </div></div>
+    <div class="pop-keys"><button class="pill" onclick="fbSignup()">CREATE ACCOUNT</button><button class="action-key" onclick="fbLogin()">LOG IN</button></div>
+    <button class="pop-quiet auth-skip" onclick="fbSkip()">PLAY OFFLINE WITHOUT SYNCING</button>
   </div>
 </div>
 

@@ -13,6 +13,12 @@ reliable reference.
 > equipment system (including its attribute bonuses), and the six colour themes. They are
 > gone from the app, so skip them when walking this list. Their saved data fields are
 > left untouched in storage. See decisions 2, 3, 11, 12 and 13 in DECISIONS.md.
+>
+> **Moved in Phase 11:**
+> - The header's name field, the footer's IMPORT / EXPORT / BACKUPS / RESET ALL,
+>   the account bar and the sound switch now live in the Settings popup.
+> - Every `confirm()` is the app's own popup.
+> - The unreachable legacy project editor (`modal-project`) was removed.
 
 Names below are the app's **current** ones. The rename to Daily / Goals / Tools,
 Reserve, Marks, Records, Awards and Tasks happens in Phase 4, and this file is
