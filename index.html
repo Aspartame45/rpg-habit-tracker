@@ -482,7 +482,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 /* the sprite unit's screen */
 .status-line{
   display:flex;justify-content:space-between;padding:9px 12px 7px;
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);
 }
 #sprite-window{
   position:relative;margin:0 10px 10px;aspect-ratio:5/7;
@@ -527,12 +527,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .task-row.done .task-name{text-decoration:line-through}
 .task-run,.task-auto{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;flex:none}
 .task-run{color:oklch(0.74 0.17 55)}
-.task-auto{color:rgba(233,237,242,.45)}
+.task-auto{color:rgba(233,237,242,.58)}
 .task-tag{
   flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;
   padding:2px 6px;border-radius:2px;border:1px solid;
 }
-.task-row.done .task-tag{color:rgba(233,237,242,.5)!important;border-color:rgba(233,237,242,.2)!important}
+.task-row.done .task-tag{color:rgba(233,237,242,.58)!important;border-color:rgba(233,237,242,.2)!important}
 #yesterday-reminder{
   margin:12px 11px 0;padding:9px 11px;border-radius:5px;
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
@@ -541,13 +541,13 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .screen-footer{
   margin-top:auto;display:flex;justify-content:space-between;gap:10px;
   padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);
 }
 /* goals needing attention, shown under the tasks when there are any */
 #daily-goals-watch:empty{display:none}
 #daily-goals-watch{padding:4px 11px 12px}
 #daily-goals-watch .dgw-title{
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);
   padding:8px 2px 6px;border-top:1px solid rgba(255,255,255,.06);
 }
 #daily-goals-watch .dgw-row{padding:6px 2px}
@@ -567,7 +567,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 /* Tier pips: one per ten points in a stat, beneath its bar. */
 .rack-pips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;min-height:6px}
 .rack-pips i{width:6px;height:6px;border-radius:1px;background:var(--hue);opacity:.75}
-.rack-pips span{font:8.5px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5);line-height:6px}
+.rack-pips span{font:8.5px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58);line-height:6px}
 /* Only on the phone: the highlighted section, the strip, the device. */
 .task-section-head,#tasks-highlighted,.tap-hint,.dock-side,.sprite-badge .why{display:none}
 
@@ -631,8 +631,8 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   .unit,.unit > .bezel,.unit .screen{display:contents}
   .unit .shell-tex,.unit-sprite .shell-header,.unit-sprite .unit-keys,.unit-tasks .unit-label{display:none}
   .unit-stats .unit-label{display:flex;padding:14px 13px 4px;border-top:1px solid rgba(255,255,255,.06);margin-top:6px}
-  .unit-stats .unit-title{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
-  .unit-stats .unit-readout{color:rgba(233,237,242,.4)}
+  .unit-stats .unit-title{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
+  .unit-stats .unit-readout{color:rgba(233,237,242,.58)}
   #stats-list{padding:8px 13px 0}
   .rack-footer{margin:14px 13px 4px}
   .unit-keys{margin:8px 11px 0}
@@ -648,7 +648,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   #sprite-window{margin:0;border-radius:calc(6px - 1px * var(--p,0))}
   .tap-hint{
     display:block;position:absolute;right:9px;top:9px;
-    font:8.5px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.5);
+    font:8.5px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);
     background:rgba(0,0,0,.4);padding:3px 6px;border-radius:2px;
     opacity:calc(1 - var(--p,0));pointer-events:none;
   }
@@ -660,7 +660,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   #sprite-window .sprite-badge-wrap{opacity:calc(1 - var(--p,0))}
   #sprite-window.collapsed .sprite-badge-wrap{pointer-events:none}
   .dock-side{display:block;position:absolute;top:50%;transform:translateY(-50%);opacity:var(--p,0)}
-  .dock-count{margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45);white-space:nowrap}
+  .dock-count{margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);white-space:nowrap}
 
   /* headline and rows, taller for thumbs */
   .daily-headline{padding:13px 13px 5px;font-size:16px}
@@ -669,9 +669,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   .task-list .task-cb{width:20px;height:20px;min-width:20px}
   .screen-tasks.has-highlights .task-section-head{
     display:flex;justify-content:space-between;align-items:center;padding:6px 13px 4px;
-    font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4);
+    font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58);
   }
-  .screen-tasks.has-highlights #hl-hint{letter-spacing:.1em;color:rgba(233,237,242,.35)}
+  .screen-tasks.has-highlights #hl-hint{letter-spacing:.1em;color:rgba(233,237,242,.58)}
   .screen-tasks.has-highlights #tasks-highlighted{display:flex}
   .screen-tasks.has-highlights #all-head{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px}
   .screen-footer{margin-top:0}
@@ -697,7 +697,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 .rack-footer{
   margin-top:14px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);
-  font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.4);
+  font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58);
 }
 
 /* One column when there is no room for three. The sprite window turns landscape
@@ -740,10 +740,10 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .seg-footer{
   display:flex;justify-content:space-between;gap:10px;padding:9px 12px;
   border-top:1px solid rgba(255,255,255,.06);
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);
 }
 .seg-more{visibility:hidden}
-.seg-list .empty-state{font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5);padding:22px 8px;text-align:center}
+.seg-list .empty-state{font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58);padding:22px 8px;text-align:center}
 
 /* cards: flat, on the screen */
 .pcard,.gcard,.acard{
@@ -759,9 +759,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .mono,.pcard-stats,.gcard-type,.gcard-foot,.acard-foot,.pcard-untimed,.pcard-today,.gcard-pace{
   font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;
 }
-.pcard-stats{display:flex;gap:12px;margin-top:10px;color:rgba(233,237,242,.45)}
+.pcard-stats{display:flex;gap:12px;margin-top:10px;color:rgba(233,237,242,.58)}
 .pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;align-items:center}
-.pcard-untimed{color:rgba(233,237,242,.4);padding:2px 0}
+.pcard-untimed{color:rgba(233,237,242,.58);padding:2px 0}
 .stag{font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;padding:2px 6px;border-radius:2px;border:1px solid}
 .atag{
   font:700 8.5px 'Chakra Petch',sans-serif;letter-spacing:.12em;padding:2px 6px;border-radius:2px;flex:none;
@@ -772,12 +772,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:11px;
   border-top:1px solid rgba(255,255,255,.07);
 }
-.pcard-today{color:rgba(233,237,242,.45);margin-right:auto}
+.pcard-today{color:rgba(233,237,242,.58);margin-right:auto}
 .pcard-actions .push{margin-left:auto}
 .pcard-log{display:none}
 .pcard.logging .pcard-log{display:flex}
 .pcard.logging .pcard-actions{display:none}
-.pcard-log .mono{color:rgba(233,237,242,.45);margin-right:auto}
+.pcard-log .mono{color:rgba(233,237,242,.58);margin-right:auto}
 .sbtn{
   font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.08em;padding:8px 12px;min-height:28px;
   border:0;border-radius:5px;background:rgba(255,255,255,.08);color:#e9edf2;cursor:pointer;
@@ -796,7 +796,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 .stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
 .gcard-head,.acard-head{display:flex;align-items:flex-start;gap:9px}
-.gcard-type{margin-top:4px;color:rgba(233,237,242,.45)}
+.gcard-type{margin-top:4px;color:rgba(233,237,242,.58)}
 .gbadge{
   flex:none;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;padding:3px 7px;border-radius:2px;
 }
@@ -810,9 +810,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
   background:repeating-linear-gradient(90deg,transparent 0 4px,#0d1016 4px 5px);
 }
 .acard .segbar{margin-top:10px}
-.gcard-foot,.acard-foot{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:rgba(233,237,242,.5)}
+.gcard-foot,.acard-foot{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:rgba(233,237,242,.58)}
 .gcard-foot .run{color:oklch(0.74 0.17 55)}
-.gcard-pace{margin-top:5px;color:rgba(233,237,242,.4)}
+.gcard-pace{margin-top:5px;color:rgba(233,237,242,.58)}
 
 /* between the phone and a desk wide enough for three: one column */
 @media(max-width:1099px) and (min-width:601px){
@@ -895,9 +895,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .fld{display:block}
 .fld-label{
   display:flex;justify-content:space-between;margin:0 0 6px;
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.45);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58);
 }
-.fld-label .opt{letter-spacing:.08em;color:rgba(233,237,242,.35)}
+.fld-label .opt{letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .pop-screen .fld-in{
   display:block;width:100%;box-sizing:border-box;margin:0;padding:10px 11px;border-radius:5px;
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);outline:none;
@@ -922,7 +922,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 .fld-toggle>span:first-child{flex:1;min-width:0}
 .fld-toggle b{display:block;font:500 13px 'Space Grotesk',sans-serif;color:#e9edf2}
-.fld-toggle small{display:block;margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.fld-toggle small{display:block;margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .fld-toggle input,.pick-row input,.seg2 input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
 .tgl{
   flex:none;width:66px;height:26px;border-radius:13px;padding:2px;box-sizing:border-box;display:inline-flex;align-items:center;
@@ -943,8 +943,8 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .pick-row input:checked~.dot{border-color:oklch(0.80 0.14 200)}
 .pick-row input:checked~.dot::after{content:'';width:6px;height:6px;border-radius:50%;background:oklch(0.80 0.14 200)}
 .pick-name{flex:1;min-width:0;overflow-wrap:anywhere}
-.pick-tag{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.4)}
-.pick-hint{font:12px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5);padding:2px 2px 4px}
+.pick-tag{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
+.pick-hint{font:12px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58);padding:2px 2px 4px}
 .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .seg2 label{position:relative;cursor:pointer}
 .seg2 span{
@@ -954,7 +954,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 .seg2 input:checked+span{background:oklch(0.80 0.14 200);border-color:transparent;color:#06131a}
 .step-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.step-unit{font:12px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5)}
+.step-unit{font:12px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .stepper.lg{height:40px;box-sizing:border-box}
 .stepper.lg button{width:35px;font-size:15px}
 .stepper.lg input{width:44px;font-size:13px;background:rgba(0,0,0,.25)}
@@ -973,7 +973,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
 /* stopwatch stop: the held clock */
 .pop-screen.sw-held{display:block;text-align:center;padding:16px 14px}
-.sw-held-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.sw-held-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .sw-held-name{margin-top:5px;font:600 16px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
 .sw-clock{
   margin-top:13px;padding:13px 10px;border-radius:6px;background:#07100d;
@@ -984,28 +984,28 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .sw-held-text{margin-top:14px;font:13px/1.55 'Space Grotesk',sans-serif;color:rgba(233,237,242,.72)}
 .sw-held-foot{
   display:flex;justify-content:space-between;gap:10px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);
-  font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45);
+  font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58);
 }
 
 /* reserve ledger */
 .pop-screen.ledger{gap:0}
 .ldg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .ldg-right{text-align:right}
-.ldg-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.ldg-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .ldg-bal{margin-top:5px;font:28px/28px 'Share Tech Mono',monospace}
 .ldg-bank{margin-top:6px;font:18px/18px 'Share Tech Mono',monospace;color:#e9edf2}
 .pos{color:oklch(0.86 0.20 130)}.neg{color:#e0645c}
-.ldg-sub{margin-top:8px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07);font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.ldg-sub{margin-top:8px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07);font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .ldg-list{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 .ldg-row{
   display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:5px;border:0;width:100%;text-align:left;cursor:pointer;
   background:rgba(255,255,255,.05);font:500 12px 'Space Grotesk',sans-serif;color:#e9edf2;
 }
 .ldg-row:active{background:rgba(255,255,255,.09)}
-.ldg-row .d{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4)}
+.ldg-row .d{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.58)}
 .ldg-row .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ldg-row .a{flex:none;font:11px 'Share Tech Mono',monospace}
-.ldg-empty{padding:18px 4px;text-align:center;font:12px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
+.ldg-empty{padding:18px 4px;text-align:center;font:12px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58)}
 
 /* ══════════════════════════════════════════════════════════════════════════
    TOOLS PAGE (Phase 8) — turn 4e, the chart view from 4d, the phone from 6c
@@ -1037,9 +1037,9 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 .lcd.idle .lcd-digits{color:oklch(0.86 0.20 130 / .32);text-shadow:none}
 .lcd.paused .lcd-digits{opacity:.7}
-.sw-label{grid-area:label;align-self:end;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.sw-label{grid-area:label;align-self:end;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .sw-name{grid-area:name;margin-top:5px;font:600 19px/1.2 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
-.sw-line{grid-area:line;align-self:start;display:flex;align-items:center;gap:7px;margin-top:9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.sw-line{grid-area:line;align-self:start;display:flex;align-items:center;gap:7px;margin-top:9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
 .sw-dot{width:6px;height:6px;border-radius:50%;flex:none;background:oklch(0.86 0.20 130);box-shadow:0 0 6px oklch(0.86 0.20 130 / .8)}
 .unit-sw.idle .sw-dot{display:none}
 .unit-sw.paused .sw-dot{opacity:.35;box-shadow:none}
@@ -1063,19 +1063,19 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .reserve-screen{cursor:pointer;outline:none}
 .reserve-screen:focus-visible{box-shadow:0 0 0 2px oklch(0.80 0.14 200 / .7)}
 .reserve-screen .seg-list{display:block;padding:18px 16px}
-.rsv-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.rsv-label{font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .rsv-bank{display:flex;align-items:baseline;gap:8px;margin-top:6px}
 #gold-display{font:44px/44px 'Share Tech Mono',monospace;color:oklch(0.86 0.14 200)}
 .rsv-unit{font:700 12px 'Chakra Petch',sans-serif;letter-spacing:.16em;color:rgba(233,237,242,.55)}
 .rsv-month{
   display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);
-  font:10px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5);
+  font:10px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58);
 }
 #rsv-bar{margin-top:8px}
 .rsv-hist-label{margin-top:18px}
 .rsv-hist{display:flex;flex-direction:column;gap:9px;margin-top:9px}
-.rsv-row{display:flex;justify-content:space-between;font:10px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.5)}
-.rsv-none{font:12px 'Space Grotesk',sans-serif;color:rgba(233,237,242,.45)}
+.rsv-row{display:flex;justify-content:space-between;font:10px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.58)}
+.rsv-none{font:12px 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58)}
 
 /* Records: a handheld's notes screen, not a book */
 .rec-screen .seg-list{padding:13px 14px;gap:7px}
@@ -1093,18 +1093,18 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .rec-row:active{background:rgba(255,255,255,.09)}
 .rec-row>div{flex:1;min-width:0}
 .rec-name{font:500 14px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
-.rec-sub{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.rec-sub{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .rec-val{flex:none;font:14px 'Share Tech Mono',monospace;color:oklch(0.86 0.14 200);white-space:nowrap}
-.rec-empty{padding:26px 8px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
+.rec-empty{padding:26px 8px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58)}
 .rec-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .rec-title{font:600 24px/1.1 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
-.rec-range{display:flex;align-items:center;gap:4px;margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.rec-range{display:flex;align-items:center;gap:4px;margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
 .rec-range input{
   background:none;border:0;border-bottom:1px dashed rgba(233,237,242,.2);padding:2px 0;color:rgba(233,237,242,.6);
   font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color-scheme:dark;width:96px;
 }
 .rec-stats{display:flex;gap:22px;text-align:right}
-.rec-stat-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.rec-stat-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58)}
 .rec-stat-v{margin-top:3px;font:20px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap}
 .rec-stat-v.cy{color:oklch(0.86 0.14 200)}
 .rec-view .rec-chips{margin-top:16px}
@@ -1112,12 +1112,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .rec-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}
 .rec-bar{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg, oklch(0.86 0.14 200), oklch(0.62 0.12 200))}
 .rec-bar-v{font:10px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap}
-.rec-bar-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4);white-space:nowrap}
+.rec-bar-l{font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.58);white-space:nowrap}
 .rec-chart.dense .rec-bar-v{display:none}
 .rec-chart.dense .rec-col:not(:first-child):not(:last-child) .rec-bar-l{visibility:hidden}
 .rec-log{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07)}
 .rec-log label{display:block}
-.rec-log label span{display:block;margin-bottom:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.rec-log label span{display:block;margin-bottom:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58)}
 .rec-log input{
   padding:10px 13px;border-radius:5px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);outline:none;
   font:12px 'Share Tech Mono',monospace;color:#e9edf2;color-scheme:dark;width:62px;box-sizing:border-box;
@@ -1177,7 +1177,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .wl-tile canvas{position:absolute;display:block;image-rendering:pixelated}
 .wl-badge{display:inline-block;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.12em;padding:3px 7px;border-radius:2px;color:#08131a;background:var(--mc,oklch(0.86 0.14 200))}
 .wl-sentence{margin-top:8px;font:600 16px/1.35 'Space Grotesk',sans-serif;color:#e9edf2}
-.wl-h{margin:14px 0 9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.wl-h{margin:14px 0 9px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .wl-cards{display:flex;flex-direction:column;gap:8px}
 .wl-card{
   position:relative;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-radius:7px;text-align:left;width:100%;box-sizing:border-box;
@@ -1187,14 +1187,14 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .wl-card.go{cursor:pointer}
 .wl-card>div{flex:1;min-width:0;padding-left:4px}
 .wl-title{font:500 13px/1.35 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
-.wl-detail{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.45)}
+.wl-detail{margin-top:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .wl-open{flex:none;padding:8px 11px;min-height:30px;border-radius:5px;border:1px solid rgba(255,255,255,.16);background:none;color:rgba(233,237,242,.75);font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.08em;cursor:pointer}
 .wl-help{margin-top:16px;padding:13px;border-radius:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
 .wl-help .wl-h{margin:0 0 7px}
 .wl-help p{margin:0;font:13px/1.55 'Space Grotesk',sans-serif;color:rgba(233,237,242,.8)}
 .wl-rack .wl-h{margin:0 0 10px}
 .wl-rack .rack-row{margin-bottom:9px}
-.wl-rack-foot{margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;gap:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4)}
+.wl-rack-foot{margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;gap:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
 .wl-rack-foot .sbtn{padding:7px 10px;min-height:26px}
 .gcard.jump,.task-row.jump{animation:jumpRing 1.6s ease-out}
 @keyframes jumpRing{0%,40%{box-shadow:0 0 0 2px oklch(0.86 0.14 200)}100%{box-shadow:0 0 0 2px transparent}}
@@ -1204,11 +1204,11 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .cu-preview{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:#0a1016}
 .cu-preview canvas,.cu-win canvas{position:absolute;display:block;image-rendering:pixelated}
 .cu-preview.clear .sprite-glass,.cu-win.clear .sprite-glass,#sprite-window.clear .sprite-glass{display:none}
-.cu-cap{display:none;margin-top:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.4)}
+.cu-cap{display:none;margin-top:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.14em;color:rgba(233,237,242,.58)}
 .cu-rows{display:flex;flex-direction:column;gap:7px;margin-top:14px}
 .cu-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:11px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
 .cu-row.on{border-color:oklch(0.80 0.14 200 / .5)}
-.cu-row span{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.45)}
+.cu-row span{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58)}
 .cu-row b{font:500 13px 'Space Grotesk',sans-serif;color:#e9edf2;text-align:right}
 .cu-trays{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .cu-trays .short{display:none}
@@ -1230,12 +1230,12 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .cu-sw.locked{opacity:.45;cursor:help}
 .cu-sw.locked::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M3 6V4a3 3 0 0 1 6 0v2' fill='none' stroke='%23e9edf2' stroke-width='1.6'/%3E%3Crect x='1.5' y='6' width='9' height='7' rx='1.2' fill='%23e9edf2'/%3E%3C/svg%3E") center/11px 13px no-repeat}
 @media(max-width:600px){.cu-sw{width:44px;height:44px}.cu-sw.locked::after{background-size:13px 15px}}
-.cu-note{margin-top:12px;min-height:14px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5)}
+.cu-note{margin-top:12px;min-height:14px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .cu-art{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
 .cu-art div{
   aspect-ratio:1;display:grid;place-items:center;border-radius:6px;border:1px dashed rgba(255,255,255,.2);
   background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 5px,transparent 5px 10px);
-  font:8px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.35);
+  font:8px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58);
 }
 
 /* between the phone and a wide desk, one column */
@@ -1270,13 +1270,35 @@ body{background:#0b0d12;background-image:none}          /* the desk */
    PHASE 11 — the remaining popups and the page chrome, in the same vocabulary
    ══════════════════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar{width:7px}::-webkit-scrollbar-track{background:#0b0d12}::-webkit-scrollbar-thumb{background:rgba(63,215,232,.3)}
-.empty-state{padding:18px 6px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.5)}
-.float-txt.center{font-size:16px}
+.empty-state{padding:18px 6px;text-align:center;font:13px/1.5 'Space Grotesk',sans-serif;color:rgba(233,237,242,.58)}
+.float-txt.center{font-size:16px;padding:7px 12px;border-radius:6px;background:rgba(6,8,12,.88);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+
+/* Touch targets (Phase 12): 44px on a phone, and on any touch screen at desktop
+   widths. Where a control is drawn smaller, an invisible ::before carries the
+   full target. */
+@media (max-width:600px), (pointer:coarse){
+  .pop-keys .pill,.pop-keys .action-key,.pop-wide,.takeover-keys .action-key,.pop-quiet,.add-dashed{min-height:44px}
+  .stepper.lg{height:46px}
+  .stepper.lg button{width:44px}
+  .wl-rack-foot .sbtn{min-height:44px}
+  .bd-row{min-height:44px}
+  .pcard-actions .sbtn,.pcard-log .sbtn,.acct .sbtn,.set-grid .sbtn,.rec-row .sbtn{min-height:44px}
+  .rec-range input{min-height:44px}
+  .modal-close,.chip,.pill.filter,#sprite-badge,.cu-sw,.wl-rack-foot .sbtn,.rw-x{position:relative}
+  .modal-close::before,.chip::before,.pill.filter::before,#sprite-badge::before,.rw-x::before{
+    content:'';position:absolute;left:50%;top:50%;min-width:100%;width:44px;height:44px;transform:translate(-50%,-50%)}
+  .cu-sw{width:44px;height:44px}
+}
+/* Keyboard (Phase 12): one visible focus ring for everything that takes focus
+   from the keyboard. Fields keep their own cyan hairline. */
+button:focus-visible,[role=button]:focus-visible,a:focus-visible,[tabindex]:focus-visible,.reserve-screen:focus-visible{
+  outline:2px solid oklch(0.80 0.14 200);outline-offset:2px}
+.task-row:focus-visible{outline-offset:-2px}
 
 /* the page footer: a quiet status line. Settings live on the cartridge on
    desktop, and at the foot of the screen on a phone. */
 #footer{display:flex;justify-content:center;align-items:center;gap:12px;max-width:1375px;margin:0 auto;padding:4px 20px 26px;position:relative;z-index:1}
-.footer-txt{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.35);text-align:center}
+.footer-txt{font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58);text-align:center}
 @media(min-width:601px){.footer-set{display:none}}
 @media(max-width:600px){
   #footer{flex-direction:column-reverse;align-items:stretch;gap:10px;max-width:none;border-top:1px solid rgba(255,255,255,.06);padding:14px 13px 16px;margin:12px 0 0}
@@ -1291,7 +1313,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .rec-row.static{cursor:default}
 .rec-row.static:active{background:rgba(255,255,255,.05)}
 .row-ico{flex:none;width:22px;text-align:center;font-size:17px;line-height:1}
-.row-go{flex:none;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;color:rgba(233,237,242,.45)}
+.row-go{flex:none;font:700 9px 'Chakra Petch',sans-serif;letter-spacing:.1em;color:rgba(233,237,242,.58)}
 .fld-pair{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:end}
 .pop-screen .fld-in.icon-in{font-size:18px;padding:7px 11px}
 .pop-h{font:700 10px 'Chakra Petch',sans-serif;letter-spacing:.14em;color:rgba(233,237,242,.7)}
@@ -1302,15 +1324,15 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 /* log past */
 .bd-list{display:flex;flex-direction:column;gap:6px}
 .bd-row{
-  display:flex;align-items:center;gap:11px;width:100%;min-height:42px;padding:10px 11px;border-radius:5px;text-align:left;cursor:pointer;
+  display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:10px 11px;border-radius:5px;text-align:left;cursor:pointer;
   border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .bd-row.on{background:rgba(255,255,255,.06)}
 .bd-task-cb{width:17px;height:17px;flex:none;box-sizing:border-box;border:2px solid oklch(0.80 0.14 200);border-radius:3px}
 .bd-task-cb.checked{background:oklch(0.80 0.14 200);border-color:transparent}
 .bd-task-name{flex:1;min-width:0;font:500 13px 'Space Grotesk',sans-serif;color:#e9edf2;overflow-wrap:anywhere}
-.bd-task-name.removing{text-decoration:line-through;color:rgba(233,237,242,.5)}
-.bd-edit-tag{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.4)}
+.bd-task-name.removing{text-decoration:line-through;color:rgba(233,237,242,.58)}
+.bd-edit-tag{flex:none;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58)}
 .bd-edit-tag.add{color:oklch(0.86 0.14 200)}
 .bd-edit-tag.was-done{color:oklch(0.86 0.20 130)}
 .bd-edit-tag.removing{color:#e0645c}
@@ -1322,10 +1344,10 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .hist .rec-chart{height:150px;margin-top:0}
 .st-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .st-tiles>div{min-width:0;padding:10px 11px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-.st-tiles span{display:block;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.4)}
+.st-tiles span{display:block;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em;color:rgba(233,237,242,.58)}
 .st-tiles b{display:block;margin-top:5px;font:400 14px 'Share Tech Mono',monospace;color:#e9edf2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gst-state{margin-top:6px;font:9px 'Share Tech Mono',monospace;letter-spacing:.12em}
-.gst-state.onTrack{color:oklch(0.86 0.20 130)}.gst-state.atRisk{color:oklch(0.74 0.17 55)}.gst-state.failing{color:#e0645c}.gst-state.grace{color:rgba(233,237,242,.45)}
+.gst-state.onTrack{color:oklch(0.86 0.20 130)}.gst-state.atRisk{color:oklch(0.74 0.17 55)}.gst-state.failing{color:#e0645c}.gst-state.grace{color:rgba(233,237,242,.58)}
 .gchart{position:relative;display:flex;align-items:flex-end;gap:8px;height:128px;border-bottom:1px solid rgba(255,255,255,.1)}
 .gchart .rec-col{height:auto;justify-content:flex-end}
 .gchart .rec-bar{flex:none}
@@ -1334,7 +1356,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .gchart-target span{position:absolute;right:0;bottom:3px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:oklch(0.74 0.17 55)}
 .gchart.dense .rec-bar-v{display:none}
 .gchart-l{display:flex;gap:8px;margin-top:6px}
-.gchart-l span{flex:1;min-width:0;text-align:center;font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4);white-space:nowrap;overflow:hidden}
+.gchart-l span{flex:1;min-width:0;text-align:center;font:9px 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.58);white-space:nowrap;overflow:hidden}
 .gchart-l.dense span:not(:first-child):not(:last-child){visibility:hidden}
 @media(max-width:600px){
   .rec-chart.mid .rec-col:nth-child(even) .rec-bar-l,.gchart-l.mid span:nth-child(even){visibility:hidden}
@@ -1347,8 +1369,8 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 }
 
 /* backups */
-.bk-cur{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.45)}
-.bk-reach{flex:none;text-align:right;font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.4)}
+.bk-cur{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
+.bk-reach{flex:none;text-align:right;font:9px/1.6 'Share Tech Mono',monospace;letter-spacing:.06em;color:rgba(233,237,242,.58)}
 .bk-reach.more{color:oklch(0.86 0.20 130)}
 
 /* help and welcome */
@@ -1374,8 +1396,8 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .sync-dot.offline{background:rgba(233,237,242,.3)}
 @keyframes sdBlink{0%,100%{opacity:1}50%{opacity:.25}}
 .set-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.set-grid .sbtn,.acct .sbtn{min-height:38px}
-.set-foot{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.4);text-align:center}
+.set-grid .sbtn,.acct .sbtn{min-height:44px}
+.set-foot{font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58);text-align:center}
 
 /* level-up: a small unit dropping in, like any popup */
 #lu-overlay{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;
@@ -1451,7 +1473,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
           <div class="screen" id="screen">
             <div class="status-line"><span id="status-time"></span><span id="status-date"></span></div>
             <div class="sprite-dock" id="sprite-dock">
-            <div id="sprite-window" onclick="openCustomize()" title="Customise">
+            <div id="sprite-window" onclick="openCustomize()" title="Customise" role="button" tabindex="0" aria-label="Customise the sprite" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCustomize();}">
               <div class="sprite-slot slot-bg" aria-hidden="true"></div>
               <canvas id="sprite-canvas"></canvas>
               <div class="sprite-slot slot-fg" aria-hidden="true"></div>
@@ -2780,7 +2802,7 @@ function _taskRow(data,t){
     const streak={current:live,best:Math.max(stored.best||0,live)};
     const atRisk=streak.current>0&&!done;
     const sd=STATS_DEF.find(s=>s.key===t.stat);
-    const hue=STAT_HUE[t.stat]||'rgba(233,237,242,.5)';
+    const hue=STAT_HUE[t.stat]||'rgba(233,237,242,.58)';
     const div=document.createElement('div');
     div.className='task-row'+(done?' done':'');div.id=idPrefix+t.id;div.setAttribute('data-stat',t.stat);
     let auto='';
@@ -2797,6 +2819,8 @@ function _taskRow(data,t){
       <span class="task-tag" style="color:${hue};border-color:color-mix(in oklch, ${hue} 50%, transparent)">${sd?sd.label:t.stat}${pts}</span>`;
     div.querySelector('.task-cb').addEventListener('click',e=>{e.stopPropagation();toggleTask(t.id);});
     div.addEventListener('click',()=>openTaskStats(t.id));
+    div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',t.name+' — history');
+    div.addEventListener('keydown',e=>{if(e.target!==div)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();openTaskStats(t.id);}});
     return div;
   }
 }
@@ -3887,7 +3911,41 @@ function closeTutorialModal(){closeModal('modal-tutorial');}
 // ══════════════════════════════════════════
 //  MODALS
 // ══════════════════════════════════════════
-function openModal(id){document.getElementById(id).classList.add('open');}
+// Keyboard use is tracked so a popup opened from the keyboard takes focus (and a
+// phone's on-screen keyboard is never summoned by one opened with a tap).
+let _kbd=false;const _modalOpener={};
+document.addEventListener('keydown',e=>{if(e.key==='Tab'||e.key==='Enter'||e.key===' ')_kbd=true;},true);
+document.addEventListener('pointerdown',()=>{_kbd=false;},true);
+function _focusables(root){return[...root.querySelectorAll('button:not([disabled]),[href],input:not([type=hidden]):not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])')]
+  .filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');}
+function _topLayer(){
+  if(document.getElementById('lu-overlay').classList.contains('show'))return document.getElementById('lu-overlay');
+  const open=[...document.querySelectorAll('.modal-overlay.open')];if(!open.length)return null;
+  return open.sort((a,b)=>(+getComputedStyle(a).zIndex||0)-(+getComputedStyle(b).zIndex||0)||(a.compareDocumentPosition(b)&4?-1:1)).pop();
+}
+function openModal(id){
+  const m=document.getElementById(id);
+  if(!m.classList.contains('open'))_modalOpener[id]=document.activeElement;
+  m.classList.add('open');
+  if(_kbd)setTimeout(()=>{if(!m.classList.contains('open')||m.contains(document.activeElement))return;
+    const vis=_focusables(m);const f=vis.find(e=>e.matches('.pop-screen .fld-in:not([type=date])'))||vis.find(e=>e.matches('.pop-keys .action-key'))||vis.find(e=>!e.matches('.modal-close'))||vis[0];if(f)f.focus();},60);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const pick=document.getElementById('emoji-picker');if(pick&&pick.classList.contains('open')){closeEmojiPicker();return;}
+    const top=_topLayer();if(!top)return;
+    if(top.id==='lu-overlay'){hideLU();return;}
+    if(top.classList.contains('locked'))return;                  // STOP and WELCOME are answered, not dismissed
+    e.preventDefault();closeModal(top.id);return;
+  }
+  if(e.key==='Tab'){                                            // Tab cycles within the top popup
+    const top=_topLayer();if(!top)return;
+    const f=_focusables(top);if(!f.length)return;
+    const i=f.indexOf(document.activeElement);
+    if(e.shiftKey&&(i<=0)){e.preventDefault();f[f.length-1].focus();}
+    else if(!e.shiftKey&&(i===-1||i===f.length-1)){e.preventDefault();f[0].focus();}
+  }
+});
 // Inline validation for popup fields: a red hairline and a short line under the field.
 function popError(id,msg){
   const el=document.getElementById(id);if(!el)return;
@@ -3905,7 +3963,10 @@ function popClear(modalId){
   const sc=m.querySelector('.pop-screen');if(sc)sc.scrollTop=0;
 }
 function closeModal(id){
-  document.getElementById(id).classList.remove('open');
+  const m=document.getElementById(id),had=m.contains(document.activeElement);
+  m.classList.remove('open');
+  const back=_modalOpener[id];delete _modalOpener[id];
+  if(had&&back&&back.isConnected&&back!==document.body)try{back.focus({preventScroll:true});}catch(e){}
   if(id==='modal-wellness'||id==='modal-customize')_unmountMinis();
   if(id==='modal-ask'&&_askResolve){const r=_askResolve;_askResolve=null;r(false);}
 }
@@ -4061,12 +4122,17 @@ function autoCheckLinkedTasks(data,activityId,date){
 // ══════════════════════════════════════════
 let luTimer=null;
 function showLU(text,title){
+  if(!document.getElementById('lu-overlay').classList.contains('show'))_modalOpener.lu=document.activeElement;
   document.getElementById('lu-title').textContent=title||'TIER UP';
   document.getElementById('lu-sub').textContent=text;
   document.getElementById('lu-overlay').classList.add('show');
+  if(_kbd)setTimeout(()=>document.getElementById('lu-close').focus(),60);
   if(luTimer)clearTimeout(luTimer);luTimer=setTimeout(hideLU,5000);
 }
-function hideLU(){document.getElementById('lu-overlay').classList.remove('show');}
+function hideLU(){
+  const o=document.getElementById('lu-overlay'),had=o.contains(document.activeElement);o.classList.remove('show');
+  const back=_modalOpener.lu;delete _modalOpener.lu;if(had&&back&&back.isConnected)try{back.focus({preventScroll:true});}catch(e){}
+}
 
 // ══════════════════════════════════════════
 //  ANIMATIONS
@@ -5679,13 +5745,36 @@ const APP_NAME = 'HABITRON';
 // The default shell, and the fallback when the saved one is not owned here.
 const SHELL_MATERIAL = 'green_plastic';
 
+// The handoff's inks sit under 4.5:1 against parts of their gradient faces, so the
+// ink printed on a shell is strengthened here (the material file stays as delivered):
+// pushed toward black for a dark ink, white for a light one, until it clears 5:1 on
+// every colour of the face. The soft ink is that ink eased back toward the face only
+// as far as it still clears 4.5:1. Red silicone and translucent grape can't reach
+// 4.5:1 with any ink, so they get the strongest their own direction allows.
+const _inkCtx = (() => { const c = document.createElement('canvas'); c.width = c.height = 1; return c.getContext('2d', { willReadFrequently: true }); })();
+function _rgbOf(str){ _inkCtx.clearRect(0,0,1,1); _inkCtx.fillStyle = '#000'; _inkCtx.fillStyle = str; _inkCtx.fillRect(0,0,1,1); const d = _inkCtx.getImageData(0,0,1,1).data; return [d[0], d[1], d[2]]; }
+function _lumOf(c){ const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); }
+function _contrastOf(a, b){ const x = _lumOf(a), y = _lumOf(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+const _shellInkCache = {};
+function _shellInks(m){
+  if (_shellInkCache[m.id]) return _shellInkCache[m.id];
+  const stops = (m.face.match(/#[0-9a-f]{3,8}|rgba?\([^)]*\)|oklch\([^)]*\)/gi) || [m.face]).map(_rgbOf);
+  const worst = c => Math.min(...stops.map(st => _contrastOf(c, st)));
+  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+  const base = _rgbOf(m.ink), to = base[0] + base[1] + base[2] < 384 ? [0, 0, 0] : [255, 255, 255];
+  let ink = base; for (let k = 0.05; k <= 1.001 && worst(ink) < 5; k += 0.05) ink = mix(base, to, k);
+  const mid = stops[Math.floor(stops.length / 2)];
+  let soft = ink; for (let j = 0.05; j < 0.7; j += 0.05) { const t = mix(ink, mid, j); if (worst(t) < 4.5) break; soft = t; }
+  return (_shellInkCache[m.id] = { ink: 'rgb(' + ink + ')', soft: 'rgb(' + soft + ')' });
+}
 function applyShellMaterial(id){
   const m = getMaterial(id);
   const r = document.documentElement.style;
+  const inks = _shellInks(m);
   r.setProperty('--shell-face', m.face);
   r.setProperty('--shell-tex', m.tex);
-  r.setProperty('--shell-ink', m.ink);
-  r.setProperty('--shell-ink-soft', m.inkSoft);
+  r.setProperty('--shell-ink', inks.ink);
+  r.setProperty('--shell-ink-soft', inks.soft);
   r.setProperty('--key-face', m.keyFace);
   r.setProperty('--key-ink', m.keyInk);
   const meta = document.getElementById('shell-meta');

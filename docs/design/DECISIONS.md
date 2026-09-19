@@ -324,6 +324,54 @@ chart, and switches are the settings toggle.
   everything, only on the sprite canvases. Text now gets normal subpixel
   smoothing.
 
+## Phase 12 — the pass on both platforms
+
+I walked 29 surfaces (every page, segment and popup) at 390px and 1440px, and
+ran the FEATURES.md checklist through each platform's own visible controls.
+- **Contrast:**
+  - Secondary text on the screen was 35–50% white, which measured 2.9–4.0:1.
+    It is now 58%, which clears 4.5:1 on the screen and on its raised rows.
+  - Four states are exempt because they are dimmed on purpose: switched-off stats,
+    the unlit stopwatch digits, finished tasks and locked shells.
+  - Floating messages now have a dark backing, so they read over anything.
+- **Shell ink:**
+  - The handoff's inks fall under 4.5:1 on parts of their gradient faces. The
+    soft ink measured about 2:1.
+  - `applyShellMaterial` now strengthens both at runtime. The material file is
+    unchanged.
+  - The ink moves toward black (or white, for a light ink) until it clears 5:1
+    on every colour of its face.
+  - The soft ink is that ink eased back toward the face only as far as it still
+    clears 4.5:1.
+- **Touch targets:**
+  - Every control on every phone surface is at least 44×44, either at that size
+    or through an invisible `::before` that carries the full target.
+  - The same rules apply on any touch screen at desktop widths
+    (`pointer:coarse`).
+  - With a mouse, desktop keeps the smaller drawn sizes.
+- **Keyboard:**
+  - Everything that answers a click is reachable with Tab, including the task
+    rows (Enter opens history) and the sprite window (Enter opens Customise).
+  - There is one cyan focus ring.
+  - A popup opened from the keyboard takes focus, Tab stays inside it, and
+    Escape closes it (and answers no to a confirm).
+  - Focus then returns to whatever opened the popup.
+  - STOP and WELCOME ignore Escape, because they must be answered.
+  - Popups opened by touch never take focus, so a phone's keyboard doesn't pop up.
+- **Large screens:** checked at 1920 and 2560. Each page is centred at its natural
+  width, and the cartridge bar stays at 1375px.
+- **Import and export** now have a round-trip test: export, change, import, and
+  the data matches exactly.
+
+**Left undone:**
+- **Red Silicone and Translucent Grape shells.** No ink colour reaches 4.5:1
+  against every part of those faces: pure white gives 3.6:1 and 3.1:1 at best.
+  These shells get the strongest ink in their own direction, which clears the
+  3:1 large-text level but not 4.5:1 for small labels. The fix needs the
+  illustrator: a lighter or flatter face, or a different ink.
+- **Desktop with a mouse.** 113 controls are drawn under 44px, sized for a
+  pointer. They grow to 44px on touch screens.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.
