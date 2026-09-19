@@ -254,10 +254,30 @@ BACK TO DAILY or DONE on the shell below).
     tapping one names the award that unlocks it.
 
   Every choice applies at once, to the preview and to the real sprite and shell.
-  **Choices last until the page is reloaded**; Phase 10 saves them.
+  Choices lasted until reload in 9b; Phase 10 saves them.
 - Fixed on the way: the collapsed strip's side badge, waiting off to the right,
   could make the phone's screen a little wider than itself once mood names grew
   longer. The dock now clips it.
+
+## Phase 10 — the look is saved
+
+- The shell and sprite choices are saved in the data as `appearance`:
+  `{shellMaterial, spriteShape, iris, background, front}`. The defaults are
+  green plastic, round, cyan, cyber grid and glass.
+- **They are saved with the data, not only on this device.** The plan said
+  "locally", but the data already syncs, so the look follows the user between
+  phone and desktop. The live version's loader keeps fields it doesn't know, so
+  it carries `appearance` along untouched. In a merge, each choice is merged on
+  its own: a shell picked on one device and a shape picked on the other are both
+  kept.
+- `unlockedMaterials` stays derived from the awards, not stored (see Phase 6).
+  If the saved shell isn't owned on this device yet, for example because the
+  award hasn't synced here, the default shell shows. The saved choice is kept
+  rather than overwritten.
+- Unknown saved values fall back to their defaults.
+- Every pick saves at once, with no confirm. A locked shell can't be picked; it
+  stays visible with its padlock and names the award that unlocks it.
+- The shell swatches are 44px on the phone, a comfortable tap size.
 
 ## Working arrangement
 

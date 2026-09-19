@@ -1377,6 +1377,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 #cu-shells .cu-sw.on{box-shadow:0 0 0 2px #0d1016,0 0 0 4px oklch(0.86 0.14 200)}
 .cu-sw.locked{opacity:.45;cursor:help}
 .cu-sw.locked::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M3 6V4a3 3 0 0 1 6 0v2' fill='none' stroke='%23e9edf2' stroke-width='1.6'/%3E%3Crect x='1.5' y='6' width='9' height='7' rx='1.2' fill='%23e9edf2'/%3E%3C/svg%3E") center/11px 13px no-repeat}
+@media(max-width:600px){.cu-sw{width:44px;height:44px}.cu-sw.locked::after{background-size:13px 15px}}
 .cu-note{margin-top:12px;min-height:14px;font:9px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.5)}
 .cu-art{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
 .cu-art div{
@@ -4239,9 +4240,10 @@ function isStreakAtRisk(data,tid){
 }
 
 // ══════════════════════════════════════════
-//  CUSTOMISE  (a placeholder until the Phase 9b rebuild)
+//  CUSTOMISE
 // ══════════════════════════════════════════
-// The sprite's look. Applied live everywhere; kept for the session until Phase 10 saves it.
+// The sprite's look and the shell. Applied live everywhere, and saved with the rest of
+// the data (data.appearance), so it follows the user to every signed-in device.
 const IRIS_COLOURS=[['CYAN','oklch(0.86 0.14 200)'],['AMBER','oklch(0.74 0.17 55)'],['LILAC','oklch(0.68 0.10 300)'],['LIME','oklch(0.86 0.20 130)']];
 const SPRITE_SHAPES=[['round','ROUND'],['slab','SLAB'],['sharp','SHARP']];
 const SPRITE_BACKS=[['grid','CYBER GRID'],['void','VOID'],['sky','NIGHT SKY'],['stripe','DUSK STRIPE']];
@@ -4255,6 +4257,33 @@ function _applyLook(){
   if(_sprite)_sprite.set(_look);
   _miniSprites.forEach(sp=>{try{sp.set({iris:_look.iris});}catch(e){}});
   document.getElementById('sprite-window')?.classList.toggle('clear',_front==='clear');
+}
+// The saved look, with anything unknown replaced by its default.
+function _appearance(data){
+  const a=(data&&data.appearance)||{};
+  const pick=(v,list,d)=>list.some(x=>x[0]===v)?v:d;
+  return{
+    shellMaterial:MATERIALS.some(m=>m.id===a.shellMaterial)?a.shellMaterial:SHELL_MATERIAL,
+    spriteShape:pick(a.spriteShape,SPRITE_SHAPES,'round'),
+    iris:pick(a.iris,IRIS_COLOURS,IRIS_COLOURS[0][0]),
+    background:pick(a.background,SPRITE_BACKS,'grid'),
+    front:pick(a.front,SPRITE_FRONTS,'glass')};
+}
+// Put the saved look on screen. A shell this device does not own yet (an award not
+// synced here) shows the default instead, without overwriting the saved choice.
+function loadAppearance(data){
+  const a=_appearance(data);
+  _look={shape:a.spriteShape,iris:IRIS_COLOURS.find(x=>x[0]===a.iris)[1],bg:a.background};
+  _front=a.front;
+  const shell=unlockedMaterials(data).includes(a.shellMaterial)?a.shellMaterial:SHELL_MATERIAL;
+  window._shellMaterial=shell;applyShellMaterial(shell);_updateDeviceHeader();
+  _applyLook();
+}
+// One choice from the Customise window: saved at once, no confirm.
+function setLook(patch){
+  const d=load();
+  d.appearance={..._appearance(d),...patch};
+  save(d);loadAppearance(d);_renderCustomize();
 }
 function openCustomize(){
   openModal('modal-customize');
@@ -4279,18 +4308,18 @@ function _renderCustomize(){
     b.innerHTML=`<div class="cu-win ${cls}"><canvas></canvas><div class="sprite-glass"></div></div><span class="cap">${cap}</span>`;b.onclick=onclick;return b;};
   if(_cuTray==='centre'){
     const sh=document.getElementById('cu-shapes');sh.innerHTML='';
-    SPRITE_SHAPES.forEach(([k,cap])=>{const b=tile(_look.shape===k,cap,()=>{_look.shape=k;_applyLook();_renderCustomize();},'clear');sh.appendChild(b);
+    SPRITE_SHAPES.forEach(([k,cap])=>{const b=tile(_look.shape===k,cap,()=>setLook({spriteShape:k}),'clear');sh.appendChild(b);
       requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{shape:k,bg:'void',mood:'steady'}));});
     const ir=document.getElementById('cu-iris');ir.innerHTML='';
     IRIS_COLOURS.forEach(([nm,col])=>{const b=document.createElement('button');b.className='cu-sw'+(_look.iris===col?' on':'');b.style.background=col;b.title=_title(nm);
-      b.setAttribute('aria-label',_title(nm)+' iris');b.onclick=()=>{_look.iris=col;_applyLook();_renderCustomize();};ir.appendChild(b);});
+      b.setAttribute('aria-label',_title(nm)+' iris');b.onclick=()=>setLook({iris:nm});ir.appendChild(b);});
   } else if(_cuTray==='back'){
     const bk=document.getElementById('cu-backs');bk.innerHTML='';
-    SPRITE_BACKS.forEach(([k,cap])=>{const b=tile(_look.bg===k,cap,()=>{_look.bg=k;_applyLook();_renderCustomize();},'clear');bk.appendChild(b);
+    SPRITE_BACKS.forEach(([k,cap])=>{const b=tile(_look.bg===k,cap,()=>setLook({background:k}),'clear');bk.appendChild(b);
       requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{bg:k,mood:'steady'}));});
   } else if(_cuTray==='front'){
     const fr=document.getElementById('cu-fronts');fr.innerHTML='';
-    SPRITE_FRONTS.forEach(([k,cap])=>{const b=tile(_front===k,cap,()=>{_front=k;_applyLook();_renderCustomize();},k==='clear'?'clear':'');fr.appendChild(b);
+    SPRITE_FRONTS.forEach(([k,cap])=>{const b=tile(_front===k,cap,()=>setLook({front:k}),k==='clear'?'clear':'');fr.appendChild(b);
       requestAnimationFrame(()=>_mountMini(b.querySelector('.cu-win'),{mood:'steady'}));});
   } else {
     // Shell: owned materials apply at once; locked ones stay visible, with how to earn them.
@@ -4305,7 +4334,7 @@ function _renderCustomize(){
       b.title=m.name+(locked?' — locked'+(aw?': earn the '+aw.name+' award':''):'');b.setAttribute('aria-label',b.title);
       b.onclick=()=>{
         if(locked){note.textContent=m.name+' · LOCKED'+(aw?' · EARN “'+aw.name.toUpperCase()+'”: '+aw.desc.toUpperCase():'');return;}
-        window._shellMaterial=m.id;applyShellMaterial(m.id);_updateDeviceHeader();_renderCustomize();
+        setLook({shellMaterial:m.id});
       };
       sw.appendChild(b);
     });
@@ -5777,7 +5806,7 @@ const getMaterial = (id) => MATERIALS.find(m => m.id === id) || MATERIALS[0];
 // ── Device shell (Phase 2) ──────────────────────────────────────────────────
 // The name is a placeholder and lives in one place so it can be swapped.
 const APP_NAME = 'HABITRON';
-// Hard-coded for this phase. The picker and persistence arrive later.
+// The default shell, and the fallback when the saved one is not owned here.
 const SHELL_MATERIAL = 'green_plastic';
 
 function applyShellMaterial(id){
@@ -5982,6 +6011,7 @@ function init(){
   initDevice();
   setInterval(updateDailyClock, 20000);
   initHaptics();
+  loadAppearance(data);
   initDailySprite();
   _swRestore();
   renderInventoryTab(data);
@@ -6004,6 +6034,7 @@ function init(){
   // An award whose condition is already met (a new award, or one met by a backdate
   // on another device) completes now rather than waiting for the next tick.
   checkAchievements(data);
+  loadAppearance(load());
 
   // Daily snapshot. When signed in, it is taken after the first sync instead,
   // so an out-of-date device never snapshots its stale copy as today's.
@@ -6446,6 +6477,7 @@ function _syncRerender(){
   try{
     const d=load();checkNewDay(d);
     renderTasks(d);renderStats(d);renderDailyGoalsWatch(d);updateFooter();renderGoals(d);
+    loadAppearance(d);if(document.getElementById('modal-customize').classList.contains('open'))_renderCustomize();
     if(document.getElementById('tab-quests').classList.contains('active'))renderQuests(d);
     if(document.getElementById('tab-inventory').classList.contains('active'))renderInventoryTab(d);
     const ni=document.getElementById('char-name');
