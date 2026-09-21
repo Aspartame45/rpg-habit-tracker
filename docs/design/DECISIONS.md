@@ -13,7 +13,7 @@ Settled questions, so they are not reopened. Raised from the Phase 0 inventory a
 | 7 | The spec includes a d-pad, but nothing navigates between days, quests or slots yet | **No d-pad for now.** Add it when a feature needs it, or if testing shows an existing screen would benefit |
 | 8 | Keys sitting on the screen currently depress, because Phase 3 asked for it | **Accepted for now.** They move onto the shell as each layout is rebuilt |
 | 9 | Which keys are tactile? | **The shell is tactile, the screen is flat.** On mobile, any key not built into the shell is flat. On desktop, each panel follows the same rule: the sprite unit's WELLNESS, CUSTOMISE and ADD TASK keys sit on its shell and stay tactile, while everything inside its screen is flat. Applied as one rule on the screen, so it holds as pages move in. Supersedes 8 |
-| 10 | Should stats keep a bar that can always be filled further? | **Yes, the tier pips are back.** Each stat's bar shows progress through its current tier of ten points (never full, at least 4%), and below it one pip per completed tier, up to ten, then "+N". `LV` is the sum of completed tiers, and the rack footer reads `NEXT TIER IN N POINTS`. Supersedes the Phase 5 note on stat bars |
+| 10 | Should stats keep a bar that can always be filled further? | **Yes, the tier pips are back.** Each stat's bar shows progress through its current tier of ten points (never full), and below it one pip per completed tier, up to ten, then "+N". The rack footer reads `NEXT TIER IN N POINTS`. Supersedes the Phase 5 note on stat bars. (After v2.0.0: the bar is drawn as ten segments and starts empty, and the readout is total points, not `LV` — see "After the redesign shipped") |
 | 11 | The old pixel character | **Removed completely.** The sprite replaces it |
 | 12 | The old title system | **Removed.** It may be replaced by something else later, but not in its current form |
 | 13 | The old cosmetics (hats, weapons, capes), unlocked by titles and worn by the pixel character | **Removed with them.** New sprite and shell cosmetics arrive with Customise (9b) and the award rewards (Phase 6, Phase 10) |
@@ -371,6 +371,24 @@ ran the FEATURES.md checklist through each platform's own visible controls.
   illustrator: a lighter or flatter face, or a different ink.
 - **Desktop with a mouse.** 113 controls are drawn under 44px, sized for a
   pointer. They grow to 44px on touch screens.
+
+## After the redesign shipped (v2.0.0, 20 September 2026)
+
+Asked for once the app was live and in use:
+- **Records opens on BY ACTIVITY**, and the filters read BY ACTIVITY / THIS WEEK /
+  ALL ENTRIES. The entry list was called ALL ACTIVITIES, which named the wrong
+  thing: it lists entries, while BY ACTIVITY lists the activities.
+- **A bar that counts whole things is drawn as that many segments**, filled one at
+  a time: five for a goal of five times a week, ten for the points in a stat tier,
+  three for an award over three days. Up to 20 segments; above that the fine mask
+  is kept, because the pieces would be too small to count.
+  - Bars that measure **time** keep the fine mask, since time doesn't arrive in
+    whole steps: activity-time goals, project hours and the Reserve bar.
+  - The stat bar no longer keeps a 4% minimum, so an empty tier reads as empty.
+    The segments carry the meaning now.
+- **`LV` became `TOTAL POINTS`**, the sum of all nine stats, in the Stats unit's
+  header and in Wellness. Tiers still exist as the pips under each bar and in
+  `NEXT TIER IN N POINTS`.
 
 ## Working arrangement
 
