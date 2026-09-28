@@ -4785,45 +4785,111 @@ function calculateMood(data){
 //   happy      — most of today done (60%+)
 //   thriving   — everything done today, or 80%+ with a 7+ day run extended today
 //   steady     — the default
-function spriteMood(data){
-  const tasks=data.customTasks||[],today=todayStr(),yest=yestStr();
-  const hist=data.taskHistory||{};
-  const doneOn=(tid,ds)=>ds===today?!!data.todayChecked[tid]:!!(hist[ds]&&hist[ds][tid]);
-  const done=tasks.filter(t=>doneOn(t.id,today)).length;
-  const ratio=tasks.length?done/tasks.length:0;
-  const day=(ds,n)=>{const d=_dd(ds);d.setDate(d.getDate()+n);return _ds(d);};
-  // the longest run extended today
-  let bestRun=0;tasks.forEach(t=>{if(doneOn(t.id,today)){const r=calcStreak(data,t.id);if(r>bestRun)bestRun=r;}});
-  // a run of 3+ days that ended yesterday and hasn't been picked up again today
-  const broken=tasks.filter(t=>{
-    if(doneOn(t.id,yest)||doneOn(t.id,today))return false;
-    let n=0,d=day(yest,-1);while(n<400&&doneOn(t.id,d)){n++;d=day(d,-1);}
-    return n>=3;
+// ══════════════════════════════════════════════════════════════════════════
+//  MOOD — what the sprite is reading
+//  It watches two kinds of neglect, and nothing else, for the way down:
+//    · a stat left alone for more than a week (unless switched off in MANAGE STATS)
+//    · a goal the user set and then missed, until that same goal is met again
+//  It lifts above steady for anything done beyond those goals: a run on a task, a
+//  goal met period after period, a project finished, an award earned. Falling short
+//  of one of those is never held against the user — the floor is steady.
+// ══════════════════════════════════════════════════════════════════════════
+const MOOD_STAT_DAYS=7;    // a stat untouched for longer than this weighs on the mood
+const MOOD_BOOST_DAYS=7;   // a project or award counts as "just now" for this long
+const MOOD_RUN_DAYS=3;     // a task run this long is worth lifting for
+const MOOD_LONG_RUN=14;    // and this long is worth lifting twice
+const MOOD_GOAL_RUN=2;     // periods in a row a goal has been met
+const MOOD_LONG_GOAL_RUN=4;
+
+function _goalTarget(g){return g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;}
+function _prevPeriod(start,period){
+  const d=_dd(start);
+  if(period==='week'){d.setDate(d.getDate()-7);return _ds(d);}
+  return _ds(new Date(d.getFullYear(),d.getMonth()-1,1));
+}
+// Can this goal still be met before the period is out? A "3 times a week" goal runs
+// out of days; hours and stat points have no daily ceiling worth enforcing, so they
+// stay possible while a day is left.
+function _goalStillPossible(g,data){
+  const need=_goalTarget(g)-(g.currentProgress||0);
+  if(need<=0)return true;
+  const left=_daysLeftInclusive(g.period);
+  if(g.type==='taskFrequency')return need<=left-(isTaskDoneOn(data,g.taskId,todayStr())?1:0);
+  return left>0;
+}
+// A goal is owed from the moment this period can no longer be met, or because the
+// last full period went unmet. It is paid off the moment the goal is met again.
+function _goalOwed(g,data){
+  calculateGoalProgress(g,data);
+  if((g.currentProgress||0)>=_goalTarget(g))return null;
+  if(!_goalStillPossible(g,data))return'impossible';
+  const cur=getStartOfPeriod(g.period),prev=_prevPeriod(cur,g.period);
+  const created=g.createdDate||g.startDate||cur;
+  // A goal set up part-way through a period isn't blamed for missing it.
+  if(created<=prev&&!_goalMetBetween(g,data,prev,_periodEnd(prev,g.period)))return'missed';
+  return null;
+}
+// How many periods in a row this goal has been met, read from the history rather
+// than the stored streak, so the sprite can never both praise a run and report the
+// same goal missed. The period in progress counts only once it is met.
+function _goalRun(g,data){
+  const cur=getStartOfPeriod(g.period),created=g.createdDate||g.startDate||cur;
+  let n=(g.currentProgress||0)>=_goalTarget(g)?1:0,start=_prevPeriod(cur,g.period),guard=0;
+  while(guard++<60&&_periodEnd(start,g.period)>=created&&_goalMetBetween(g,data,start,_periodEnd(start,g.period))){
+    n++;start=_prevPeriod(start,g.period);
+  }
+  return n;
+}
+// Everything the mood is made of, for the sprite and for the Wellness report.
+function moodFactors(data){
+  const today=todayStr(),down=[],up=[];
+  const sli=data.statLastIncreased||{},active=data.activeStats||{};
+  STATS_DEF.forEach(st=>{
+    if(active[st.key]===false||!sli[st.key])return;         // switched off, or never raised
+    const d=daysBetween(sli[st.key],today);
+    if(d>MOOD_STAT_DAYS)down.push({kind:'stat',stat:st,days:d,last:sli[st.key]});
   });
-  // a goal whose period ended unmet in the last two days
-  const missed=(data.customGoals||[]).filter(g=>g.lastPeriodMet===false&&g.openPeriod&&daysBetween(g.openPeriod,today)<=1&&g.status!=='onTrack');
-  // days since anything at all was done
-  let lastDone=null;for(const ds in hist){if(ds<=today&&Object.values(hist[ds]).some(Boolean)&&(!lastDone||ds>lastDone))lastDone=ds;}
-  if(done)lastDone=today;
-  const idle=lastDone?daysBetween(lastDone,today):9999;
-  // A brand-new user has nothing to be drained about.
-  if(!lastDone)return{mood:'steady',why:'A fresh start: nothing logged yet.'};
-  // A stat that has never been raised has no date; it isn't neglect, so it doesn't count here.
-  const sli={...(data.statLastIncreased||{})};STATS_DEF.forEach(st=>{if(!sli[st.key])sli[st.key]=today;});
-  const pressure={happy:0,neutral:0,concerned:1,sad:2,critical:3}[calculateMood({...data,statLastIncreased:sli})]||0;
-  const pos=(ratio>=0.999&&tasks.length)||(ratio>=0.8&&bestRun>=7)?2:ratio>=0.6?1:0;
-  const nm=t=>t.name.length>40?t.name.slice(0,38)+'…':t.name;
-  if(pos===0&&(pressure>=3||idle>=3))
-    return{mood:'drained',why:idle>=3?`Nothing has been logged for ${idle===9999?'a long while':idle+' days'}.`:'Several stats have gone untouched for ten days or more.'};
-  if((broken.length||missed.length)&&pos<2)
-    return{mood:'frustrated',why:broken.length?`${nm(broken[0])} lost a run of three days or more yesterday.`:`${goalTitle(missed[0],data)} ended its ${missed[0].period==='month'?'month':'week'} short.`};
-  if(pressure>=1)
-    return pos===2?{mood:'happy',why:'A strong day, though some stats or goals still need attention.'}
-      :pos===1?{mood:'steady',why:'Most of today is done; some stats or goals still need attention.'}
-      :{mood:'concerned',why:'Some stats or goals are slipping.'};
-  if(pos===2)return{mood:'thriving',why:ratio>=0.999?'Everything is done today.':`Most of today is done, and a ${bestRun}-day run was extended.`};
-  if(pos===1)return{mood:'happy',why:'Most of today is done.'};
-  return{mood:'steady',why:'Nothing is slipping.'};
+  (data.customGoals||[]).forEach(g=>{const why=_goalOwed(g,data);if(why)down.push({kind:'goal',goal:g,why});});
+  down.sort((a,b)=>(a.kind===b.kind?(b.days||0)-(a.days||0):a.kind==='goal'?-1:1));
+  let run=null;(data.customTasks||[]).forEach(t=>{const n=calcStreak(data,t.id);if(n>=MOOD_RUN_DAYS&&(!run||n>run.days))run={kind:'run',task:t,days:n};});
+  if(run){up.push(run);if(run.days>=MOOD_LONG_RUN)up.push({...run,kind:'run-long'});}
+  let gs=null;(data.customGoals||[]).forEach(g=>{const n=_goalRun(g,data);if(n>=MOOD_GOAL_RUN&&(!gs||n>gs.periods))gs={kind:'goal-run',goal:g,periods:n};});
+  if(gs){up.push(gs);if(gs.periods>=MOOD_LONG_GOAL_RUN)up.push({...gs,kind:'goal-run-long'});}
+  const fresh=d=>d&&daysBetween(d,today)<=MOOD_BOOST_DAYS;
+  const proj=(data.completedQuests||[]).filter(q=>fresh(q.completedDate)).sort((a,b)=>b.completedDate.localeCompare(a.completedDate))[0];
+  if(proj)up.push({kind:'project',name:proj.name,date:proj.completedDate});
+  const dq=data.defaultQuests||{};
+  const aw=ACHIEVEMENT_QUESTS.map(q=>({q,st:dq[q.id]||{}})).filter(x=>x.st.completed&&fresh(x.st.completedDate))
+    .sort((a,b)=>b.st.completedDate.localeCompare(a.st.completedDate))[0];
+  if(aw)up.push({kind:'award',name:aw.q.name,date:aw.st.completedDate});
+  return{down,up};
+}
+// Steady is the floor for anyone who is keeping to what they set. Neglect takes it
+// down a step at a time; going beyond takes it up.
+function spriteMood(data){
+  const f=moodFactors(data),n=f.down.length,u=f.up.length;
+  const nm=t=>t.length>40?t.slice(0,38)+'…':t;
+  if(n){
+    const top=f.down[0];
+    const why=top.kind==='goal'
+      ?(top.why==='impossible'?`${nm(goalTitle(top.goal,data))} can't be met this ${top.goal.period}.`
+        :`${nm(goalTitle(top.goal,data))} went unmet last ${top.goal.period}.`)
+      :`${top.stat.fullLabel} hasn't been raised in ${top.days} days.`;
+    const tail=n>1?` And ${n-1} other${n>2?'s':''}.`:'';
+    return{mood:n>=4?'drained':n>=2?'frustrated':'concerned',why:why+tail};
+  }
+  if(u>=3)return{mood:'thriving',why:_moodUpWhy(f.up,data)};
+  if(u>=1)return{mood:'happy',why:_moodUpWhy(f.up,data)};
+  return{mood:'steady',why:'Nothing you set is being neglected.'};
+}
+function _moodUpWhy(up,data){
+  const first=up.find(x=>x.kind!=='run-long'&&x.kind!=='goal-run-long')||up[0];
+  const more=up.filter(x=>x.kind!=='run-long'&&x.kind!=='goal-run-long').length-1;
+  const one=first.kind==='run'?`${first.task.name} is on a ${first.days}-day run.`
+    :first.kind==='goal-run'?`${goalTitle(first.goal,data)} has been met ${first.periods} ${first.goal.period}s running.`
+    :first.kind==='project'?`${first.name} is finished.`
+    :`${first.name} earned.`;
+  return one+(more>0?` And ${more} more beyond your goals.`:'');
 }
 // A new mood shows at once, unless the last change was under MOOD_HOLD_MS ago, in
 // which case the latest one shows when the hold ends. So it can never flicker.
@@ -4866,14 +4932,14 @@ function openWellnessReport(){
   const card=(c,i)=>`<div class="wl-card${c.open?' go':''}" style="--sev:${c.col}" ${c.open?`role="button" tabindex="0" onclick="_wellnessOpen(${i})" onkeydown="if(event.key==='Enter')_wellnessOpen(${i})"`:''}>
       <div><div class="wl-title">${esc(c.title)}</div><div class="wl-detail">${esc(c.detail)}</div></div>
       ${c.open?`<button class="wl-open" tabindex="-1" onclick="event.stopPropagation();_wellnessOpen(${i})">OPEN</button>`:''}</div>`;
-  window._wlOpen=w.causes.map(c=>c.open);
+  window._wlOpen=w.causes.map(c=>c.open||null);
   const body=document.getElementById('wellness-body');
   body.innerHTML=`<div class="wl-main">
       <div class="wl-verdict"><div class="wl-tile" id="wl-tile"><canvas></canvas></div>
         <div><span class="wl-badge" style="--mc:${w.moodCol}">${w.mood.toUpperCase()}</span><div class="wl-sentence">${esc(w.verdict)}</div></div></div>
-      ${w.causes.length?`<div class="wl-h">WHAT IS PULLING IT DOWN</div><div class="wl-cards">${w.causes.map(card).join('')}</div>`
-        :`<div class="wl-h">WHAT IS HOLDING IT UP</div><div class="wl-cards">${w.holding.map(c=>card(c,-1)).join('')}</div>`}
+      ${w.causes.length?`<div class="wl-h">WHAT IS PULLING IT DOWN</div><div class="wl-cards">${w.causes.map(card).join('')}</div>`:''}
       ${w.help.length?`<div class="wl-help"><div class="wl-h">WHAT WOULD HELP TODAY</div><p>${esc(w.help.join(' '))}</p></div>`:''}
+      ${w.holding.length?`<div class="wl-h">${w.causes.length?'WHAT IS LIFTING IT':'WHAT IS HOLDING IT UP'}</div><div class="wl-cards">${w.holding.map(c=>card(c,-1)).join('')}</div>`:''}
     </div>
     <div class="wl-rack"><div class="wl-h">STATS · ${fmtNum(_totalPoints(data))} POINTS</div><div id="wl-rack-rows"></div>
       <div class="wl-rack-foot"><span>${esc(document.getElementById('stats-footer')?.textContent||'')}</span><button class="sbtn ghost" onclick="closeModal('modal-wellness');openManageStats()">MANAGE</button></div></div>`;
@@ -4883,69 +4949,75 @@ function openWellnessReport(){
   requestAnimationFrame(()=>{_unmountMinis();_mountMini(document.getElementById('wl-tile'),{mood:w.mood});});
 }
 // Everything the Wellness window says, from real goal, task and stat data.
+// Everything the Wellness window says, from the same factors as the mood.
 function wellnessModel(data){
-  const sm=spriteMood(data);
-  const today=todayStr(),yest=yestStr();
-  const tasks=data.customTasks||[],hist=data.taskHistory||{};
-  const doneOn=(tid,ds)=>ds===today?!!data.todayChecked[tid]:!!(hist[ds]&&hist[ds][tid]);
+  const sm=spriteMood(data),f=moodFactors(data);
+  const today=todayStr();
+  const tasks=data.customTasks||[];
   const words=['no','one','two','three','four','five','six','seven','eight','nine','ten'];
   const W=n=>n<words.length?words[n]:String(n);
   const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
   const COL={fail:'#e0645c',risk:'oklch(0.74 0.17 55)',neglect:'oklch(0.68 0.10 300)',good:'oklch(0.86 0.20 130)'};
+  const amount=(g,v)=>g.type==='activityTime'?_hrs(v):g.type==='statIncrease'?'+'+v:String(v);
   const causes=[],help=[];
-  // goals at risk or failing (new goals are still in their grace period)
-  const goals=(data.customGoals||[]).map(g=>{calculateGoalProgress(g,data);return g;}).filter(g=>!isGoalInGracePeriod(g));
-  const prog=g=>{const cur=g.currentProgress||0,max=g.type==='taskFrequency'?g.frequency:g.type==='activityTime'?g.targetHours:g.targetIncrease;
-    return g.type==='taskFrequency'?`${cur} OF ${max}`:g.type==='activityTime'?`${_hrs(cur)} OF ${_hrs(max)}`:`+${cur} OF +${max}`;};
-  ['failing','atRisk'].forEach(st=>goals.filter(g=>g.status===st).forEach(g=>{
-    const left=getDaysLeftInPeriod(g.period);
-    const tail=g.lastPeriodMet===false&&!(g.streak>0)?'STREAK BROKEN':`${left} DAY${left===1?'':'S'} LEFT`;
-    causes.push({col:st==='failing'?COL.fail:COL.risk,title:cap(goalTitle(g,data))+(st==='failing'?' is failing':' is at risk'),
-      detail:prog(g)+' · '+tail,open:{kind:'goal',id:g.id},fail:st==='failing'});
-    if(st==='atRisk'){
-      if(g.type==='taskFrequency'){const t=tasks.find(x=>x.id===g.taskId);if(t&&!doneOn(t.id,today))help.push(`${t.name} today keeps “${goalTitle(g,data)}” within reach.`);}
-      else if(g.type==='statIncrease'){const need=g.targetIncrease-(g.currentProgress||0);const t=tasks.find(x=>x.stat===g.stat&&!doneOn(x.id,today));
-        const sd=STATS_DEF.find(x=>x.key===g.stat);if(t)help.push(`${t.name} closes ${Math.min(t.points||1,need)===need?'the':'some of the'} ${sd?sd.label:g.stat} gap.`);}
-      else{const need=(g.targetHours||0)-(g.currentProgress||0);const d=Math.max(1,_daysLeftInclusive(g.period));
-        help.push(`${fmtHMCeil(need/d)} of ${_goalTimeName(g,data)} today puts that goal back on pace.`);}
+  f.down.forEach(d=>{
+    if(d.kind==='goal'){
+      const g=d.goal,max=_goalTarget(g),cur=g.currentProgress||0,left=_daysLeftInclusive(g.period);
+      const per=g.period==='month'?'month':'week';
+      causes.push({col:d.why==='impossible'?COL.fail:COL.risk,
+        title:cap(goalTitle(g,data))+(d.why==='impossible'?` can't be met this ${per}`:` went unmet last ${per}`),
+        detail:`${amount(g,cur)} OF ${amount(g,max)} THIS ${per.toUpperCase()} · ${d.why==='impossible'?'MEET IT NEXT '+per.toUpperCase()+' TO CLEAR IT':'MEET IT THIS '+per.toUpperCase()+' TO CLEAR IT'}`,
+        open:{kind:'goal',id:g.id}});
+      if(d.why==="impossible"){
+        // the period is out of reach, so the help points at the next one
+        const t=g.type==="taskFrequency"?tasks.find(x=>x.id===g.taskId):null;
+        if(t)help.push(t.name+" on "+W(max)+" days next "+per+" clears it.");
+        else help.push("Meeting it next "+per+" clears it.");
+      }
+      if(d.why!=='impossible'){
+        const need=max-cur;
+        if(g.type==='taskFrequency'){
+          const t=tasks.find(x=>x.id===g.taskId);
+          if(t)help.push(`${t.name} on ${W(need)} more day${need===1?'':'s'} this ${per} clears it.`);
+        } else if(g.type==='activityTime'){
+          help.push(`${fmtHMCeil(need/Math.max(1,left))} of ${_goalTimeName(g,data)} a day clears it.`);
+        } else {
+          const sd=STATS_DEF.find(x=>x.key===g.stat);
+          help.push(`${need} more ${sd?sd.fullLabel:g.stat} point${need===1?'':'s'} this ${per} clears it.`);
+        }
+      }
+    } else {
+      causes.push({col:COL.neglect,title:`${d.stat.fullLabel} untouched for ${d.days} days`,
+        detail:'LAST RAISED '+_dayLabel(d.last).toUpperCase(),
+        open:(()=>{const t=tasks.find(x=>x.stat===d.stat.key);return t?{kind:'task',id:t.id}:null;})()});
+      const t=tasks.find(x=>x.stat===d.stat.key);
+      help.push(t?`${t.name} today resets ${d.stat.fullLabel}'s clock.`:`A task for ${d.stat.fullLabel} would bring it back into rotation.`);
     }
-  }));
-  // task runs of three days or more that broke yesterday
-  tasks.forEach(t=>{
-    if(doneOn(t.id,yest)||doneOn(t.id,today))return;
-    let n=0;const d=_dd(yest);d.setDate(d.getDate()-1);
-    while(n<400&&doneOn(t.id,_ds(d))){n++;d.setDate(d.getDate()-1);}
-    if(n>=3){causes.push({col:COL.fail,title:`${t.name} lost its ${W(n)}-day run`,detail:'YESTERDAY WAS MISSED',open:{kind:'task',id:t.id}});
-      help.push(`${t.name} today starts a new run.`);}
   });
-  // nothing logged for days
-  let lastDone=null;for(const ds in hist){if(ds<=today&&Object.values(hist[ds]).some(Boolean)&&(!lastDone||ds>lastDone))lastDone=ds;}
-  if(tasks.some(t=>doneOn(t.id,today)))lastDone=today;
-  const idle=lastDone?daysBetween(lastDone,today):0;
-  if(idle>=3){causes.push({col:COL.neglect,title:`Nothing logged for ${W(idle)} days`,detail:'LAST ENTRY '+_dayLabel(lastDone)});help.push('One small task is enough to wake it up.');}
-  // the longest-neglected stat
-  const sli=data.statLastIncreased||{},active=data.activeStats||{};
-  const neg=STATS_DEF.filter(st=>active[st.key]!==false&&sli[st.key]).map(st=>({st,d:daysBetween(sli[st.key],today)})).filter(x=>x.d>=7).sort((a,b)=>b.d-a.d);
-  if(neg.length){
-    const top=neg[0];
-    causes.push({col:COL.neglect,title:`${top.st.label} untouched for ${top.d} days`,detail:'YOUR LONGEST NEGLECTED STAT'+(neg.length>1?` · ${neg.length-1} MORE OVER A WEEK`:'')});
-    const t=tasks.find(x=>x.stat===top.st.key);
-    help.push(t?`Any ${top.st.fullLabel} task, like ${t.name}, resets its clock.`:`A task for ${top.st.fullLabel} would bring it back into rotation.`);
-  }
-  // the verdict
-  const n=causes.length,f=causes.filter(c=>c.fail).length;
-  let verdict;
-  if(!n)verdict={thriving:'Everything is holding up.',happy:'A good day so far.',steady:'Nothing is slipping.'}[sm.mood]||sm.why;
-  else verdict=cap(W(n))+(n===1?' thing is slipping.':' things are slipping.')+(f?'':(n===1?' It isn’t lost.':n===2?' Neither is lost.':' None is lost.'));
-  // what is holding it up, when nothing is pulling it down
+  // what is lifting it: the boosts, in the sprite's own order
   const holding=[];
-  const done=tasks.filter(t=>doneOn(t.id,today)).length;
-  if(done)holding.push({col:COL.good,title:`${cap(W(done))} of ${W(tasks.length)} done today`,detail:done===tasks.length?'EVERYTHING':'AND COUNTING'});
-  let best=null;tasks.forEach(t=>{const r=calcStreak(data,t.id);if(r>=2&&(!best||r>best.n))best={t,n:r};});
-  if(best)holding.push({col:COL.good,title:`${best.t.name} has a ${W(best.n)}-day run going`,detail:'YOUR LONGEST RUN'});
-  const ok=goals.filter(g=>g.status==='onTrack');
-  if(ok.length)holding.push({col:COL.good,title:`${cap(W(ok.length))} goal${ok.length===1?' is':'s are'} on track`,detail:ok.slice(0,2).map(g=>goalTitle(g,data).toUpperCase()).join(' · ')});
-  if(!holding.length)holding.push({col:COL.good,title:'Nothing to report yet',detail:'TICK A TASK AND IT STARTS HERE'});
+  f.up.forEach(x=>{
+    if(x.kind==='run')holding.push({col:COL.good,title:`${x.task.name} has a ${W(x.days)}-day run going`,detail:'YOUR LONGEST RUN'});
+    else if(x.kind==='run-long')holding.push({col:COL.good,title:'That run is past a fortnight',detail:`${x.days} DAYS AND COUNTING`});
+    else if(x.kind==='goal-run')holding.push({col:COL.good,title:`${cap(goalTitle(x.goal,data))} met ${W(x.periods)} ${x.goal.period}s running`,detail:'A GOAL YOU SET, KEPT'});
+    else if(x.kind==='goal-run-long')holding.push({col:COL.good,title:'That goal has held for a month or more',detail:`${x.periods} ${x.goal.period.toUpperCase()}S RUNNING`});
+    else if(x.kind==='project')holding.push({col:COL.good,title:`${x.name} is finished`,detail:'COMPLETED '+_dayLabel(x.date).toUpperCase()});
+    else if(x.kind==='award')holding.push({col:COL.good,title:`${x.name} earned`,detail:'AWARDED '+_dayLabel(x.date).toUpperCase()});
+  });
+  const doneToday=tasks.filter(t=>isTaskDoneOn(data,t.id,today)).length;
+  if(doneToday)holding.push({col:COL.good,title:`${cap(W(doneToday))} of ${W(tasks.length)} done today`,detail:doneToday===tasks.length?'EVERYTHING':'AND COUNTING'});
+  if(!holding.length&&!causes.length)holding.push({col:COL.good,title:'Nothing is being neglected',detail:'RUNS, PROJECTS AND AWARDS LIFT IT FROM HERE'});
+  // the verdict
+  const goals=f.down.filter(d=>d.kind==='goal').length,stats=f.down.length-goals;
+  let verdict;
+  if(!f.down.length){
+    verdict={thriving:'Going well beyond what you set.',happy:'Ahead of what you set for yourself.',steady:'Nothing you set is being neglected.'}[sm.mood]||sm.why;
+  } else {
+    const parts=[];
+    if(goals)parts.push(`${W(goals)} goal${goals===1?'':'s'}`);
+    if(stats)parts.push(`${W(stats)} stat${stats===1?'':'s'}`);
+    verdict=cap(parts.join(' and '))+(f.down.length===1?' is':' are')+' being neglected.'+(f.up.length?' The rest is holding.':' None of it is lost.');
+  }
   const moodCol={thriving:COL.good,happy:'oklch(0.86 0.14 200)',steady:'oklch(0.86 0.14 200)',concerned:COL.risk,frustrated:COL.fail,drained:COL.neglect}[sm.mood];
   return{mood:sm.mood,moodCol,verdict,causes,help:[...new Set(help)].slice(0,3),holding};
 }

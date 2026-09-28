@@ -390,6 +390,47 @@ Asked for once the app was live and in use:
   header and in Wellness. Tiers still exist as the pips under each bar and in
   `NEXT TIER IN N POINTS`.
 
+## The mood rework (v2.1.0)
+
+The companion is the point of the app: it keeps what the user set for themselves,
+and it is honest about what is being neglected. The first version leaned on
+streaks and on today's tally, which made it a nag about things the user never
+asked for. It now reads only two things for the way down, and treats everything
+else as a lift.
+
+**Down from steady — neglect of what the user set:**
+- **A stat not raised for more than seven days.** A stat switched off in MANAGE
+  STATS is never counted. A stat never raised at all is not neglect.
+- **A goal the user set and then missed**, from the moment this period can no
+  longer be met, or because the last full period went unmet. It is owed until
+  that same goal is met again, which settles it immediately — the failure no
+  longer weighs once the goal is achieved.
+  - "Can no longer be met" is only ever true for a task-frequency goal, which
+    runs out of days. Hours and stat points have no daily ceiling, so those are
+    judged when the period ends.
+  - A goal set up part-way through a period is not blamed for that period.
+
+**Up from steady — going beyond what you set:** a task run of 3+ days (twice for
+14+), a goal met 2+ periods running (twice for 4+), a project completed in the
+last 7 days, an award earned in the last 7 days.
+
+**The ladder:** 1 neglected → concerned, 2–3 → frustrated, 4+ → drained. With
+nothing neglected: 1–2 lifts → happy, 3+ → thriving, none → steady.
+
+**Decisions inside the rework:**
+- **Neglect is never offset by a boost.** A long run doesn't hide a goal that was
+  missed — that would defeat the diagnostic purpose. Wellness shows both at once:
+  WHAT IS PULLING IT DOWN, then WHAT IS LIFTING IT.
+- **Losing a run, or having no project or award, is never a penalty.** The floor
+  for anyone keeping to what they set is steady.
+- **Goal streaks for the mood are counted from the history**, not the stored
+  `streak` field, so the sprite can never praise a run and report the same goal
+  missed in the same breath. (The stored field, which the goal cards show, can
+  disagree with the history on older data.)
+- **Wellness names every neglected thing**, one card each, and says what clears
+  it: how many more times this week, how many hours a day, which task resets a
+  stat's clock.
+
 ## Working arrangement
 
 - The redesign lives on `redesign/device-v2`, branched from the live v1.9.0.
