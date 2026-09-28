@@ -565,6 +565,8 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 
 
 /* Tier pips: one per ten points in a stat, beneath its bar. */
+/* Tiers are the pips and nothing else: a line naming the nearest one said too
+   little to be worth reading. */
 .rack-pips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;min-height:6px}
 .rack-pips i{width:6px;height:6px;border-radius:1px;background:var(--hue);opacity:.75}
 .rack-pips span{font:8.5px 'Share Tech Mono',monospace;letter-spacing:.08em;color:rgba(233,237,242,.58);line-height:6px}
@@ -1200,7 +1202,7 @@ body{background:#0b0d12;background-image:none}          /* the desk */
 .wl-help p{margin:0;font:13px/1.55 'Space Grotesk',sans-serif;color:rgba(233,237,242,.8)}
 .wl-rack .wl-h{margin:0 0 10px}
 .wl-rack .rack-row{margin-bottom:9px}
-.wl-rack-foot{margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;gap:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
+.wl-rack-foot{margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:flex-end;align-items:center;gap:8px;font:9px 'Share Tech Mono',monospace;letter-spacing:.1em;color:rgba(233,237,242,.58)}
 .wl-rack-foot .sbtn{padding:7px 10px;min-height:26px}
 .gcard.jump,.task-row.jump{animation:jumpRing 1.6s ease-out}
 @keyframes jumpRing{0%,40%{box-shadow:0 0 0 2px oklch(0.86 0.14 200)}100%{box-shadow:0 0 0 2px transparent}}
@@ -1537,7 +1539,6 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,[tabindex]:focu
         <div class="bezel">
           <div class="screen screen-stats">
             <div id="stats-list"></div>
-            <div class="rack-footer" id="stats-footer"></div>
           </div>
         </div>
         <div class="unit-keys unit-keys-row">
@@ -2756,16 +2757,6 @@ function _segCount(n){return Number.isFinite(n)&&n>=1&&n<=_SEG_MAX&&n===Math.rou
 function _tierLevel(data){const tot=getTotalStats(data);return STATS_DEF.reduce((n,s)=>n+Math.floor((tot[s.key]||0)/10),0);}
 // Every point ever earned, across all nine stats.
 function _totalPoints(data){const tot=getTotalStats(data);return STATS_DEF.reduce((n,s)=>n+(tot[s.key]||0),0);}
-// The nearest tier still to fill, across the stats that count.
-function _nextTierGap(data){
-  const tot=getTotalStats(data);let best=null;
-  STATS_DEF.forEach(s=>{
-    if((data.activeStats||{})[s.key]===false)return;
-    const gap=10-((tot[s.key]||0)%10);
-    if(best===null||gap<best)best=gap;
-  });
-  return best;
-}
 function renderDailySummary(data){
   const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
   const tasks=data.customTasks||[];
@@ -2778,8 +2769,6 @@ function renderDailySummary(data){
   set('tasks-points','+'+pts+' POINT'+(pts===1?'':'S')+' TODAY');
   set('sprite-badge-count',done.length+' OF '+tasks.length);
   set('stats-readout','TOTAL POINTS '+fmtNum(_totalPoints(data)));
-  const gap=_nextTierGap(data);
-  set('stats-footer',gap===null?'EVERY STAT IS INACTIVE':'NEXT TIER IN '+gap+' POINT'+(gap===1?'':'S'));
   set('dock-count',done.length+' OF '+tasks.length+' TODAY');
   _dockSchedule();
   updateDailyClock();
@@ -4942,7 +4931,7 @@ function openWellnessReport(){
       ${w.holding.length?`<div class="wl-h">${w.causes.length?'WHAT IS LIFTING IT':'WHAT IS HOLDING IT UP'}</div><div class="wl-cards">${w.holding.map(c=>card(c,-1)).join('')}</div>`:''}
     </div>
     <div class="wl-rack"><div class="wl-h">STATS · ${fmtNum(_totalPoints(data))} POINTS</div><div id="wl-rack-rows"></div>
-      <div class="wl-rack-foot"><span>${esc(document.getElementById('stats-footer')?.textContent||'')}</span><button class="sbtn ghost" onclick="closeModal('modal-wellness');openManageStats()">MANAGE</button></div></div>`;
+      <div class="wl-rack-foot"><button class="sbtn ghost" onclick="closeModal('modal-wellness');openManageStats()">MANAGE</button></div></div>`;
   const rows=document.getElementById('wl-rack-rows');_rackRows(data,false).forEach(r=>rows.appendChild(r));
   openModal('modal-wellness');
   body.scrollTop=0;

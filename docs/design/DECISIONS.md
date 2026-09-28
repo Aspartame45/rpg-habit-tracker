@@ -387,8 +387,10 @@ Asked for once the app was live and in use:
   - The stat bar no longer keeps a 4% minimum, so an empty tier reads as empty.
     The segments carry the meaning now.
 - **`LV` became `TOTAL POINTS`**, the sum of all nine stats, in the Stats unit's
-  header and in Wellness. Tiers still exist as the pips under each bar and in
-  `NEXT TIER IN N POINTS`.
+  header and in Wellness.
+- **The `NEXT TIER IN N POINTS` line is gone** (v2.1.0). It named no stat, so it
+  read as a riddle. Tiers are the pips under each bar and nothing else. Supersedes
+  the footer half of decision 10.
 
 ## The mood rework (v2.1.0)
 
